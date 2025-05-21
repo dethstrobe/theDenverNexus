@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: OMA3-CI
+name: BAREFEED-CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
@@ -22,6 +22,6 @@ jobs:
           node-version: 20.x
       # TODO remove --legacy-peer-deps when all dependencies are updated
       - run: npm ci
-      - run: npm run test-all
+      - run: npm run test -- run --coverage
         env:
           CI: true

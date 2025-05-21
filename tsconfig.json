@@ -3,7 +3,7 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "target": "es2021",
+    "target": "ESNext",
     /* Specify a set of bundled library declaration files that describe the target runtime environment. */
     "lib": ["DOM", "DOM.Iterable", "ESNext", "ES2022"],
     /* Specify what JSX code is generated. */
@@ -17,7 +17,8 @@
     "types": [
       "./worker-configuration.d.ts",
       "./types/rw.d.ts",
-      "./types/vite.d.ts"
+      "./types/vite.d.ts",
+      "vitest/globals"
     ],
     "paths": {
       "@/*": ["./src/*"],
