@@ -10,10 +10,6 @@ interface RssArticle {
   image: string
 }
 
-interface RssResponse {
-  items: RssArticle[]
-}
-
 export const Home = () => {
   const [rssFeed, setRssFeed] = useState<RssArticle[] | null>(null)
   return (
@@ -26,9 +22,39 @@ export const Home = () => {
           const rssFeedUrl = formData.get("rssFeedUrl")
           if (rssFeedUrl) {
             fetch(rssFeedUrl.toString())
-              .then((res) => res.json())
-              .then((data) => {
-                setRssFeed((data as RssResponse).items)
+              .then((res) => res.text())
+              .then((xmlText) => {
+                const parser = new DOMParser()
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml")
+                // Try RSS format first
+                let items = Array.from(xmlDoc.getElementsByTagName("item"))
+                // If no RSS items found, try Atom format
+                if (items.length === 0) {
+                  items = Array.from(xmlDoc.getElementsByTagName("entry"))
+                }
+                const articles = items.map((item) => ({
+                  title:
+                    item.getElementsByTagName("title")[0]?.textContent || "",
+                  description:
+                    item.getElementsByTagName("description")[0]?.textContent ||
+                    item.getElementsByTagName("summary")[0]?.textContent ||
+                    "",
+                  link:
+                    item
+                      .getElementsByTagName("link")[0]
+                      ?.getAttribute("href") ||
+                    item.getElementsByTagName("link")[0]?.textContent ||
+                    "",
+                  pubDate:
+                    item.getElementsByTagName("pubDate")[0]?.textContent ||
+                    item.getElementsByTagName("updated")[0]?.textContent ||
+                    "",
+                  image:
+                    item.getElementsByTagName("image")[0]?.textContent ||
+                    item.querySelector("content img")?.getAttribute("src") ||
+                    "",
+                }))
+                setRssFeed(articles)
               })
             // Handle the RSS feed URL here
             console.log("RSS Feed URL:", rssFeedUrl)

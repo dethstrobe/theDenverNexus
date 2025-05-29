@@ -21,7 +21,9 @@ describe("Home", () => {
 
     // Verify the RSS feed post is displayed
     expect(
-      screen.getByRole("article", { name: "Example Post Title" }),
+      screen.getByRole("article", {
+        name: "From Agile to Apathy: Why Google Didn’t Work for Me.",
+      }),
     ).toBeInTheDocument()
   })
 })
