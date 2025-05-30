@@ -20,10 +20,23 @@ describe("Home", () => {
     expect(rssFeedUrlInput).toHaveValue("")
 
     // Verify the RSS feed post is displayed
+    const articles = screen.getAllByRole("article")
+    expect(articles).toHaveLength(4)
+    expect(articles[0]).toHaveTextContent("Article 4 Title.")
     expect(
-      screen.getByRole("article", {
-        name: "From Agile to Apathy: Why Google Didn’t Work for Me.",
-      }),
-    ).toBeInTheDocument()
+      screen.getByRole("link", { name: "Article 4 Title." }),
+    ).toHaveAttribute("href", "https://example.com/blog/article-4/")
+    expect(articles[1]).toHaveTextContent("Article 3 Title.")
+    expect(
+      screen.getByRole("link", { name: "Article 3 Title." }),
+    ).toHaveAttribute("href", "https://example.com/blog/article-3/")
+    expect(articles[2]).toHaveTextContent("Article 2 Title.")
+    expect(
+      screen.getByRole("link", { name: "Article 2 Title." }),
+    ).toHaveAttribute("href", "https://example.com/blog/article-2/")
+    expect(articles[3]).toHaveTextContent("First Post Title.")
+    expect(
+      screen.getByRole("link", { name: "First Post Title." }),
+    ).toHaveAttribute("href", "https://example.com/blog/firstpost/")
   })
 })

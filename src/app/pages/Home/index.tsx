@@ -75,7 +75,9 @@ export const Home = () => {
       {rssFeed &&
         rssFeed.map((article) => (
           <article key={article.link} aria-labelledby={article.link}>
-            <h2 id={article.link}>{article.title}</h2>
+            <h2 id={article.link}>
+              <a href={article.link}>{article.title}</a>
+            </h2>
             <p>{article.description}</p>
           </article>
         ))}
