@@ -1,17 +1,9 @@
 "use client"
 
-import { useState } from "react"
-
-interface RssArticle {
-  title: string
-  description: string
-  link: string
-  pubDate: string
-  image: string
-}
+import { useFeed } from "./useFeed"
 
 export const Home = () => {
-  const [rssFeed, setRssFeed] = useState<RssArticle[] | null>(null)
+  const { feed, saveFeeds, isLoading } = useFeed()
   return (
     <div>
       <h1>Home</h1>
@@ -54,7 +46,7 @@ export const Home = () => {
                     item.querySelector("content img")?.getAttribute("src") ||
                     "",
                 }))
-                setRssFeed(articles)
+                saveFeeds(articles)
               })
             // Handle the RSS feed URL here
             console.log("RSS Feed URL:", rssFeedUrl)
@@ -72,15 +64,18 @@ export const Home = () => {
         />
         <button type="submit">Add to Feed</button>
       </form>
-      {rssFeed &&
-        rssFeed.map((article) => (
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        feed.map((article) => (
           <article key={article.link} aria-labelledby={article.link}>
             <h2 id={article.link}>
               <a href={article.link}>{article.title}</a>
             </h2>
             <p>{article.description}</p>
           </article>
-        ))}
+        ))
+      )}
     </div>
   )
 }
