@@ -33,22 +33,31 @@ export const useFeed = () => {
     })
   }, [setFeed, setIsLoading])
 
-  const saveFeeds = useCallback(async (feeds: RssArticle[]) => {
-    const db = await openDB(DB_NAME, 1, updateFeed)
-    const tx = db.transaction(FEED_STORE, "readwrite")
-    const store = tx.objectStore(FEED_STORE)
+  const saveFeeds = useCallback(
+    async (feeds: RssArticle[]) => {
+      const db = await openDB(DB_NAME, 1, updateFeed)
+      const tx = db.transaction(FEED_STORE, "readwrite")
+      const store = tx.objectStore(FEED_STORE)
 
-    // Clear existing feeds
-    await store.clear()
+      const combinedFeeds = [...feed, ...feeds].toSorted((a, b) => {
+        const dateA = new Date(a.pubDate || 0)
+        const dateB = new Date(b.pubDate || 0)
+        return dateB.getTime() - dateA.getTime()
+      })
 
-    // Store each feed individually
-    for (const article of feeds) {
-      await store.put(article, article.link)
-    }
+      // Clear existing feeds
+      await store.clear()
 
-    await tx.done
-    setFeed(feeds)
-  }, [])
+      // Store each feed individually
+      for (const article of combinedFeeds) {
+        await store.put(article, article.link)
+      }
+
+      await tx.done
+      setFeed(combinedFeeds)
+    },
+    [feed],
+  )
 
   return useMemo(
     () => ({ feed, saveFeeds, isLoading }),

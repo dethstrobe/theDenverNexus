@@ -3,18 +3,14 @@ import { Home } from "./"
 import userEvent from "@testing-library/user-event"
 import "../../../test/msw"
 import "fake-indexeddb/auto"
-import { openDB } from "idb"
+import { indexedDB } from "fake-indexeddb"
 
 describe("Home", () => {
   const user = userEvent.setup()
 
-  beforeEach(async () => {
-    const db = await openDB("rss-feeds", 1, {
-      upgrade(db) {
-        db.createObjectStore("feeds")
-      },
-    })
-    await db.clear("feeds")
+  beforeEach(() => {
+    // Clear the indexedDB before each test to ensure a clean state
+    ;(indexedDB as any)._databases.clear()
   })
 
   test("home page should allow you to follow an rss feed", async () => {
@@ -88,5 +84,33 @@ describe("Home", () => {
     expect(articles[1]).toHaveTextContent("Article 3 Title.")
     expect(articles[2]).toHaveTextContent("Article 2 Title.")
     expect(articles[3]).toHaveTextContent("First Post Title.")
+  })
+
+  test("should aggregate multiple rss feeds", async () => {
+    render(<Home />)
+
+    const rssFeedUrlInput = screen.getByRole("textbox", {
+      name: "RSS Feed URL to Follow",
+    })
+    const addToFeedButton = screen.getByRole("button", { name: "Add to Feed" })
+
+    await user.type(rssFeedUrlInput, "https://example.com/rss")
+    await user.click(addToFeedButton)
+    expect(rssFeedUrlInput).toHaveValue("")
+
+    await user.clear(rssFeedUrlInput)
+    await user.type(rssFeedUrlInput, "https://website.net/feed.xml")
+    await user.click(addToFeedButton)
+
+    const articles = await screen.findAllByRole("article")
+    expect(articles).toHaveLength(6)
+    expect(articles[0]).toHaveTextContent("10 websites. You won't believe #4.")
+    expect(articles[1]).toHaveTextContent("Article 4 Title.")
+    expect(articles[2]).toHaveTextContent(
+      "10 click bait headlines. Doctors don't want you to know.",
+    )
+    expect(articles[3]).toHaveTextContent("Article 3 Title.")
+    expect(articles[4]).toHaveTextContent("Article 2 Title.")
+    expect(articles[5]).toHaveTextContent("First Post Title.")
   })
 })
