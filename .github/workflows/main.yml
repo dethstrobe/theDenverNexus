@@ -20,15 +20,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "latest"
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: "latest"
+      # - name: Install pnpm
+      #   uses: pnpm/action-setup@v2
+      #   with:
+      #     version: "latest"
+
+      # - name: Install dependencies
+      #   run: pnpm install
+
+      # - name: Run tests
+      #   run: pnpm test -- run --coverage
+      #   env:
+      #     CI: true
 
       - name: Install dependencies
-        run: pnpm install
-
+        run: npm ci
       - name: Run tests
-        run: pnpm test -- run --coverage
+        run: npm test -- run --coverage
         env:
           CI: true
