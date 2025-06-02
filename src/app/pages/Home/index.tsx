@@ -1,6 +1,7 @@
 "use client"
 
 import { useFeed } from "./useFeed"
+import { Button, Input } from "@headlessui/react"
 
 export const Home = () => {
   const { feed, saveFeeds, isLoading } = useFeed()
@@ -56,20 +57,24 @@ export const Home = () => {
         }}
       >
         <label htmlFor="rssFeedUrl">RSS Feed URL to Follow</label>
-        <input
+        <Input
           id="rssFeedUrl"
           type="text"
           name="rssFeedUrl"
           placeholder="Input RSS Feed URL"
         />
-        <button type="submit">Add to Feed</button>
+        <Button type="submit">Add to Feed</Button>
       </form>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         feed.map((article) => (
-          <article key={article.link} aria-labelledby={article.link}>
-            <h2 id={article.link}>
+          <article
+            className="p-2"
+            key={article.link}
+            aria-labelledby={article.link}
+          >
+            <h2 className="text-4xl font-bolder mb-2" id={article.link}>
               <a href={article.link}>{article.title}</a>
             </h2>
             <p>{article.description}</p>
