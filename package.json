@@ -35,7 +35,7 @@
     "@simplewebauthn/server": "^13.1.1",
     "@tailwindcss/vite": "^4.1.8",
     "idb": "^8.0.3",
-    "rwsdk": "0.0.86",
+    "rwsdk": "0.0.88",
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
