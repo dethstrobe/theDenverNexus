@@ -25,7 +25,8 @@
     "check": "npm run generate && npm run types",
     "types": "tsc",
     "prepare": "vibe-rules install cursor",
-    "test": "vitest"
+    "test": "vitest",
+    "wrangler-types": "wrangler types ./types/wrangle.d.ts"
   },
   "peerDependencies": {
     "react": ">=18",

@@ -18,8 +18,10 @@
       "./worker-configuration.d.ts",
       "./types/rw.d.ts",
       "./types/vite.d.ts",
-      "vitest/globals"
+      "vitest/globals",
+      "@cloudflare/vitest-pool-workers"
     ],
+    "include": ["types/wrangle.d.ts"],
     "paths": {
       "@/*": ["./src/*"],
       ".prisma/*": ["./node_modules/.prisma/*"]
