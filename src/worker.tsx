@@ -10,6 +10,7 @@ import { db } from "./db"
 import type { User } from "@prisma/client"
 import { env } from "cloudflare:workers"
 export { SessionDurableObject } from "./session/durableObject"
+import { rssData1, rssData2 } from "./app/pages/Home/__mocks__/rssData"
 
 export type AppContext = {
   session: Session | null
@@ -49,6 +50,34 @@ export default defineApp([
     route("/", () => <Home />),
     route("/ping", function () {
       return <h1>Pong!</h1>
+    }),
+    route("/proxy/:url", async ({ params }) => {
+      try {
+        const url = decodeURIComponent(params.url)
+
+        return fetch(url)
+      } catch (error) {
+        return new Response("Failed to fetch RSS feed", {
+          status: 500,
+          headers: { "Content-Type": "text/plain" },
+        })
+      }
+    }),
+    route("/TEST/:rssKey", async ({ params }) => {
+      try {
+        const rssKey = decodeURIComponent(params.rssKey)
+
+        return new Response(rssKey === "rssData1" ? rssData1 : rssData2, {
+          headers: {
+            "Content-Type": "application/rss+xml",
+          },
+        })
+      } catch (error) {
+        return new Response("Failed to parse RSS data", {
+          status: 500,
+          headers: { "Content-Type": "text/plain" },
+        })
+      }
     }),
     route("/protected", [
       ({ ctx }) => {

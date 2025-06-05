@@ -14,7 +14,7 @@ export const Home = () => {
           const formData = new FormData(e.currentTarget)
           const rssFeedUrl = formData.get("rssFeedUrl")
           if (rssFeedUrl) {
-            fetch(rssFeedUrl.toString())
+            fetch(`/proxy/${encodeURIComponent(rssFeedUrl.toString())}`)
               .then((res) => res.text())
               .then((xmlText) => {
                 const parser = new DOMParser()

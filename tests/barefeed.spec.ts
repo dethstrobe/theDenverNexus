@@ -6,17 +6,26 @@ test("Ping Pong smoke test", async ({ page }) => {
   expect(page.getByRole("heading")).toContainText("Pong!")
 })
 
-// test("rss feed", async ({ page }) => {
-//   await page.goto("http://localhost:5173/")
+test("rss feed", async ({ page }) => {
+  page.on("request", (request) => {
+    console.log(`>> ${request.method()} ${request.url()}`)
+  })
 
-//   // Click the get started link.
-//   await page
-//     .getByRole("textbox", { name: "RSS Feed URL to Follow" })
-//     .fill("https://example.com/rss")
-//   await page.getByRole("button", { name: "Add to Feed" }).click()
+  // Listen to all responses
+  page.on("response", (response) => {
+    console.log(`<< ${response.status()} ${response.url()}`)
+  })
 
-//   // Expects page to have a heading with the name of Installation.
-//   await expect(
-//     page.getByRole("heading", { name: "Article 4 Title." }),
-//   ).toBeVisible()
-// })
+  await page.goto("http://localhost:5173/")
+
+  // Click the get started link.
+  await page
+    .getByRole("textbox", { name: "RSS Feed URL to Follow" })
+    .fill("http://localhost:5173/TEST/rssData1")
+  await page.getByRole("button", { name: "Add to Feed" }).click()
+
+  // Expects page to have a heading with the name of Installation.
+  await expect(
+    page.getByRole("heading", { name: "Article 4 Title." }),
+  ).toBeVisible()
+})
