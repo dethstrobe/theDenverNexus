@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@prisma/adapter-d1':
-        specifier: ~6.8.2
-        version: 6.8.2
+        specifier: ~6.9.0
+        version: 6.9.0
       '@prisma/client':
         specifier: ~6.9.0
         version: 6.9.0(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3)
@@ -944,8 +944,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@prisma/adapter-d1@6.8.2':
-    resolution: {integrity: sha512-YAFT6y0E5WBOY6IeHbT2vORa8h6bpJTEBlGC3by96bcLDSVBA0vdgTkBgg+rFuO4zEN727dWR/IdOaW0/zsHZg==}
+  '@prisma/adapter-d1@6.9.0':
+    resolution: {integrity: sha512-50l97aZLzxOEaHsvFlGWgZ1OyOXQqUBmZgjqRS7JBRnplX1wjbkf8pCXxF+cu5arAeMUo97QVh2XaNnlo/vKpg==}
 
   '@prisma/client@6.9.0':
     resolution: {integrity: sha512-Gg7j1hwy3SgF1KHrh0PZsYvAaykeR0PaxusnLXydehS96voYCGt1U5zVR31NIouYc63hWzidcrir1a7AIyCsNQ==}
@@ -965,8 +965,11 @@ packages:
   '@prisma/debug@6.8.2':
     resolution: {integrity: sha512-4muBSSUwJJ9BYth5N8tqts8JtiLT8QI/RSAzEogwEfpbYGFo9mYsInsVo8dqXdPO2+Rm5OG5q0qWDDE3nyUbVg==}
 
-  '@prisma/driver-adapter-utils@6.8.2':
-    resolution: {integrity: sha512-5+CzN/41gBsRmA3ekbVy1TXnSImSPBtMlxWAttVH6tg94bv4zGGRmyk5tUCdT83nl0hG1Sq2oMXR7ml6aqILvw==}
+  '@prisma/debug@6.9.0':
+    resolution: {integrity: sha512-bFeur/qi/Q+Mqk4JdQ3R38upSYPebv5aOyD1RKywVD+rAMLtRkmTFn28ZuTtVOnZHEdtxnNOCH+bPIeSGz1+Fg==}
+
+  '@prisma/driver-adapter-utils@6.9.0':
+    resolution: {integrity: sha512-HtugVGw5y50drVTboKubHJeOmoUQfDZa8vJBhzgR+iZ8KfUsJuTIU20rNd7Hi/S+JdLJGJXIxzbXiQABMNArjw==}
 
   '@prisma/engines-version@6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e':
     resolution: {integrity: sha512-Rkik9lMyHpFNGaLpPF3H5q5TQTkm/aE7DsGM5m92FZTvWQsvmi6Va8On3pWvqLHOt5aPUvFb/FeZTmphI4CPiQ==}
@@ -3811,10 +3814,10 @@ snapshots:
     dependencies:
       playwright: 1.52.0
 
-  '@prisma/adapter-d1@6.8.2':
+  '@prisma/adapter-d1@6.9.0':
     dependencies:
       '@cloudflare/workers-types': 4.20250214.0
-      '@prisma/driver-adapter-utils': 6.8.2
+      '@prisma/driver-adapter-utils': 6.9.0
       ky: 1.7.5
 
   '@prisma/client@6.9.0(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3)':
@@ -3828,9 +3831,11 @@ snapshots:
 
   '@prisma/debug@6.8.2': {}
 
-  '@prisma/driver-adapter-utils@6.8.2':
+  '@prisma/debug@6.9.0': {}
+
+  '@prisma/driver-adapter-utils@6.9.0':
     dependencies:
-      '@prisma/debug': 6.8.2
+      '@prisma/debug': 6.9.0
 
   '@prisma/engines-version@6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e': {}
 

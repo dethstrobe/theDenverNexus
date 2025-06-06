@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
-    "@prisma/adapter-d1": "~6.8.2",
+    "@prisma/adapter-d1": "~6.9.0",
     "@prisma/client": "~6.9.0",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
