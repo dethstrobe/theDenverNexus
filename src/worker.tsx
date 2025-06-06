@@ -5,7 +5,7 @@ import { Home } from "@/app/pages/Home"
 import { setCommonHeaders } from "@/app/headers"
 import { userRoutes } from "@/app/pages/user/routes"
 import { sessions, setupSessionStore } from "./session/store"
-import { Session } from "./session/durableObject"
+import type { Session } from "./session/durableObject"
 import { db } from "./db"
 import type { User } from "@prisma/client"
 import { env } from "cloudflare:workers"
@@ -48,9 +48,7 @@ export default defineApp([
   },
   render(Document, [
     route("/", () => <Home />),
-    route("/ping", function () {
-      return <h1>Pong!</h1>
-    }),
+    route("/ping", () => <h1>Pong!</h1>),
     route("/proxy/:url", async ({ params }) => {
       try {
         const url = decodeURIComponent(params.url)

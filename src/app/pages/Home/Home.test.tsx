@@ -10,6 +10,7 @@ describe("Home", () => {
 
   beforeEach(() => {
     // Clear the indexedDB before each test to ensure a clean state
+    // biome-ignore lint/suspicious/noExplicitAny: this is hacky bullshit anyway
     ;(indexedDB as any)._databases.clear()
   })
 

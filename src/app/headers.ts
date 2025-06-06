@@ -1,4 +1,4 @@
-import { RouteMiddleware } from "rwsdk/router"
+import type { RouteMiddleware } from "rwsdk/router"
 import { IS_DEV } from "rwsdk/constants"
 
 export const setCommonHeaders =

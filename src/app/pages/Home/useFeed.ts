@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { RssArticle } from "./types"
-import { IDBPDatabase, openDB } from "idb"
+import type { RssArticle } from "./types"
+import { type IDBPDatabase, openDB } from "idb"
 
 const updateFeed = {
   upgrade(db: IDBPDatabase<unknown>) {
@@ -31,7 +31,7 @@ export const useFeed = () => {
           setIsLoading(false)
         })
     })
-  }, [setFeed, setIsLoading])
+  }, [])
 
   const saveFeeds = useCallback(
     async (feeds: RssArticle[]) => {
