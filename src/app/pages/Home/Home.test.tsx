@@ -102,6 +102,7 @@ describe("Home", () => {
     await user.clear(rssFeedUrlInput)
     await user.type(rssFeedUrlInput, "https://website.net/feed.xml")
     await user.click(addToFeedButton)
+    await screen.findByText("10 websites. You won't believe #4.")
 
     const articles = await screen.findAllByRole("article")
     expect(articles).toHaveLength(6)
