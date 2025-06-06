@@ -11,7 +11,8 @@ export const Home = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          const formData = new FormData(e.currentTarget)
+          const form = e.currentTarget
+          const formData = new FormData(form)
           const rssFeedUrl = formData.get("rssFeedUrl")
           if (rssFeedUrl) {
             fetch(`/proxy/${encodeURIComponent(rssFeedUrl.toString())}`)
@@ -48,11 +49,9 @@ export const Home = () => {
                     "",
                 }))
                 saveFeeds(articles)
+                // Clear the input after submission
+                form.reset()
               })
-            // Handle the RSS feed URL here
-            console.log("RSS Feed URL:", rssFeedUrl)
-            // Clear the input after submission
-            e.currentTarget.reset()
           }
         }}
       >
