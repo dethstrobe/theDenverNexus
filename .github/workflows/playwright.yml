@@ -18,7 +18,10 @@ jobs:
         with:
           version: "latest"
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm approve-builds @prisma/client @prisma/engines prisma
+          pnpm install --frozen-lockfile
       - name: Generate Prisma Client
         run: pnpm generate
       - name: Install Playwright Browsers
