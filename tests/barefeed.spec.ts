@@ -3,19 +3,10 @@ import { test, expect } from "@playwright/test"
 test("Ping Pong smoke test", async ({ page }) => {
   await page.goto("http://localhost:5173/ping")
 
-  expect(page.getByRole("heading")).toContainText("Pong!")
+  await expect(page.getByRole("heading")).toContainText("Pong!")
 })
 
 test("rss feed", async ({ page }) => {
-  page.on("request", (request) => {
-    console.log(`>> ${request.method()} ${request.url()}`)
-  })
-
-  // Listen to all responses
-  page.on("response", (response) => {
-    console.log(`<< ${response.status()} ${response.url()}`)
-  })
-
   await page.goto("http://localhost:5173/")
 
   // Click the get started link.
