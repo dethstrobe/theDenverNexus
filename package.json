@@ -57,7 +57,7 @@
     "fake-indexeddb": "^6.0.1",
     "jsdom": "^26.1.0",
     "msw": "^2.9.0",
-    "prisma": "~6.8.2",
+    "prisma": "~6.9.0",
     "typescript": "^5.8.3",
     "vibe-rules": "^0.2.31",
     "vite": "^6.2.6",
