@@ -13,8 +13,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: "latest"
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install
+      - name: Generate Prisma Client
+        run: pnpm generate
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
