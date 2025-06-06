@@ -61,8 +61,9 @@ export const Home = () => {
           type="text"
           name="rssFeedUrl"
           placeholder="Input RSS Feed URL"
+          disabled={isLoading}
         />
-        <Button type="submit">Add to Feed</Button>
+        <Button type="submit" disabled={isLoading}>Add to Feed</Button>
       </form>
       {isLoading ? (
         <p>Loading...</p>
