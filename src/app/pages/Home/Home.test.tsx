@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import { Home } from "./"
 import userEvent from "@testing-library/user-event"
 import "../../../test/msw"
@@ -22,7 +22,9 @@ describe("Home", () => {
     const rssFeedUrlInput = screen.getByRole("textbox", {
       name: "RSS Feed URL to Follow",
     })
-    expect(rssFeedUrlInput).toBeInTheDocument()
+    await waitFor(() => {
+      expect(rssFeedUrlInput).not.toBeDisabled()
+    })
     await user.type(rssFeedUrlInput, "https://example.com/rss")
     const submitButton = screen.getByRole("button", { name: "Add to Feed" })
     await user.click(submitButton)
@@ -57,10 +59,15 @@ describe("Home", () => {
     let articles = screen.queryAllByRole("article")
     expect(articles).toHaveLength(0)
 
+    const rssFeedUrlInput = screen.getByRole("textbox", {
+      name: "RSS Feed URL to Follow",
+    })
+    await waitFor(() => {
+      expect(rssFeedUrlInput).not.toBeDisabled()
+    })
+
     await user.type(
-      screen.getByRole("textbox", {
-        name: "RSS Feed URL to Follow",
-      }),
+      rssFeedUrlInput,
       "https://example.com/rss",
     )
     await user.click(screen.getByRole("button", { name: "Add to Feed" }))
@@ -93,6 +100,10 @@ describe("Home", () => {
     const rssFeedUrlInput = screen.getByRole("textbox", {
       name: "RSS Feed URL to Follow",
     })
+    await waitFor(() => {
+      expect(rssFeedUrlInput).not.toBeDisabled()
+    })
+
     const addToFeedButton = screen.getByRole("button", { name: "Add to Feed" })
 
     await user.type(rssFeedUrlInput, "https://example.com/rss")
