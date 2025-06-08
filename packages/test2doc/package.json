@@ -1,0 +1,18 @@
+{
+  "name": "test2doc",
+  "version": "0.0.0",
+  "description": "A reporter that generates docs based off playwright test files",
+  "keywords": [
+    "docs",
+    "test",
+    "playwright",
+    "automation"
+  ],
+  "license": "GPL-3.0-or-later",
+  "author": "@dethstrobe",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest"
+  }
+}
