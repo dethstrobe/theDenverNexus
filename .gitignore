@@ -1,2 +1,51 @@
-node_modules
+# Dependencies
+**/node_modules
+**/.pnpm-store
+
+# Build outputs
+**/dist
+**/.vite
+**/coverage
+
+# Environment variables
+**/.env*
+**/.dev.vars
+**/.wrangler
+
+# Logs
+**/logs
+**/*.log
+**/npm-debug.log*
+**/pnpm-debug.log*
+
+# Cache files
+**/*.tsbuildinfo
+**/.eslintcache
+**/.stylelintcache
+**/.npm
+**/.node_repl_history
+
+# Test outputs
+**/test-results
+**/playwright-report
+**/blob-report
+**/playwright/.cache/
+**/debug-screenshot.png
+
+# IDE and editors
+**/.vscode
+**/.idea
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln
+**/*.sw?
+
+# OS generated files
 .DS_Store
+**/.DS_Store
+
+# Temporary files
+**/*.tmp
+**/*.temp
+**/*.tgz
