@@ -1,5 +1,5 @@
 {
-  "name": "theDenverNexus",
+  "name": "the-denver-nexus",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,5 +10,10 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.11.1",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
+  }
 }

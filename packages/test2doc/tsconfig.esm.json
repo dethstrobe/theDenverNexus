@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json", // Extend your base tsconfig for common options
+  "compilerOptions": {
+    "module": "NodeNext",      // Emit ES Modules (for Node.js's dual module system)
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist/esm",    // Output to an 'esm' subdirectory
+    "declaration": true,       // Still generate declarations
+    "declarationMap": true,     // Still generate declaration maps
+    "composite": true        // Keep composite if you use project references
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
