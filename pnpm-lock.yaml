@@ -11,6 +11,9 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4
+      '@playwright/test':
+        specifier: ^1.52.0
+        version: 1.52.0
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -109,7 +112,11 @@ importers:
         specifier: ^4.19.1
         version: 4.19.1(@cloudflare/workers-types@4.20250607.0)
 
-  packages/test2doc: {}
+  packages/test2doc:
+    dependencies:
+      '@playwright/test':
+        specifier: ^1.52.0
+        version: 1.52.0
 
 packages:
 

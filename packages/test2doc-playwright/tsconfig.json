@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* Project Options */
-    "target": "es2020",                /* Specify ECMAScript target version for emitted JavaScript. */
+    "target": "es2022",                /* Specify ECMAScript target version for emitted JavaScript. */
     "lib": ["es2020"],                 /* Specify a list of library files to be included in the compilation. */
     "rootDir": "./src",                /* Specify the root directory of input files. */
     "sourceMap": true,                 /* Generates corresponding .map file. */

@@ -1,26 +1,23 @@
 {
-  "name": "test2doc",
+  "name": "@test2doc/playwright",
   "version": "0.0.1",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": ["docs", "test", "playwright", "automation"],
   "license": "GPL-3.0-or-later",
   "author": "@dethstrobe",
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
       },
-
       "require": {
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       },
-
       "default": "./dist/cjs/index.js"
     },
-
     "./utils": {
       "import": {
         "types": "./dist/esm/utils.d.ts",
@@ -32,17 +29,14 @@
       },
       "default": "./dist/cjs/utils.js"
     },
-
     "./*": {
       "types": "./dist/*/index.d.ts",
       "default": "./dist/*/index.js"
     }
   },
-
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",
-
   "files": ["dist"],
   "scripts": {
     "clean": "rm -rf dist",
@@ -52,5 +46,8 @@
     "test": "vitest",
     "lint": "biome lint .",
     "format": "biome format --write ."
+  },
+  "dependencies": {
+    "@playwright/test": "^1.52.0"
   }
 }
