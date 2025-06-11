@@ -100,8 +100,8 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
       vibe-rules:
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.3.40
+        version: 0.3.40
       vite:
         specifier: ^6.2.6
         version: 6.3.5(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.42.0)
@@ -2915,8 +2915,8 @@ packages:
     resolution: {integrity: sha512-CVGXHyKRvDeC3S6SywxTcNGuckmSjwB+2q/v8eDSmwDBTlz0ziRqm49eI5ELLy4djKq6DdCSYvV4EGcwzsHRog==}
     hasBin: true
 
-  vibe-rules@0.3.1:
-    resolution: {integrity: sha512-J5unBvlsx1EQNAlgkHJonQUaLxlHo4QWI65gp2c49agWvDGH6cDCbSzhfcGmL4UtJIqYlUjpKdcAL0S522uR4g==}
+  vibe-rules@0.3.40:
+    resolution: {integrity: sha512-uCzed+a60pfdzrMX2tYhQx5wAcbDaSidTS42l7uUs10helt0YoPydQ+APFXzokXF5fK73qy6I8wLqpJu7Syj4A==}
     hasBin: true
 
   vite-node@3.2.2:
@@ -3153,8 +3153,8 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@3.25.57:
-    resolution: {integrity: sha512-6tgzLuwVST5oLUxXTmBqoinKMd3JeesgbgseXeFasKKj8Q1FCZrHnbqJOyiEvr4cVAlbug+CgIsmJ8cl/pU5FA==}
+  zod@3.25.61:
+    resolution: {integrity: sha512-fzfJgUw78LTNnHujj9re1Ov/JJQkRZZGDMcYqSx7Hp4rPOkKywaFHq0S6GoHeXs0wGNE/sIOutkXgnwzrVOGCQ==}
 
 snapshots:
 
@@ -5931,15 +5931,15 @@ snapshots:
       commander: 11.1.0
       fs-extra: 11.3.0
       import-meta-resolve: 4.1.0
-      zod: 3.25.57
+      zod: 3.25.61
 
-  vibe-rules@0.3.1:
+  vibe-rules@0.3.40:
     dependencies:
       chalk: 4.1.2
       commander: 11.1.0
       fs-extra: 11.3.0
       import-meta-resolve: 4.1.0
-      zod: 3.25.57
+      zod: 3.25.61
 
   vite-node@3.2.2(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.42.0):
     dependencies:
@@ -6270,4 +6270,4 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zod@3.25.57: {}
+  zod@3.25.61: {}
