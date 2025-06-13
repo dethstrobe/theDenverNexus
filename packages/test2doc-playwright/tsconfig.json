@@ -1,46 +1,47 @@
 {
   "compilerOptions": {
     /* Project Options */
-    "target": "es2022",                /* Specify ECMAScript target version for emitted JavaScript. */
-    "lib": ["es2020"],                 /* Specify a list of library files to be included in the compilation. */
-    "rootDir": "./src",                /* Specify the root directory of input files. */
-    "sourceMap": true,                 /* Generates corresponding .map file. */
+    "target": "es2022" /* Specify ECMAScript target version for emitted JavaScript. */,
+    "lib": ["esnext"] /* Specify a list of library files to be included in the compilation. */,
+    "types": ["node"],
+    "rootDir": "./src" /* Specify the root directory of input files. */,
+    "sourceMap": true /* Generates corresponding .map file. */,
 
     /* Strictness & Type Checking Options */
-    "strict": true,                    /* Enable all strict type-checking options. Highly recommended. */
-    "noImplicitAny": true,             /* Raise error on expressions and declarations with an implied 'any' type. */
-    "strictNullChecks": true,          /* Enable strict null checks. */
-    "strictFunctionTypes": true,       /* Enable strict checking of function types. */
-    "strictBindCallApply": true,       /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
-    "strictPropertyInitialization": true, /* Ensure non-null class properties are initialized. */
-    "noImplicitThis": true,            /* Raise error on 'this' expressions with an implied 'any' type. */
-    "useUnknownInCatchVariables": true, /* Type catch clause variables as 'unknown' instead of 'any'. */
-    "alwaysStrict": true,              /* Parse in strict mode and emit "use strict" for each source file. */
-    "noUnusedLocals": true,            /* Report errors on unused locals. */
-    "noUnusedParameters": true,        /* Report errors on unused parameters. */
-    "exactOptionalPropertyTypes": true, /* Report errors for extra properties in object literals. */
-    "noImplicitReturns": true,         /* Report error when not all code paths in function return a value. */
-    "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-    "noUncheckedIndexedAccess": true,  /* Include 'undefined' in the type of indexed access. */
-    "noPropertyAccessFromIndexSignature": true, /* Disallow dot-accessing properties with string index signatures. */
-    "assumeChangesOnlyAffectDirectDependencies": false, /* More accurate incremental builds. */
+    "strict": true /* Enable all strict type-checking options. Highly recommended. */,
+    "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
+    "strictNullChecks": true /* Enable strict null checks. */,
+    "strictFunctionTypes": true /* Enable strict checking of function types. */,
+    "strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
+    "strictPropertyInitialization": true /* Ensure non-null class properties are initialized. */,
+    "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
+    "useUnknownInCatchVariables": true /* Type catch clause variables as 'unknown' instead of 'any'. */,
+    "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
+    "exactOptionalPropertyTypes": true /* Report errors for extra properties in object literals. */,
+    "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "noUncheckedIndexedAccess": true /* Include 'undefined' in the type of indexed access. */,
+    "noPropertyAccessFromIndexSignature": true /* Disallow dot-accessing properties with string index signatures. */,
+    "assumeChangesOnlyAffectDirectDependencies": false /* More accurate incremental builds. */,
 
     /* Module Resolution Options */
-    "moduleResolution": "node",        /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    "esModuleInterop": true,           /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
-    "allowSyntheticDefaultImports": true, /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
-    "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+    "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
+    "allowSyntheticDefaultImports": true /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
 
     /* Other Options */
-    "skipLibCheck": true,              /* Skip type checking all .d.ts files. Improves compilation speed. */
-    "pretty": true,                    /* Enable color and context in error messages. */
-    "newLine": "lf"                    /* Use LF for line endings. */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. Improves compilation speed. */,
+    "pretty": true /* Enable color and context in error messages. */,
+    "newLine": "lf" /* Use LF for line endings. */,
+    "module": "nodenext", // Emit ES Modules (for Node.js's dual module system)
+    "moduleResolution": "nodenext",
+    "outDir": "./dist", // Output to an 'esm' subdirectory
+    "declaration": true, // Still generate declarations
+    "declarationMap": true, // Still generate declaration maps
+    "composite": true // Keep composite if you use project references
   },
-  "include": [
-    "src/**/*"                         /* Include all TypeScript files in the 'src' directory. */
-  ],
-  "exclude": [
-    "node_modules",                    /* Exclude the 'node_modules' directory. */
-    "dist"                             /* Exclude the compiled 'dist' directory. */
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,4 +1,15 @@
 packages:
-  - 'packages/*'
-  - 'apps/*'
+  - packages/*
+  - apps/*
+ignoredBuiltDependencies:
+  - '@biomejs/biome'
+  - esbuild
+  - msw
+  - sharp
+  - workerd
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@tailwindcss/oxide'
+  - prisma
 shared-workspace-lockfile: true

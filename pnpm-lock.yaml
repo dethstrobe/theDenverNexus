@@ -63,6 +63,9 @@ importers:
       '@playwright/test':
         specifier: ^1.52.0
         version: 1.52.0
+      '@test2doc/playwright':
+        specifier: workspace:*
+        version: link:../../packages/test2doc-playwright
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.6.3
@@ -117,6 +120,10 @@ importers:
       '@playwright/test':
         specifier: ^1.52.0
         version: 1.52.0
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.30
+        version: 22.15.30
 
 packages:
 
