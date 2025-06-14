@@ -15,6 +15,6 @@
     "@biomejs/biome": "^1.9.4",
     "@playwright/test": "^1.52.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.2"
+    "vitest": "^3.2.3"
   }
 }
