@@ -62,11 +62,13 @@ body {
 .intro {
   perspective: 400px;
   overflow: hidden;
+  max-width: 3000px;
+  margin: auto;
 }
 
 .crawl {
-  font-size: 7vw;
-  padding-block-start: 100vh;
+  font-size: min(7vw, 10rem);
+  padding-block-start: min(100vh, 500px);
   padding-block-end: 100vh;
   position: relative;
   transform-origin: center bottom;
