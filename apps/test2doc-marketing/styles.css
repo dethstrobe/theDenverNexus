@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Oswald:wght@400..500&display=swap');
+
+body {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}
+
+.opener {
+  color: cyan;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  padding: 5vw;
+  box-sizing: border-box;
+}
+
+.opener-text {
+  font-size: 5vw;
+  font-weight: 400;
+}
+
+.logo-container {
+  perspective: 400px;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  color: gold;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  text-align: center;
+  position: relative;
+  font-size: 55vw;
+  span {
+    display: block;
+  }
+  .two {
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.intro {
+  perspective: 400px;
+}
+
+.crawl {
+  font-size: 7vw;
+  padding-block-end: 100vh;
+  position: relative;
+  transform-origin: 50% 100%;
+  transform: translateZ(0) translateY(1vh) rotateX(25deg);
+  color: #feda4a;
+
+  h2, h3 {
+    text-align: center;
+  }
+
+  p {
+    text-align: justify;
+  }
+}
+
+.subscribe {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
