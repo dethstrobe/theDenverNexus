@@ -7,34 +7,71 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
+import { writeFileSync } from "node:fs"
 
-class MyReporter implements Reporter {
+interface DocSection {
+  title: string
+  steps: Array<{
+    title: string
+  }>
+}
+
+interface Test2DocReporterOptions {
+  outputDir?: string
+}
+
+/**
+ * Test2DocReporter is a Playwright reporter that generates documentation
+ * for tests in markdown and consumed by Docusaurus.
+ *
+ * @example
+ * ```ts
+ * import { test } from '@playwright/test';
+ * import Test2DocReporter from 'test2doc-playwright';
+ *
+ * test.use({ reporter: new Test2DocReporter() });
+ * ```
+ */
+class Test2DocReporter implements Reporter {
+  private docs: Map<string, DocSection> = new Map()
+  private outputDir: string
+
+  constructor(options: Test2DocReporterOptions = { outputDir: "./docs" }) {
+    this.outputDir = options.outputDir || "./docs"
+  }
+
   onBegin(config: FullConfig, suite: Suite) {
-    console.log(
-      `Starting the run with ${suite.allTests().length} tests`,
-      config.version,
-    )
+    this.docs.clear()
   }
 
   onTestBegin(test: TestCase, result: TestResult) {
     console.log(`Starting test ${test.title}`, result.status)
-  }
-
-  onStepBegin(test: TestCase, result: TestResult, step: TestStep): void {
-    console.log(`Starting step ${step.title} in test ${test.title}`)
+    this.docs.set(test.id, {
+      title: test.title,
+      steps: [],
+    })
   }
 
   onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {
-    console.log(`Finished step ${step.title} in test ${test.title}`)
-  }
-
-  onTestEnd(test: TestCase, result: TestResult) {
-    console.log(`Finished test ${test.title}: ${result.status}`)
+    const docSection = this.docs.get(test.id)
+    if (docSection) {
+      docSection.steps.push({ title: step.title })
+    } else {
+      console.warn(`No documentation section found for test ${test.id}`)
+    }
   }
 
   onEnd(result: FullResult) {
-    console.log(`Finished the run: ${result.status}`)
+    this.docs.forEach((section, id) => {
+      const docContent = `# ${section.title}\n\n${section.steps
+        .map((step) => `- ${step.title}`)
+        .join("\n")}\n`
+
+      const filePath = `${this.outputDir}/${id}.md`
+      writeFileSync(filePath, docContent)
+      console.log(`Documentation for test ${id} written to ${filePath}`)
+    })
   }
 }
 
-export default MyReporter
+export default Test2DocReporter
