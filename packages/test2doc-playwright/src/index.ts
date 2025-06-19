@@ -57,13 +57,20 @@ class Test2DocReporter implements Reporter {
     }
   }
 
+  private convertToKebabCase(title: string): string {
+    return title
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+  }
+
   onEnd() {
     for (const [_, section] of this.docs) {
       const docContent = `# ${section.title}\n\n${section.steps
         .map((step) => `- ${step.title}`)
         .join("\n")}\n`
 
-      const filePath = `${this.outputDir}/${section.title}.md`
+      const filePath = `${this.outputDir}/${this.convertToKebabCase(section.title)}.md`
       writeFileSync(filePath, docContent)
       console.log(
         `Documentation for test "${section.title}" written to ${filePath}`,
