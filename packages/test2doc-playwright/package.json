@@ -2,23 +2,32 @@
   "name": "@test2doc/playwright",
   "version": "0.0.1",
   "description": "A reporter that generates docs based off playwright test files",
-  "keywords": ["docs", "test", "playwright", "automation"],
+  "keywords": [
+    "docs",
+    "test",
+    "playwright",
+    "automation"
+  ],
   "license": "GPL-3.0-or-later",
   "author": "@dethstrobe",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rm -rf dist",
     "build": "pnpm run clean && tsc --project tsconfig.json",
+    "build:watch": "tsc --project tsconfig.json --watch",
     "test": "vitest",
     "lint": "biome lint .",
     "format": "biome format --write ."
   },
   "dependencies": {
-    "@playwright/test": "^1.52.0"
+    "@playwright/test": "^1.52.0",
+    "vitest": "^3.2.4"
   },
   "devDependencies": {
     "@types/node": "^22.15.30"

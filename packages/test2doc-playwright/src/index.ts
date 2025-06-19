@@ -1,8 +1,5 @@
 import type {
-  FullConfig,
-  FullResult,
   Reporter,
-  Suite,
   TestCase,
   TestResult,
   TestStep,
@@ -40,37 +37,38 @@ class Test2DocReporter implements Reporter {
     this.outputDir = options.outputDir || "./docs"
   }
 
-  onBegin(config: FullConfig, suite: Suite) {
+  onBegin() {
     this.docs.clear()
   }
 
-  onTestBegin(test: TestCase, result: TestResult) {
-    console.log(`Starting test ${test.title}`, result.status)
+  onTestBegin(test: TestCase) {
     this.docs.set(test.id, {
       title: test.title,
       steps: [],
     })
   }
 
-  onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {
+  onStepBegin(test: TestCase, _result: TestResult, step: TestStep): void {
     const docSection = this.docs.get(test.id)
-    if (docSection) {
+    if (docSection && step.category === "test.step") {
       docSection.steps.push({ title: step.title })
     } else {
       console.warn(`No documentation section found for test ${test.id}`)
     }
   }
 
-  onEnd(result: FullResult) {
-    this.docs.forEach((section, id) => {
+  onEnd() {
+    for (const [_, section] of this.docs) {
       const docContent = `# ${section.title}\n\n${section.steps
         .map((step) => `- ${step.title}`)
         .join("\n")}\n`
 
-      const filePath = `${this.outputDir}/${id}.md`
+      const filePath = `${this.outputDir}/${section.title}.md`
       writeFileSync(filePath, docContent)
-      console.log(`Documentation for test ${id} written to ${filePath}`)
-    })
+      console.log(
+        `Documentation for test "${section.title}" written to ${filePath}`,
+      )
+    }
   }
 }
 
