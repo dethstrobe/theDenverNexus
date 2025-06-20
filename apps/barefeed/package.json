@@ -1,7 +1,7 @@
 {
-  "name": "@redwoodjs/starter-standard",
+  "name": "barefeed",
   "version": "1.0.0",
-  "description": "Build fast, server-driven webapps on Cloudflare with SSR, RSC, and realtime. ",
+  "description": "Open source data aggregation.",
   "main": "index.js",
   "type": "module",
   "keywords": [],

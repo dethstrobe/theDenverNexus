@@ -12,8 +12,8 @@
   "packageManager": "pnpm@10.11.1",
   "type": "module",
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@playwright/test": "^1.52.0",
+    "@biomejs/biome": "^2.0.2",
+    "@playwright/test": "^1.53.1",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   }
