@@ -1,9 +1,11 @@
 import { test, expect } from "@playwright/test"
 
-test("Ping Pong smoke test", async ({ page }) => {
-  await page.goto("http://localhost:5173/ping")
+test.describe("Ping Pong route", () => {
+  test("Ping Pong smoke test", async ({ page }) => {
+    await page.goto("http://localhost:5173/ping")
 
-  await expect(page.getByRole("heading")).toContainText("Pong!")
+    await expect(page.getByRole("heading")).toContainText("Pong!")
+  })
 })
 
 test.describe("RSS Feed Tests", () => {

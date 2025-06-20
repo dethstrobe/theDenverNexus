@@ -42,7 +42,7 @@ class Test2DocReporter implements Reporter {
     this.docs = { title: suite.title, children: [] }
     this.docMap.clear()
     this.docMap.set(suite.title, this.docs)
-    this.docs = this.buildDocTree(suite)
+    this.docs = this.buildDocTree(suite.suites[0]?.suites[0] ?? suite)
   }
 
   private buildDocTree(suite: Suite) {
@@ -119,6 +119,7 @@ class Test2DocReporter implements Reporter {
           for (const step of test.steps) {
             markdown += `- ${step.title}\n`
           }
+          markdown += "\n"
         }
       }
     }

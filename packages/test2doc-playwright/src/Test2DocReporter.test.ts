@@ -21,93 +21,9 @@ describe("Test2DocReporter", () => {
     }))
     const reporter = setup()
 
-    const mockTest: TestCase = {
-      title: "login test",
-      location: { file: "", line: 0, column: 0 },
-      ok: (): boolean => {
-        throw new Error("Function not implemented.")
-      },
-      outcome: (): "skipped" | "expected" | "unexpected" | "flaky" => {
-        throw new Error("Function not implemented.")
-      },
-      titlePath: (): Array<string> => [
-        "Root Suite",
-        "Parent Describe",
-        "Child Describe",
-        "login test",
-      ],
-      annotations: [],
-      expectedStatus: "passed",
-      id: "",
-      parent: {
-        allTests: (): Array<TestCase> => {
-          throw new Error("Function not implemented.")
-        },
-        entries: (): Array<TestCase | Suite> => {
-          throw new Error("Function not implemented.")
-        },
-        project: (): FullProject | undefined => {
-          throw new Error("Function not implemented.")
-        },
-        titlePath: (): Array<string> => {
-          throw new Error("Function not implemented.")
-        },
-        suites: [],
-        tests: [],
-        title: "",
-        type: "root",
-      },
-      repeatEachIndex: 0,
-      results: [],
-      retries: 0,
-      tags: [],
-      timeout: 0,
-      type: "test",
-    }
-
-    const mockSuite: Suite = {
-      title: "Root Suite",
-      suites: [
-        {
-          title: "Parent Describe",
-          suites: [
-            {
-              title: "Child Describe",
-              suites: [],
-              tests: [mockTest],
-              location: { file: "", line: 0, column: 0 },
-              allTests: (): Array<TestCase> => {
-                throw new Error("Function not implemented.")
-              },
-              entries: (): Array<TestCase | Suite> => {
-                throw new Error("Function not implemented.")
-              },
-              project: (): FullProject | undefined => {
-                throw new Error("Function not implemented.")
-              },
-              titlePath: (): Array<string> => {
-                throw new Error("Function not implemented.")
-              },
-              type: "root",
-            },
-          ],
-          tests: [],
-          location: { file: "", line: 0, column: 0 },
-          allTests: (): Array<TestCase> => {
-            throw new Error("Function not implemented.")
-          },
-          entries: (): Array<TestCase | Suite> => {
-            throw new Error("Function not implemented.")
-          },
-          project: (): FullProject | undefined => {
-            throw new Error("Function not implemented.")
-          },
-          titlePath: (): Array<string> => {
-            throw new Error("Function not implemented.")
-          },
-          type: "root",
-        },
-      ],
+    const baseSuite: Suite = {
+      title: "",
+      suites: [],
       tests: [],
       location: { file: "", line: 0, column: 0 },
       allTests: (): Array<TestCase> => {
@@ -125,7 +41,73 @@ describe("Test2DocReporter", () => {
       type: "root",
     }
 
-    const mockStep: TestStep = {
+    const baseTestCase: TestCase = {
+      title: "base",
+      location: { file: "", line: 0, column: 0 },
+      ok: (): boolean => {
+        throw new Error("Function not implemented.")
+      },
+      outcome: (): "skipped" | "expected" | "unexpected" | "flaky" => {
+        throw new Error("Function not implemented.")
+      },
+      titlePath: (): Array<string> => [
+        "Root Suite",
+        "Parent Describe",
+        "Child Describe",
+        "login test",
+      ],
+      annotations: [],
+      expectedStatus: "passed",
+      id: "",
+      parent: baseSuite, // this is just mocked out
+      repeatEachIndex: 0,
+      results: [],
+      retries: 0,
+      tags: [],
+      timeout: 0,
+      type: "test",
+    }
+
+    const mockTestSuccess: TestCase = {
+      ...baseTestCase,
+      title: "should rediect to dashboard on successful login",
+    }
+
+    const mockTestFail: TestCase = {
+      ...baseTestCase,
+      title: "should display error message on failed login",
+    }
+
+    const mockSuite: Suite = {
+      ...baseSuite,
+      title: "", // Root Suite
+      suites: [
+        {
+          ...baseSuite,
+          title: "chromium", // or firefox, webkit, etc.
+          suites: [
+            {
+              ...baseSuite,
+              title: "Login Page", // First Describe Block in the test file
+              suites: [
+                {
+                  ...baseSuite,
+                  title: "Successful Login",
+                  tests: [mockTestSuccess],
+                },
+                {
+                  ...baseSuite,
+                  title: "Failed Login",
+                  tests: [mockTestFail],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+
+    const baseTestStep: TestStep = {
       title: "Given user is on login page",
       category: "test.step",
       titlePath: (): Array<string> => {
@@ -138,22 +120,33 @@ describe("Test2DocReporter", () => {
       steps: [],
     }
 
+    const mockStep: TestStep = {
+      ...baseTestStep,
+      title: "Given user is on login page",
+    }
+
     reporter.onBegin({} as FullConfig, mockSuite)
-    reporter.onTestBegin(mockTest)
-    reporter.onStepBegin(mockTest, {} as TestResult, mockStep)
+    reporter.onTestBegin(mockTestSuccess)
+    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+    reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/root-suite.md",
-      `# Root Suite
+      "test-output/login-page.md",
+      `# Login Page
 
-## Parent Describe
+## Successful Login
 
-### Child Describe
-
-#### login test
+### should rediect to dashboard on successful login
 
 - Given user is on login page
+
+## Failed Login
+
+### should display error message on failed login
+
+- Given user is on login page
+
 `,
     )
   })
