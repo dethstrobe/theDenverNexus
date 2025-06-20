@@ -42,7 +42,9 @@ class Test2DocReporter implements Reporter {
     this.docs = { title: suite.title, children: [] }
     this.docMap.clear()
     this.docMap.set(suite.title, this.docs)
-    this.docs = this.buildDocTree(suite.suites[0]?.suites[0] ?? suite)
+    this.docs = this.buildDocTree(
+      suite.suites[0]?.suites[0]?.suites[0] ?? suite,
+    )
   }
 
   private buildDocTree(suite: Suite) {

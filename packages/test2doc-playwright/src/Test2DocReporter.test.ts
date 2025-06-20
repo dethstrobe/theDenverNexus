@@ -88,17 +88,23 @@ describe("Test2DocReporter", () => {
           suites: [
             {
               ...baseSuite,
-              title: "Login Page", // First Describe Block in the test file
+              title: "login.test.ts", // Test file name
               suites: [
                 {
                   ...baseSuite,
-                  title: "Successful Login",
-                  tests: [mockTestSuccess],
-                },
-                {
-                  ...baseSuite,
-                  title: "Failed Login",
-                  tests: [mockTestFail],
+                  title: "Login Page", // First Describe Block in the test file
+                  suites: [
+                    {
+                      ...baseSuite,
+                      title: "Successful Login",
+                      tests: [mockTestSuccess],
+                    },
+                    {
+                      ...baseSuite,
+                      title: "Failed Login",
+                      tests: [mockTestFail],
+                    },
+                  ],
                 },
               ],
             },
