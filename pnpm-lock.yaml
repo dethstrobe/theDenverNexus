@@ -152,7 +152,7 @@ importers:
         specifier: ^4.19.1
         version: 4.19.1(@cloudflare/workers-types@4.20250619.0)
 
-  packages/test2doc-playwright:
+  packages/test2doc:
     dependencies:
       '@playwright/test':
         specifier: ^1.52.0
@@ -160,10 +160,19 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.3)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(terser@5.42.0)
+
+  packages/test2doc-playwright:
+    dependencies:
+      '@playwright/test':
+        specifier: ^1.52.0
+        version: 1.52.0
     devDependencies:
       '@types/node':
         specifier: ^24.0.3
         version: 24.0.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.3)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(terser@5.42.0)
 
 packages:
 
