@@ -7,6 +7,7 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
+export * from "./DocHeader.js"
 
 interface DocNode {
   title: string
