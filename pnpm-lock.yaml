@@ -140,8 +140,8 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
       vibe-rules:
-        specifier: ^0.3.40
-        version: 0.3.40
+        specifier: ^0.3.41
+        version: 0.3.41
       vite:
         specifier: ^6.2.6
         version: 6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.42.0)
@@ -836,6 +836,7 @@ packages:
   '@biomejs/biome@2.0.2':
     resolution: {integrity: sha512-IEeXplI1jwI1NJLTW4Oj0ieyVaDtyAOnpZu567qd6JCBc64HmTSlmY9j/7lWK2cmfLvGv6fS6JNClT6VobzjmQ==}
     engines: {node: '>=14.21.3'}
+    deprecated: This version of Biome has a broken manifest and we don't recommend to use it. Please update to v2.0.4 or later.
     hasBin: true
 
   '@biomejs/cli-darwin-arm64@1.9.4':
@@ -6951,8 +6952,8 @@ packages:
     resolution: {integrity: sha512-CVGXHyKRvDeC3S6SywxTcNGuckmSjwB+2q/v8eDSmwDBTlz0ziRqm49eI5ELLy4djKq6DdCSYvV4EGcwzsHRog==}
     hasBin: true
 
-  vibe-rules@0.3.40:
-    resolution: {integrity: sha512-uCzed+a60pfdzrMX2tYhQx5wAcbDaSidTS42l7uUs10helt0YoPydQ+APFXzokXF5fK73qy6I8wLqpJu7Syj4A==}
+  vibe-rules@0.3.41:
+    resolution: {integrity: sha512-qEWxneHWqP3xnZ80HItpCLwCAcp5EpVipC4YnKCDxLL88yNrvHge0PQGx5H0ck9gG4hj4obFQsFkhEi+TO3WZA==}
     hasBin: true
 
   vite-node@3.2.4:
@@ -7274,9 +7275,6 @@ packages:
 
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-
-  zod@3.25.61:
-    resolution: {integrity: sha512-fzfJgUw78LTNnHujj9re1Ov/JJQkRZZGDMcYqSx7Hp4rPOkKywaFHq0S6GoHeXs0wGNE/sIOutkXgnwzrVOGCQ==}
 
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
@@ -15454,13 +15452,13 @@ snapshots:
       import-meta-resolve: 4.1.0
       zod: 3.25.67
 
-  vibe-rules@0.3.40:
+  vibe-rules@0.3.41:
     dependencies:
       chalk: 4.1.2
       commander: 11.1.0
       fs-extra: 11.3.0
       import-meta-resolve: 4.1.0
-      zod: 3.25.61
+      zod: 3.25.67
 
   vite-node@3.2.4(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.42.0):
     dependencies:
@@ -15841,8 +15839,6 @@ snapshots:
   zod@3.22.3: {}
 
   zod@3.23.8: {}
-
-  zod@3.25.61: {}
 
   zod@3.25.67: {}
 
