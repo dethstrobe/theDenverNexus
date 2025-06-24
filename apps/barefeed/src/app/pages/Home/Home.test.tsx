@@ -66,10 +66,7 @@ describe("Home", () => {
       expect(rssFeedUrlInput).not.toBeDisabled()
     })
 
-    await user.type(
-      rssFeedUrlInput,
-      "https://example.com/rss",
-    )
+    await user.type(rssFeedUrlInput, "https://example.com/rss")
     await user.click(screen.getByRole("button", { name: "Add to Feed" }))
 
     articles = await screen.findAllByRole("article")

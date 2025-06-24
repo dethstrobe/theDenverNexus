@@ -1,5 +1,5 @@
 body {
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   font-weight: 500;
   margin: 0;
   padding: 0;
@@ -42,7 +42,7 @@ body {
 
 .logo {
   color: gold;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   font-weight: 900;
   text-align: center;
   position: relative;
@@ -76,7 +76,8 @@ body {
   color: #feda4a;
   overflow: hidden;
 
-  h2, h3 {
+  h2,
+  h3 {
     text-align: center;
   }
 
