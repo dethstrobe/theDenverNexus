@@ -79,7 +79,7 @@ describe("Test2DocReporter", () => {
 
     const mockTestSuccess: TestCase = {
       ...baseTestCase,
-      title: "should rediect to dashboard on successful login",
+      title: "should redirect to dashboard on successful login",
     }
 
     const mockTestFail: TestCase = {
@@ -104,7 +104,14 @@ describe("Test2DocReporter", () => {
               suites: [
                 {
                   ...baseSuite,
-                  title: "Login Page", // First Describe Block in the test file
+                  title: withDocMeta("Login Page", {
+                    title: "Login Page Documentation",
+                    keywords: ["login", "password", "username"],
+                    description:
+                      "The different login scenarios for the login page.",
+                    sidebar_position: 1,
+                    parse_number_prefixes: true,
+                  }), // First Describe Block in the test file
                   type: "describe",
                   suites: [
                     {
@@ -152,11 +159,22 @@ describe("Test2DocReporter", () => {
 
     expect(writeFileSync).toHaveBeenCalledWith(
       "test-output/login-page.md",
-      `# Login Page
+      `---
+title: Login Page Documentation
+keywords:
+  - login
+  - password
+  - username
+description: The different login scenarios for the login page.
+sidebar_position: 1
+parse_number_prefixes: true
+---
+
+# Login Page
 
 ## Successful Login
 
-### should rediect to dashboard on successful login
+### should redirect to dashboard on successful login
 
 - Given user is on login page
 

@@ -1,5 +1,5 @@
-interface DocusaurusHeaderConfig {
-  title: string
+export interface DocusaurusHeaderConfig {
+  title?: string
   description?: string
   slug?: string
   sidebar_label?: string
@@ -25,6 +25,7 @@ export const activateTest2Doc = () => {
  * withDocMeta - Adds Docusaurus Page Meta Data to Playwright Describe Title when test2doc is active.
  * @param title - The title of the describe block.
  * @param config - The Docusaurus Page Metadata configuration object.
+ * For a list of fields for the config see https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter
  * @returns The title with appended JSON string of config if test2doc is active, otherwise just the title.
  */
 export const withDocMeta = (title: string, config: DocusaurusHeaderConfig) =>

@@ -7,7 +7,7 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
-import { activateTest2Doc } from "./DocHeader.js"
+import { activateTest2Doc, DocusaurusHeaderConfig } from "./DocHeader.js"
 
 interface DocNode {
   title: string
@@ -105,9 +105,54 @@ class Test2DocReporter implements Reporter {
   }
 
   onEnd() {
-    const markdown = this.generateMarkdown(this.docs)
-    const filePath = `${this.outputDir}/${this.convertToKebabCase(this.docs.title)}.md`
+    const [title, metadata] = this.extractDocMetadata(this.docs.title)
+    const markdownHeader = this.generateHeader(metadata)
+    const markdown =
+      markdownHeader + this.generateMarkdown({ ...this.docs, title }, 1)
+    const filePath = `${this.outputDir}/${this.convertToKebabCase(title)}.md`
     writeFileSync(filePath, markdown)
+  }
+
+  private extractDocMetadata(
+    docTitle: string,
+  ): [string, DocusaurusHeaderConfig] {
+    const [_ignore, title, metadataJson] =
+      docTitle.match(/^(.*?)\s*({.*})$/) ?? []
+    console.log("Generating metadata for doc:", metadataJson)
+    return [title ?? docTitle, metadataJson ? JSON.parse(metadataJson) : {}]
+  }
+
+  private generateHeader(metadata: DocusaurusHeaderConfig): string {
+    let header = "---\n"
+    for (const [key, value] of Object.entries(metadata)) {
+      switch (typeof value) {
+        case "string":
+        case "number":
+        case "boolean":
+          header += `${key}: ${value}\n`
+          break
+        case "object":
+          if (Array.isArray(value)) {
+            header += `${key}:\n`
+            for (const item of value) {
+              header += `  - ${item}\n`
+            }
+          } else {
+            header += `${key}:\n`
+            for (const [subKey, subValue] of Object.entries(value)) {
+              header += `  ${subKey}: ${subValue}\n`
+            }
+          }
+          break
+        default:
+          console.warn(
+            `Unsupported metadata type for key "${key}": ${typeof value}`,
+          )
+          break
+      }
+    }
+    header += "---\n\n"
+    return header
   }
 
   private generateTitle(title: string, depth: number): string {
@@ -118,7 +163,7 @@ class Test2DocReporter implements Reporter {
     return `${titleMarkdown} ${title}\n\n`
   }
 
-  private generateMarkdown(docNode: DocNode, depth = 1): string {
+  private generateMarkdown(docNode: DocNode, depth: number): string {
     let markdown = this.generateTitle(docNode.title, depth)
 
     if (docNode.tests) {
