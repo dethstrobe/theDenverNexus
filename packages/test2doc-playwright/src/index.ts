@@ -7,7 +7,7 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
-import { activateTest2Doc, DocusaurusHeaderConfig } from "./DocHeader.js"
+import { activateTest2Doc, type DocusaurusHeaderConfig } from "./DocHeader.js"
 
 interface DocNode {
   title: string
@@ -33,7 +33,7 @@ activateTest2Doc()
  * for tests in markdown and consumed by Docusaurus.
  */
 class Test2DocReporter implements Reporter {
-  private docs: DocNode = { title: "", children: [] }
+  private docs: DocNode[] = []
   private docMap: Map<string, DocTest | DocNode> = new Map()
   private outputDir: string
 
@@ -46,12 +46,13 @@ class Test2DocReporter implements Reporter {
   }
 
   onBegin(_config: FullConfig, suite: Suite) {
-    this.docs = { title: suite.title, children: [] }
+    this.docs = []
     this.docMap.clear()
-    this.docMap.set(suite.title, this.docs)
-    this.docs = this.buildDocTree(
-      suite.suites[0]?.suites[0]?.suites[0] ?? suite,
-    )
+    // this.docMap.set(suite.title, this.docs)
+    this.docs =
+      suite.suites[0]?.suites.flatMap(({ suites }) =>
+        suites.map((s) => this.buildDocTree(s)),
+      ) || []
   }
 
   private buildDocTree(suite: Suite) {
@@ -105,12 +106,15 @@ class Test2DocReporter implements Reporter {
   }
 
   onEnd() {
-    const [title, metadata] = this.extractDocMetadata(this.docs.title)
-    const markdownHeader = this.generateHeader(metadata)
-    const markdown =
-      markdownHeader + this.generateMarkdown({ ...this.docs, title }, 1)
-    const filePath = `${this.outputDir}/${this.convertToKebabCase(title)}.md`
-    writeFileSync(filePath, markdown)
+    this.docs.forEach((doc) => {
+      const [title, metadata] = this.extractDocMetadata(doc.title)
+      console.log(`Generating documentation for: ${title}`, metadata)
+      const markdownHeader = this.generateHeader(metadata)
+      const markdown =
+        markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
+      const filePath = `${this.outputDir}/${this.convertToKebabCase(title)}.md`
+      writeFileSync(filePath, markdown)
+    })
   }
 
   private extractDocMetadata(
