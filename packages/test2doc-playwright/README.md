@@ -68,3 +68,14 @@ export default defineConfig({
 ## How it works
 
 After this setup, every time you run your Playwright tests, the `@test2doc/playwright` reporter will automatically generate a new markdown file in your specified Docusaurus docs directory for each top-level describe block found in your Playwright test files.
+
+### Adding Docusaurus Page Metadata
+Docusaurus supports [markdown front matter](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter) to allow for more control of pages and to help position links in the sidebar.
+
+To add this metadata to the test2doc markdown files that are generated use the `withDocMeta` function in your top level describe block in your test.
+
+```ts
+import {withDocMeta} from "@test2doc/playwright/DocHeader";
+
+describe(withDocMeta("Title of Page", {title: "Title in Sidebar", sidebar_position: 1}))
+```
