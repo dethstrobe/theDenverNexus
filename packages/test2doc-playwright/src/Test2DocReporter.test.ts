@@ -9,11 +9,20 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
+import { withDocMeta } from "./DocHeader.js"
 
 describe("Test2DocReporter", () => {
   const setup = () => {
     return new Test2DocReporter({ outputDir: "test-output" })
   }
+
+  describe("withDocMeta", () => {
+    it("loading the reporter file should enable the withDocMeta JSON stringify for Docusaurus Page Header Data", () => {
+      expect(withDocMeta("test title", { title: "Test" })).toBe(
+        'test title{"title":"Test"}',
+      )
+    })
+  })
 
   it("should capture test steps", () => {
     vi.mock("node:fs", () => ({
@@ -81,18 +90,22 @@ describe("Test2DocReporter", () => {
     const mockSuite: Suite = {
       ...baseSuite,
       title: "", // Root Suite
+      type: "root",
       suites: [
         {
           ...baseSuite,
           title: "chromium", // or firefox, webkit, etc.
+          type: "project",
           suites: [
             {
               ...baseSuite,
               title: "login.test.ts", // Test file name
+              type: "file",
               suites: [
                 {
                   ...baseSuite,
                   title: "Login Page", // First Describe Block in the test file
+                  type: "describe",
                   suites: [
                     {
                       ...baseSuite,

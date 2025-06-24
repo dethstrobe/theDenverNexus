@@ -7,7 +7,7 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
-export * from "./DocHeader.js"
+import { activateTest2Doc } from "./DocHeader.js"
 
 interface DocNode {
   title: string
@@ -26,6 +26,8 @@ interface Test2DocReporterOptions {
   outputDir?: string
 }
 
+activateTest2Doc()
+
 /**
  * Test2DocReporter is a Playwright reporter that generates documentation
  * for tests in markdown and consumed by Docusaurus.
@@ -35,7 +37,11 @@ class Test2DocReporter implements Reporter {
   private docMap: Map<string, DocTest | DocNode> = new Map()
   private outputDir: string
 
-  constructor(options: Test2DocReporterOptions = { outputDir: "./docs" }) {
+  constructor(
+    options: Test2DocReporterOptions = {
+      outputDir: "./docs",
+    },
+  ) {
     this.outputDir = options.outputDir || "./docs"
   }
 

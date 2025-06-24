@@ -1,18 +1,30 @@
-import { describe, expect, test } from "vitest"
-import { createDocusaurusPageAnnotation } from "./DocHeader.js"
+import { test, expect, describe, vi } from "vitest"
 
-describe("DocHeader", () => {
-  test("should generate documentation header", () => {
-    const config = {
-      title: "Test Title",
-      description: "This is a test description.",
-      tags: ["tag1", "tag2"],
-    }
-    const annotation = createDocusaurusPageAnnotation(config)
+describe("withDocMeta", () => {
+  test("returns title without config data if test2doc is not enabled", async () => {
+    const { withDocMeta } = await import("./DocHeader.js")
+    const title = withDocMeta("My Test Title", { title: "My Test Title" })
+    expect(title).toBe("My Test Title")
+  })
 
-    expect(annotation).toEqual({
-      type: "test2doc-docusaurus-header",
-      description: JSON.stringify(config),
+  test("returns title with config data if test2doc is enabled", async () => {
+    const { activateTest2Doc, withDocMeta } = await import("./DocHeader.js")
+    activateTest2Doc()
+    const title = withDocMeta("My Test Title", { title: "My Test Title" })
+    expect(title).toBe('My Test Title{"title":"My Test Title"}')
+  })
+
+  test("returns title with config data when --test2doc flag is provided on the command line", async () => {
+    vi.resetModules()
+    const originalArgv = [...process.argv]
+    process.argv.push("--test2doc")
+
+    const { withDocMeta } = await import("./DocHeader.js")
+    const title = withDocMeta("My Test Title", {
+      title: "My Test Title",
     })
+    expect(title).toBe('My Test Title{"title":"My Test Title"}')
+
+    process.argv = originalArgv
   })
 })

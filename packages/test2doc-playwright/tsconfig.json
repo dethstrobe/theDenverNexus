@@ -2,7 +2,9 @@
   "compilerOptions": {
     /* Project Options */
     "target": "es2022" /* Specify ECMAScript target version for emitted JavaScript. */,
-    "lib": ["esnext"] /* Specify a list of library files to be included in the compilation. */,
+    "lib": [
+      "esnext"
+    ] /* Specify a list of library files to be included in the compilation. */,
     "types": ["node"],
     "rootDir": "./src" /* Specify the root directory of input files. */,
     "sourceMap": true /* Generates corresponding .map file. */,
@@ -42,6 +44,6 @@
     "declarationMap": true, // Still generate declaration maps
     "composite": true // Keep composite if you use project references
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "bin"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

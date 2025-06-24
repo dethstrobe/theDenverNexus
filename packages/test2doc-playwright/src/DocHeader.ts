@@ -8,12 +8,24 @@ interface DocusaurusHeaderConfig {
   keywords?: string[]
   image?: string
   // Add any other custom Docusaurus fields you might use
-  [key: string]: any // Allows for additional, non-defined properties
+  [key: string]: string | number | boolean | string[] // Allows for additional, non-defined properties
 }
 
-export const createDocusaurusPageAnnotation = (
-  config: DocusaurusHeaderConfig,
-) => ({
-  type: "test2doc-docusaurus-header",
-  description: JSON.stringify(config),
-})
+// Assume false by default
+let test2docActive = process.argv.includes("--test2doc")
+
+/**
+ * activateTest2Doc - Activates withDocMeta to add Docusaurus Page Meta Data to Describe Title.
+ */
+export const activateTest2Doc = () => {
+  test2docActive = true
+}
+
+/**
+ * withDocMeta - Adds Docusaurus Page Meta Data to Playwright Describe Title when test2doc is active.
+ * @param title - The title of the describe block.
+ * @param config - The Docusaurus Page Metadata configuration object.
+ * @returns The title with appended JSON string of config if test2doc is active, otherwise just the title.
+ */
+export const withDocMeta = (title: string, config: DocusaurusHeaderConfig) =>
+  test2docActive ? title + JSON.stringify(config) : title
