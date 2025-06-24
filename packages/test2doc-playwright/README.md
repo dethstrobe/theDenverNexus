@@ -77,5 +77,13 @@ To add this metadata to the test2doc markdown files that are generated use the `
 ```ts
 import {withDocMeta} from "@test2doc/playwright/DocHeader";
 
-describe(withDocMeta("Title of Page", {title: "Title in Sidebar", sidebar_position: 1}))
+describe(withDocMeta("Title of Page", {
+  title: "Title in Sidebar",
+  sidebar_position: 1,
+  ...
+  }), () => {
+    test("test block", () => {
+      ...
+    })
+  })
 ```
