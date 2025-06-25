@@ -8,7 +8,11 @@ import type {
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
 import { activateTest2Doc } from "./DocMeta.js"
-import type { DocusaurusHeaderConfig, metadataType } from "./DocMeta.js"
+import type {
+  DocusaurusCategoryMetadata,
+  DocusaurusHeaderConfig,
+  metadataType,
+} from "./DocMeta.js"
 
 interface DocNode {
   title: string
@@ -26,6 +30,16 @@ interface DocTest {
 interface Test2DocReporterOptions {
   outputDir?: string
 }
+
+type ExtractDocMetadataPage = [string, DocusaurusHeaderConfig, "page"]
+
+type ExtractDocMetadataCategory = [
+  string,
+  DocusaurusCategoryMetadata,
+  "category",
+]
+
+type ExtractedDocMetadata = ExtractDocMetadataPage | ExtractDocMetadataCategory
 
 activateTest2Doc()
 
@@ -108,19 +122,19 @@ class Test2DocReporter implements Reporter {
 
   onEnd() {
     this.docs.forEach((doc) => {
-      const [title, metadata] = this.extractDocMetadata(doc.title)
+      const [title, metadata, metaType] = this.extractDocMetadata(doc.title)
 
-      const markdownHeader = this.generateHeader(metadata)
-      const markdown =
-        markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
-      const filePath = `${this.outputDir}/${this.convertToKebabCase(title)}.md`
-      writeFileSync(filePath, markdown)
+      if (metaType === "page") {
+        const markdownHeader = this.generateHeader(metadata)
+        const markdown =
+          markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
+        const filePath = `${this.outputDir}/${this.convertToKebabCase(title)}.md`
+        writeFileSync(filePath, markdown)
+      }
     })
   }
 
-  private extractDocMetadata(
-    docTitle: string,
-  ): [string, DocusaurusHeaderConfig, metadataType] {
+  private extractDocMetadata(docTitle: string): ExtractedDocMetadata {
     const [_ignore, title, metaType, metadataJson] =
       docTitle.match(/^(.*?)\[test2doc_(.+)\]:(.+)$/) ?? []
 
