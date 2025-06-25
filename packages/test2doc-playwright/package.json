@@ -16,9 +16,9 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./DocHeader": {
-      "import": "./dist/DocHeader.js",
-      "types": "./dist/DocHeader.d.ts"
+    "./DocMeta": {
+      "import": "./dist/DocMeta.js",
+      "types": "./dist/DocMeta.d.ts"
     }
   },
   "main": "dist/index.js",
@@ -26,8 +26,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "dist/DocHeader.js",
-    "dist/DocHeader.d.ts"
+    "dist/DocMeta.js",
+    "dist/DocMeta.d.ts"
   ],
   "publishConfig": {
     "access": "public"

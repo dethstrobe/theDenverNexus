@@ -11,6 +11,8 @@ export interface DocusaurusHeaderConfig {
   [key: string]: string | number | boolean | string[] // Allows for additional, non-defined properties
 }
 
+export type metadataType = "page" | "category"
+
 // Assume false by default
 let test2docActive = process.argv.includes("--test2doc")
 
@@ -29,4 +31,50 @@ export const activateTest2Doc = () => {
  * @returns The title with appended JSON string of config if test2doc is active, otherwise just the title.
  */
 export const withDocMeta = (title: string, config: DocusaurusHeaderConfig) =>
-  test2docActive ? title + JSON.stringify(config) : title
+  test2docActive ? addConfigToTitle(title, config, "page") : title
+
+const addConfigToTitle = (
+  title: string,
+  config: DocusaurusHeaderConfig | DocusaurusCategoryMetadata,
+  metaType: metadataType,
+): string => `${title}[test2doc_${metaType}]:${JSON.stringify(config)}`
+
+interface DocusaurusCategoryLinkGeneratedIndex {
+  type: "generated-index"
+  title?: string
+  description?: string
+  slug?: string
+  keywords?: string[]
+  image?: string
+}
+
+interface DocusaurusCategoryLinkDoc {
+  type: "doc"
+  id: string
+}
+
+interface DocusaurusCategoryLinkExternal {
+  type: "link"
+  href: string
+}
+
+type DocusaurusCategoryLink =
+  | DocusaurusCategoryLinkGeneratedIndex
+  | DocusaurusCategoryLinkDoc
+  | DocusaurusCategoryLinkExternal
+
+export interface DocusaurusCategoryMetadata {
+  label?: string
+  position?: number
+  link?: DocusaurusCategoryLink
+  collapsible?: boolean
+  collapsed?: boolean
+  className?: string
+  customProps?: Record<string, unknown>
+}
+
+export const withDocCategory = (
+  title: string,
+  metadata: DocusaurusCategoryMetadata,
+): string =>
+  test2docActive ? addConfigToTitle(title, metadata, "category") : title

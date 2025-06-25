@@ -9,7 +9,7 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
-import { withDocMeta } from "./DocHeader.js"
+import { withDocMeta } from "./DocMeta.js"
 
 const baseSuite: Suite = {
   title: "",
@@ -178,7 +178,7 @@ describe("Test2DocReporter", () => {
   describe("withDocMeta", () => {
     it("loading the reporter file should enable the withDocMeta JSON stringify for Docusaurus Page Header Data", () => {
       expect(withDocMeta("test title", { title: "Test" })).toBe(
-        'test title{"title":"Test"}',
+        'test title[test2doc_page]:{"title":"Test"}',
       )
     })
   })

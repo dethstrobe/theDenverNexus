@@ -75,7 +75,7 @@ Docusaurus supports [markdown front matter](https://docusaurus.io/docs/api/plugi
 To add this metadata to the test2doc markdown files that are generated use the `withDocMeta` function in your top level describe block in your test.
 
 ```ts
-import {withDocMeta} from "@test2doc/playwright/DocHeader";
+import {withDocMeta} from "@test2doc/playwright/DocMeta";
 
 describe(withDocMeta("Title of Page", {
   title: "Title in Sidebar",

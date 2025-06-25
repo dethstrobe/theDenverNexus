@@ -7,7 +7,8 @@ import type {
   TestStep,
 } from "@playwright/test/reporter"
 import { writeFileSync } from "node:fs"
-import { activateTest2Doc, type DocusaurusHeaderConfig } from "./DocHeader.js"
+import { activateTest2Doc } from "./DocMeta.js"
+import type { DocusaurusHeaderConfig, metadataType } from "./DocMeta.js"
 
 interface DocNode {
   title: string
@@ -108,7 +109,7 @@ class Test2DocReporter implements Reporter {
   onEnd() {
     this.docs.forEach((doc) => {
       const [title, metadata] = this.extractDocMetadata(doc.title)
-      console.log(`Generating documentation for: ${title}`, metadata)
+
       const markdownHeader = this.generateHeader(metadata)
       const markdown =
         markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
@@ -119,11 +120,15 @@ class Test2DocReporter implements Reporter {
 
   private extractDocMetadata(
     docTitle: string,
-  ): [string, DocusaurusHeaderConfig] {
-    const [_ignore, title, metadataJson] =
-      docTitle.match(/^(.*?)\s*({.*})$/) ?? []
-    console.log("Generating metadata for doc:", metadataJson)
-    return [title ?? docTitle, metadataJson ? JSON.parse(metadataJson) : {}]
+  ): [string, DocusaurusHeaderConfig, metadataType] {
+    const [_ignore, title, metaType, metadataJson] =
+      docTitle.match(/^(.*?)\[test2doc_(.+)\]:(.+)$/) ?? []
+
+    return [
+      title ?? docTitle,
+      metadataJson ? JSON.parse(metadataJson) : {},
+      metaType as metadataType,
+    ]
   }
 
   private generateHeader(metadata: DocusaurusHeaderConfig): string {
