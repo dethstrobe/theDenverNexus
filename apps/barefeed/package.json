@@ -63,6 +63,6 @@
     "vibe-rules": "^0.3.41",
     "vite": "^7.0.0",
     "vitest": "^3.2.4",
-    "wrangler": "^4.21.1"
+    "wrangler": "^4.21.2"
   }
 }
