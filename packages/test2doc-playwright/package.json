@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
     "docs",
@@ -14,10 +14,12 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./DocMeta": {
       "import": "./dist/DocMeta.js",
+      "require": "./dist/DocMeta.js",
       "types": "./dist/DocMeta.d.ts"
     }
   },

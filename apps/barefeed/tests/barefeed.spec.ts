@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test"
+import { withDocMeta } from "@test2doc/playwright/DocMeta"
 
 test.describe(
-  "Ping Pong route",
+  withDocMeta("Ping Pong route", { sidebar_position: 2 }),
   {
     annotation: [
       {
@@ -19,7 +20,7 @@ test.describe(
   },
 )
 
-test.describe("RSS Feed Tests", () => {
+test.describe(withDocMeta("RSS Feed Tests", { sidebar_position: 1 }), () => {
   test("rss feed", async ({ page }) => {
     await test.step("Given a user is on the home page", async () => {
       await page.goto("http://localhost:5173/")
