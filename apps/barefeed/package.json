@@ -42,7 +42,7 @@
     "@tailwindcss/vite": "^4.1.10",
     "idb": "^8.0.3",
     "rwsdk": "0.1.2",
-    "tailwindcss": "^4.1.10"
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.5",
