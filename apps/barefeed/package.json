@@ -39,7 +39,7 @@
     "@prisma/client": "~6.10.1",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
-    "@tailwindcss/vite": "^4.1.10",
+    "@tailwindcss/vite": "^4.1.11",
     "idb": "^8.0.3",
     "rwsdk": "0.1.2",
     "tailwindcss": "^4.1.11"
