@@ -1,13 +1,27 @@
 The Test2Doc is a project that generates documentation based on tests, helping you keep your technical documentation automatically in sync with your code.
 
 # Test2Doc Playwright Reporter
-The `@test2doc/playwright` package is a [Playwright](https://playwright.dev/) reporter that generates documentation in markdown. It is intended to work with [Docusaurus](https://docusaurus.io/).
+The `@test2doc/playwright` package is a [Playwright](https://playwright.dev/) reporter that generates documentation in markdown. It generates markdown files compatible with [Docusaurus](https://docusaurus.io/).
 
 ## Installation & Setup
 
-### Install the Reporter
+### Prerequisites
+
+#### Playwright
 If you don't have Playwright currently installed, you can follow [Playwright's installation guide](https://playwright.dev/docs/intro#installing-playwright). (Don't forget to run `npx playwright install` to install browsers after Playwright itself!)
 
+#### Docusaurus
+This reporter generates markdown files for Docusaurus. If you don't have a Docusaurus app set up yet there is an install guide [here](https://docusaurus.io/docs/installation). If you have a monorepo I recommend using these [instructions](https://docusaurus.io/docs/installation#monorepos)
+
+Else you can install the Docusaurus app within your current repo with:
+
+```sh
+npx create-docusaurus@latest doc classic --typescript
+```
+
+This will make a `doc` directory with your Docusaurus app.
+
+### Install the Reporter
 After installing Playwright you can add the `@test2doc/playwright` with your package manager of choice:
 
 ```sh
@@ -19,51 +33,66 @@ yarn add @test2doc/playwright --dev
 pnpm install @test2doc/playwright -D
 ```
 
-#### Configure Playwright
-Add the reporter to your `playwright.config.ts`
+#### Configure Playwright to work with Test2Doc's Reporter
+Create a new config to run Test2Doc. `playwright-test2doc.config.ts`
 
 ```ts
-// playwright.config.ts or playwright.config.js
-import { defineConfig, ... } from "@playwright/test"
+// playwright-test2doc.config.ts
+import { defineConfig, devices } from "@playwright/test"
 
-...
-
+/**
+ * Test2Doc Playwright Configuration
+ * This config is optimized for generating documentation from your tests.
+ */
 export default defineConfig({
-  ...
+  // Test directory - adjust to match your project structure
+  testDir: './tests',
+
+  // Test2Doc Reporter Configuration
   reporter: [
-    ...
-    ["@test2doc/playwright", { outputDir: "./path/to/docs" }],
+    ['@test2doc/playwright', { 
+      outputDir: './doc/docs'  // Change this to your Docusaurus docs directory
+    }]
   ],
-  ...
-})
-```
 
-Replace `"./path/to/docs"` with a path to the `doc` directory of your Docusaurus app.
+  // Optimized settings for doc generation
+  fullyParallel: false,
+  workers: 1,  // Single worker for consistent output
+  retries: 0,  // No retries needed for doc generation
 
-#### Setup Docusaurus
-This reporter generates markdown files for Docusaurus. If you don't have a Docusaurus app set up yet there is an install guide [here](https://docusaurus.io/docs/installation). If you have a monorepo I recommend using these [instructions](https://docusaurus.io/docs/installation#monorepos)
-
-Else you can install the Docusaurus app within your current repo with:
-
-```sh
-npx create-docusaurus@latest doc classic --typescript
-```
-
-This will make a `doc` directory with your Docusaurus app.
-
-Then set the `outputDir` in the `playwright.config.ts` to `"./doc/docs"`
-
-```ts
-// playwright.config.ts
-export default defineConfig({
-  ...
-  reporter: [
-    ...
-    ["@test2doc/playwright", { outputDir: "./doc/docs" }],
+  // Use only one browser for faster doc generation
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
   ],
-  ...
-})
+
+  // Optional: Import settings from your main config
+  // Uncomment and adjust the path if you want to inherit from your main config
+  // ...require('./playwright.config').default,
+});
 ```
+
+Replace `"./doc/docs"` with a path to the `doc` directory of your Docusaurus app.
+
+##### Add script to run playwright to generate docs
+
+Also add a script to build the docs in your project's `package.json`
+
+```json
+{
+  ...
+  "scripts": {
+    ...
+    "docs:generate": "playwright test --config=playwright-test2doc.config.ts"
+  }
+  ...
+}
+```
+
+## Verify installation
+To verify your setup works, run `npm run docs:generate` and check that markdown files appear in your `./doc/docs` directory.
 
 ## How it works
 
@@ -75,7 +104,9 @@ Docusaurus supports [markdown front matter](https://docusaurus.io/docs/api/plugi
 To add this metadata to the test2doc markdown files that are generated use the `withDocMeta` function in your top level describe block in your test.
 
 ```ts
-import {withDocMeta} from "@test2doc/playwright/DocMeta";
+import { withDocMeta } from "@test2doc/playwright/DocMeta";
+
+...
 
 describe(withDocMeta("Title of Page", {
   title: "Title in Sidebar",
@@ -85,5 +116,35 @@ describe(withDocMeta("Title of Page", {
     test("test block", () => {
       ...
     })
+  })
+```
+
+### Adding Docusaurus Category route
+Docusaurus supports grouping docs by [category](https://docusaurus.io/docs/sidebar/autogenerated#category-item-metadata).
+
+By using the `withDocCategory` function for a describe block's title, this will add the metadata to allow Test2Doc to generate a new directory and a `__category__.json` file. It will then place all subsequent describes and tests under this new route.
+
+```ts
+
+import { withDocCategory, withDocMeta } from "@test2doc/playwright/DocMeta";
+
+...
+
+describe(withDocCategory("Title of Category Route", {
+  label: "Category Sidebar Label",
+  position: 1,
+  className: "class-to-add-on-sidebar-label",
+  ...
+  }),
+  () => {
+    describe(withDocMeta("Title of Page in Category", {
+      title: "Title in Sidebar under Category",
+      sidebar_position: 1,
+      ...
+      }), () => {
+        test("test block", () => {
+          ...
+        })
+      })
   })
 ```
