@@ -6,7 +6,7 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { writeFileSync } from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
 import { activateTest2Doc } from "./DocMeta.js"
 import type {
   DocusaurusCategoryMetadata,
@@ -39,7 +39,16 @@ type ExtractDocMetadataCategory = [
   "category",
 ]
 
-type ExtractedDocMetadata = ExtractDocMetadataPage | ExtractDocMetadataCategory
+type ExtractedDocMetadataUnspecified = [
+  string,
+  Record<string, unknown>,
+  undefined,
+]
+
+type ExtractedDocMetadata =
+  | ExtractDocMetadataPage
+  | ExtractDocMetadataCategory
+  | ExtractedDocMetadataUnspecified
 
 activateTest2Doc()
 
@@ -121,17 +130,32 @@ class Test2DocReporter implements Reporter {
   }
 
   onEnd() {
-    this.docs.forEach((doc) => {
-      const [title, metadata, metaType] = this.extractDocMetadata(doc.title)
+    this.docs.forEach((doc) => this.buildDocFiles(doc))
+  }
 
-      if (metaType === "page") {
-        const markdownHeader = this.generateHeader(metadata)
-        const markdown =
-          markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
-        const filePath = `${this.outputDir}/${this.convertToKebabCase(title)}.md`
-        writeFileSync(filePath, markdown)
-      }
-    })
+  private buildDocFiles(doc: DocNode, outputDir: string = this.outputDir) {
+    const [title, metadata, metaType] = this.extractDocMetadata(doc.title)
+
+    if (metaType === "page") {
+      const markdownHeader = this.generateHeader(metadata)
+      const markdown =
+        markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
+      const filePath = `${outputDir}/${this.convertToKebabCase(title)}.md`
+      writeFileSync(filePath, markdown)
+    } else if (metaType === "category") {
+      const filePath = `${outputDir}/${this.convertToKebabCase(title)}`
+      mkdirSync(filePath, { recursive: true })
+
+      writeFileSync(
+        `${filePath}/__category__.json`,
+        JSON.stringify(metadata, null, 2),
+      )
+      doc.children.forEach((child) => this.buildDocFiles(child, filePath))
+    } else {
+      const markdown = this.generateMarkdown(doc, 1)
+      const filePath = `${outputDir}/${this.convertToKebabCase(doc.title)}.md`
+      writeFileSync(filePath, markdown)
+    }
   }
 
   private extractDocMetadata(docTitle: string): ExtractedDocMetadata {

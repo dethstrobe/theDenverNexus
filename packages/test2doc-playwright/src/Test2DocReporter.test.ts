@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import Test2DocReporter from "./index.js"
 import type {
   FullConfig,
@@ -8,8 +8,8 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { writeFileSync } from "node:fs"
-import { withDocMeta } from "./DocMeta.js"
+import { writeFileSync, mkdirSync } from "node:fs"
+import { withDocCategory, withDocMeta } from "./DocMeta.js"
 
 const baseSuite: Suite = {
   title: "",
@@ -68,7 +68,7 @@ const mockTestFail: TestCase = {
   title: "should display error message on failed login",
 }
 
-const mockSuite: Suite = {
+const mockSuiteForPages: Suite = {
   ...baseSuite,
   title: "", // Root Suite
   type: "root",
@@ -152,6 +152,58 @@ const mockSuite: Suite = {
   ],
 }
 
+const mockSuiteForCategories: Suite = {
+  ...baseSuite,
+  title: "", // Root Suite
+  type: "root",
+  suites: [
+    {
+      ...baseSuite,
+      title: "chromium", // or firefox, webkit, etc.
+      type: "project",
+      suites: [
+        {
+          ...baseSuite,
+          title: "login.test.ts", // Test file name
+          type: "file",
+          suites: [
+            {
+              ...baseSuite,
+              title: withDocCategory("Login Page", {
+                label: "Login Page Documentation Label",
+                position: 1,
+                className: "login-page",
+                link: {
+                  type: "generated-index",
+                  title: "Login Page Documentation Title",
+                  description:
+                    "The different login scenarios for the login page.",
+                  slug: "login-page",
+                },
+              }),
+              suites: [
+                {
+                  ...baseSuite,
+                  title: withDocMeta("Successful Login", {
+                    sidebar_position: 1,
+                  }),
+                  tests: [mockTestSuccess],
+                },
+                {
+                  ...baseSuite,
+                  title: "Failed Login",
+                  tests: [mockTestFail],
+                },
+              ],
+              type: "describe",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+
 const baseTestStep: TestStep = {
   title: "Given user is on login page",
   category: "test.step",
@@ -171,6 +223,15 @@ const mockStep: TestStep = {
 }
 
 describe("Test2DocReporter", () => {
+  vi.mock("node:fs", () => ({
+    writeFileSync: vi.fn(),
+    mkdirSync: vi.fn(),
+  }))
+
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
+
   const setup = () => {
     return new Test2DocReporter({ outputDir: "test-output" })
   }
@@ -183,13 +244,10 @@ describe("Test2DocReporter", () => {
     })
   })
 
-  it("should capture test steps", () => {
-    vi.mock("node:fs", () => ({
-      writeFileSync: vi.fn(),
-    }))
+  it("should generate markdown for each root describe block in a file", () => {
     const reporter = setup()
 
-    reporter.onBegin({} as FullConfig, mockSuite)
+    reporter.onBegin({} as FullConfig, mockSuiteForPages)
     reporter.onTestBegin(mockTestSuccess)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
@@ -241,6 +299,65 @@ sidebar_position: 2
 ## Logged Out User
 
 ### should redirect to login page
+
+`,
+    )
+  })
+
+  it("should generate a directory and a __category__.json, and a page for each describe block child under the category describe", () => {
+    const reporter = setup()
+
+    reporter.onBegin({} as FullConfig, mockSuiteForCategories)
+    reporter.onTestBegin(mockTestSuccess)
+    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+    reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
+    reporter.onEnd()
+
+    expect(mkdirSync).toHaveBeenCalledOnce()
+    expect(mkdirSync).toHaveBeenCalledWith("test-output/login-page", {
+      recursive: true,
+    })
+
+    expect(writeFileSync).toHaveBeenCalledWith(
+      "test-output/login-page/__category__.json",
+      JSON.stringify(
+        {
+          label: "Login Page Documentation Label",
+          position: 1,
+          className: "login-page",
+          link: {
+            type: "generated-index",
+            title: "Login Page Documentation Title",
+            description: "The different login scenarios for the login page.",
+            slug: "login-page",
+          },
+        },
+        null,
+        2,
+      ),
+    )
+    expect(writeFileSync).toHaveBeenCalledWith(
+      "test-output/login-page/successful-login.md",
+      `---
+sidebar_position: 1
+---
+
+# Successful Login
+
+## should redirect to dashboard on successful login
+
+- Given user is on login page
+
+`,
+    )
+    expect(writeFileSync).toBeCalledTimes(3)
+    expect(writeFileSync).toHaveBeenCalledWith(
+      "test-output/login-page/failed-login.md",
+      `# Failed Login
+
+## should display error message on failed login
+
+- Given user is on login page
 
 `,
     )
