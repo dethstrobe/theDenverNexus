@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
     "docs",
@@ -8,6 +8,12 @@
     "playwright",
     "automation"
   ],
+  "homepage": "https://github.com/dethstrobe/theDenverNexus/tree/main/packages/test2doc-playwright",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dethstrobe/theDenverNexus.git",
+    "directory": "packages/test2doc-playwright"
+  },
   "license": "GPL-3.0-or-later",
   "author": "@dethstrobe",
   "type": "module",
