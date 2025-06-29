@@ -13,6 +13,7 @@ import type {
   DocusaurusHeaderConfig,
   metadataType,
 } from "./DocMeta.js"
+import { convertToKebabCase } from "./utils.js"
 
 interface DocNode {
   title: string
@@ -122,13 +123,6 @@ class Test2DocReporter implements Reporter {
     }
   }
 
-  private convertToKebabCase(title: string): string {
-    return title
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-  }
-
   onEnd() {
     this.docs.forEach((doc) => this.buildDocFiles(doc))
   }
@@ -140,10 +134,10 @@ class Test2DocReporter implements Reporter {
       const markdownHeader = this.generateHeader(metadata)
       const markdown =
         markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
-      const filePath = `${outputDir}/${this.convertToKebabCase(title)}.md`
+      const filePath = `${outputDir}/${convertToKebabCase(title)}.md`
       writeFileSync(filePath, markdown)
     } else if (metaType === "category") {
-      const filePath = `${outputDir}/${this.convertToKebabCase(title)}`
+      const filePath = `${outputDir}/${convertToKebabCase(title)}`
       mkdirSync(filePath, { recursive: true })
 
       writeFileSync(
@@ -153,7 +147,7 @@ class Test2DocReporter implements Reporter {
       doc.children.forEach((child) => this.buildDocFiles(child, filePath))
     } else {
       const markdown = this.generateMarkdown(doc, 1)
-      const filePath = `${outputDir}/${this.convertToKebabCase(doc.title)}.md`
+      const filePath = `${outputDir}/${convertToKebabCase(doc.title)}.md`
       writeFileSync(filePath, markdown)
     }
   }
