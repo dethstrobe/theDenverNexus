@@ -7,7 +7,7 @@ import {
 } from "@playwright/test"
 import { convertToKebabCase } from "./utils.js"
 
-type DocScreenshot = (
+type ScreenshotFn = (
   testInfo: TestInfo,
   page: Page,
   description: string,
@@ -15,7 +15,7 @@ type DocScreenshot = (
   selector?: string,
 ) => Promise<void>
 
-const docScreenshotHelper = async (
+const screenshotHelper = async (
   testInfo: TestInfo,
   page: Page,
   description: string,
@@ -34,18 +34,18 @@ const docScreenshotHelper = async (
   return { target, filename }
 }
 
-export const docScreenshot: DocScreenshot = async (...args) => {
-  await docScreenshotHelper(...args)
+export const screenshot: ScreenshotFn = async (...args) => {
+  await screenshotHelper(...args)
 }
 
-export const docScreenshotAssert: DocScreenshot = async (
+export const screenshotAssert: ScreenshotFn = async (
   testInfo,
   page,
   description,
   options = {},
   selector = undefined,
 ) => {
-  const { target, filename } = await docScreenshotHelper(
+  const { target, filename } = await screenshotHelper(
     testInfo,
     page,
     description,

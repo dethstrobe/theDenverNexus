@@ -27,6 +27,11 @@
       "import": "./dist/DocMeta.js",
       "require": "./dist/DocMeta.js",
       "types": "./dist/DocMeta.d.ts"
+    },
+    "./screenshots": {
+      "import": "./dist/screenshots.js",
+      "require": "./dist/screenshots.js",
+      "types": "./dist/screenshots.d.ts"
     }
   },
   "main": "dist/index.js",
@@ -35,7 +40,9 @@
   "files": [
     "dist",
     "dist/DocMeta.js",
-    "dist/DocMeta.d.ts"
+    "dist/DocMeta.d.ts",
+    "dist/screenshots.js",
+    "dist/screenshots.d.ts"
   ],
   "publishConfig": {
     "access": "public"

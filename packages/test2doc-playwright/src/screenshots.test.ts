@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { docScreenshot, docScreenshotAssert } from "./screenshots.js"
+import { screenshot, screenshotAssert } from "./screenshots.js"
 import type { Page, TestInfo } from "@playwright/test"
 import { expect as pwExpect } from "@playwright/test"
 
@@ -31,7 +31,7 @@ describe("Test2Doc Playwright Screenshots", () => {
   })
 
   it("should take a screenshot and attach it to the test", async () => {
-    await docScreenshot(
+    await screenshot(
       mockTestInfo,
       mockPage,
       "This is a test to take a screenshot using Test2Doc Playwright.",
@@ -50,7 +50,7 @@ describe("Test2Doc Playwright Screenshots", () => {
 
   it("should take a screenshot with the selector and attach it to the test", async () => {
     const selector = "#test-selector"
-    await docScreenshot(
+    await screenshot(
       mockTestInfo,
       mockPage,
       "This is a test to take a screenshot with a selector.",
@@ -72,7 +72,7 @@ describe("Test2Doc Playwright Screenshots", () => {
   describe("docScreenshotAssert", () => {
     it("should assert that the page has a screenshot", async () => {
       const options = { maxDiffPixels: 100 }
-      await docScreenshotAssert(
+      await screenshotAssert(
         mockTestInfo,
         mockPage,
         "This is a test to assert a screenshot.",
