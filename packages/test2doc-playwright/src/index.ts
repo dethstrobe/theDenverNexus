@@ -6,7 +6,7 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { mkdirSync, writeFileSync } from "node:fs"
+import { mkdirSync, renameSync, writeFileSync } from "node:fs"
 import { activateTest2Doc } from "./DocMeta.js"
 import type {
   DocusaurusCategoryMetadata,
@@ -24,7 +24,8 @@ interface DocNode {
 interface DocTest {
   title: string
   steps: Array<{
-    title: string
+    title?: string
+    screenshot?: string // path to screenshot if available
   }>
 }
 
@@ -61,6 +62,7 @@ class Test2DocReporter implements Reporter {
   private docs: DocNode[] = []
   private docMap: Map<string, DocTest | DocNode> = new Map()
   private outputDir: string
+  private screenshotMoveQueue: { src: string }[] = []
 
   constructor(
     options: Test2DocReporterOptions = {
@@ -123,6 +125,17 @@ class Test2DocReporter implements Reporter {
     }
   }
 
+  onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {
+    const docSection = this.docMap.get(test.title)
+    if (docSection && step.category === "test.step" && "steps" in docSection) {
+      const filename = `${convertToKebabCase(step.title)}.png`
+      const screenshot = result.attachments.find(
+        (attachment) => attachment.name === filename,
+      )?.name
+      if (screenshot) docSection.steps.push({ screenshot })
+    }
+  }
+
   onEnd() {
     this.docs.forEach((doc) => this.buildDocFiles(doc))
   }
@@ -136,6 +149,7 @@ class Test2DocReporter implements Reporter {
         markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
       const filePath = `${outputDir}/${convertToKebabCase(title)}.md`
       writeFileSync(filePath, markdown)
+      this.moveScreenshots(outputDir)
     } else if (metaType === "category") {
       const filePath = `${outputDir}/${convertToKebabCase(title)}`
       mkdirSync(filePath, { recursive: true })
@@ -145,11 +159,20 @@ class Test2DocReporter implements Reporter {
         JSON.stringify(metadata, null, 2),
       )
       doc.children.forEach((child) => this.buildDocFiles(child, filePath))
+      this.moveScreenshots(filePath)
     } else {
       const markdown = this.generateMarkdown(doc, 1)
       const filePath = `${outputDir}/${convertToKebabCase(doc.title)}.md`
       writeFileSync(filePath, markdown)
+      this.moveScreenshots(outputDir)
     }
+  }
+
+  private moveScreenshots(output: string) {
+    this.screenshotMoveQueue.forEach(({ src }) => {
+      const dest = `${output}/${src}`
+      renameSync(src, dest)
+    })
   }
 
   private extractDocMetadata(docTitle: string): ExtractedDocMetadata {
@@ -212,7 +235,14 @@ class Test2DocReporter implements Reporter {
         markdown += this.generateTitle(test.title, depth + 1)
         if (test.steps.length > 0) {
           for (const step of test.steps) {
-            markdown += `- ${step.title}\n`
+            if (step.title) {
+              markdown += `- ${step.title}\n`
+            } else if (step.screenshot) {
+              this.screenshotMoveQueue.push({
+                src: step.screenshot,
+              })
+              markdown += `![screenshot](./${step.screenshot})\n`
+            }
           }
           markdown += "\n"
         }

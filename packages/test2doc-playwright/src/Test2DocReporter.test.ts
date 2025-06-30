@@ -8,7 +8,7 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { writeFileSync, mkdirSync } from "node:fs"
+import { writeFileSync, mkdirSync, renameSync } from "node:fs"
 import { withDocCategory, withDocMeta } from "./DocMeta.js"
 
 const baseSuite: Suite = {
@@ -226,6 +226,7 @@ describe("Test2DocReporter", () => {
   vi.mock("node:fs", () => ({
     writeFileSync: vi.fn(),
     mkdirSync: vi.fn(),
+    renameSync: vi.fn(),
   }))
 
   beforeEach(() => {
@@ -250,6 +251,15 @@ describe("Test2DocReporter", () => {
     reporter.onBegin({} as FullConfig, mockSuiteForPages)
     reporter.onTestBegin(mockTestSuccess)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+    reporter.onStepEnd(
+      mockTestSuccess,
+      {
+        attachments: [
+          { name: "given-user-is-on-login-page.png", contentType: "image/png" },
+        ],
+      } as TestResult,
+      mockStep,
+    )
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()
     expect(writeFileSync).toHaveBeenCalledWith(
@@ -272,6 +282,7 @@ parse_number_prefixes: true
 ### should redirect to dashboard on successful login
 
 - Given user is on login page
+![screenshot](./given-user-is-on-login-page.png)
 
 ## Failed Login
 
@@ -301,6 +312,10 @@ sidebar_position: 2
 ### should redirect to login page
 
 `,
+    )
+    expect(renameSync).toHaveBeenCalledWith(
+      "given-user-is-on-login-page.png",
+      "test-output/given-user-is-on-login-page.png",
     )
   })
 
