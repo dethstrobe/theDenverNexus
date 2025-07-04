@@ -61,8 +61,8 @@ importers:
   apps/barefeed:
     dependencies:
       '@prisma/adapter-d1':
-        specifier: ~6.10.1
-        version: 6.10.1
+        specifier: ~6.11.1
+        version: 6.11.1
       '@prisma/client':
         specifier: ~6.10.1
         version: 6.10.1(prisma@6.11.1(typescript@5.8.3))(typescript@5.8.3)
@@ -2051,8 +2051,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@prisma/adapter-d1@6.10.1':
-    resolution: {integrity: sha512-qFIRU3+hmROylgSqeugWYZZ7EKuSCfGE8HGrZloHyvs29CJjemvqLWKJy9QvjXehh5JL5WM6iOU2aljRMDK3zg==}
+  '@prisma/adapter-d1@6.11.1':
+    resolution: {integrity: sha512-1WDzlEb6vgqDHgYVIX7ygR9chjs9HrKbyPZtjbcTspovwcNdEvuggnBXIVTO+Vo2EsiXDvZ5dB2qho26MduQIg==}
 
   '@prisma/client@6.10.1':
     resolution: {integrity: sha512-Re4pMlcUsQsUTAYMK7EJ4Bw2kg3WfZAAlr8GjORJaK4VOP6LxRQUQ1TuLnxcF42XqGkWQ36q5CQF1yVadANQ6w==}
@@ -2069,14 +2069,11 @@ packages:
   '@prisma/config@6.11.1':
     resolution: {integrity: sha512-z6rCTQN741wxDq82cpdzx2uVykpnQIXalLhrWQSR0jlBVOxCIkz3HZnd8ern3uYTcWKfB3IpVAF7K2FU8t/8AQ==}
 
-  '@prisma/debug@6.10.1':
-    resolution: {integrity: sha512-k2YT53cWxv9OLjW4zSYTZ6Z7j0gPfCzcr2Mj99qsuvlxr8WAKSZ2NcSR0zLf/mP4oxnYG842IMj3utTgcd7CaA==}
-
   '@prisma/debug@6.11.1':
     resolution: {integrity: sha512-lWRb/YSWu8l4Yum1UXfGLtqFzZkVS2ygkWYpgkbgMHn9XJlMITIgeMvJyX5GepChzhmxuSuiq/MY/kGFweOpGw==}
 
-  '@prisma/driver-adapter-utils@6.10.1':
-    resolution: {integrity: sha512-MJ7NiiMA5YQUD1aMHiOcLmRpW0U0NTpygyeuLMxHXnKbcq+HX/cy10qilFMLVzpveuIEHuwxziR67z6i0K1MKA==}
+  '@prisma/driver-adapter-utils@6.11.1':
+    resolution: {integrity: sha512-y09aIY3XTJIgPI1ZMfybn5kndbhu11Rjg81cH6pSi/Rg/PnbxomWVHhu4NnKmCGioidUqJ5KeQ7i75dIOVsSXQ==}
 
   '@prisma/engines-version@6.11.1-1.f40f79ec31188888a2e33acda0ecc8fd10a853a9':
     resolution: {integrity: sha512-swFJTOOg4tHyOM1zB/pHb3MeH0i6t7jFKn5l+ZsB23d9AQACuIRo9MouvuKGvnDogzkcjbWnXi/NvOZ0+n5Jfw==}
@@ -9730,10 +9727,10 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@prisma/adapter-d1@6.10.1':
+  '@prisma/adapter-d1@6.11.1':
     dependencies:
       '@cloudflare/workers-types': 4.20250214.0
-      '@prisma/driver-adapter-utils': 6.10.1
+      '@prisma/driver-adapter-utils': 6.11.1
       ky: 1.7.5
 
   '@prisma/client@6.10.1(prisma@6.11.1(typescript@5.8.3))(typescript@5.8.3)':
@@ -9745,13 +9742,11 @@ snapshots:
     dependencies:
       jiti: 2.4.2
 
-  '@prisma/debug@6.10.1': {}
-
   '@prisma/debug@6.11.1': {}
 
-  '@prisma/driver-adapter-utils@6.10.1':
+  '@prisma/driver-adapter-utils@6.11.1':
     dependencies:
-      '@prisma/debug': 6.10.1
+      '@prisma/debug': 6.11.1
 
   '@prisma/engines-version@6.11.1-1.f40f79ec31188888a2e33acda0ecc8fd10a853a9': {}
 
