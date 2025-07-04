@@ -20,7 +20,7 @@
     "migrate:dev": "prisma generate && wrangler d1 migrations apply DB --local",
     "migrate:prd": "wrangler d1 migrations apply DB --remote",
     "migrate:new": "rw-scripts migrate-new",
-    "seed": "npm run worker:run ./src/scripts/seed.ts",
+    "seed": "pnpm run worker:run ./src/scripts/seed.ts",
     "generate": "rw-scripts ensure-env && prisma generate && wrangler types",
     "check": "npm run generate && npm run types",
     "types": "tsc",
@@ -35,14 +35,13 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.4",
     "@prisma/adapter-d1": "~6.10.1",
     "@prisma/client": "~6.10.1",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "@tailwindcss/vite": "^4.1.11",
     "idb": "^8.0.3",
-    "rwsdk": "0.1.3",
+    "rwsdk": "0.1.9",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
@@ -62,7 +61,7 @@
     "prisma": "~6.10.1",
     "typescript": "^5.8.3",
     "vibe-rules": "^0.3.50",
-    "vite": "^7.0.0",
+    "vite": "^6.3.5",
     "vitest": "^3.2.4",
     "wrangler": "^4.22.0"
   }

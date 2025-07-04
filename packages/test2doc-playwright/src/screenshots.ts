@@ -1,5 +1,6 @@
 import {
   expect,
+  type Locator,
   type Page,
   type PageAssertionsToHaveScreenshotOptions,
   type PageScreenshotOptions,
@@ -9,20 +10,17 @@ import { convertToKebabCase } from "./utils.js"
 
 type ScreenshotFn = (
   testInfo: TestInfo,
-  page: Page,
+  target: Page | Locator,
   description: string,
   options?: PageScreenshotOptions & PageAssertionsToHaveScreenshotOptions,
-  selector?: string,
 ) => Promise<void>
 
 const screenshotHelper = async (
   testInfo: TestInfo,
-  page: Page,
+  target: Page | Locator,
   description: string,
   options?: PageScreenshotOptions & PageAssertionsToHaveScreenshotOptions,
-  selector?: string,
 ) => {
-  const target = selector ? page.locator(selector) : page
   const filename = `${convertToKebabCase(description)}.png`
   const screenshot = target.screenshot(options)
 
@@ -43,14 +41,12 @@ export const screenshotAssert: ScreenshotFn = async (
   page,
   description,
   options = {},
-  selector = undefined,
 ) => {
   const { target, filename } = await screenshotHelper(
     testInfo,
     page,
     description,
     options,
-    selector,
   )
 
   await expect(target).toHaveScreenshot(filename, options)

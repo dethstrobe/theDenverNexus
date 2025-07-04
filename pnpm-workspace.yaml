@@ -12,4 +12,3 @@ onlyBuiltDependencies:
   - '@prisma/engines'
   - '@tailwindcss/oxide'
   - prisma
-shared-workspace-lockfile: true

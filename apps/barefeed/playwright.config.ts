@@ -24,7 +24,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["html"],
-    ["@test2doc/playwright", { outputDir: "../baredoc/docs" }],
+    // ["@test2doc/playwright", { outputDir: "../baredoc/docs" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

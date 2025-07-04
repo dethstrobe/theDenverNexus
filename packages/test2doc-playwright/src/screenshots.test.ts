@@ -14,15 +14,11 @@ describe("Test2Doc Playwright Screenshots", () => {
     return Promise.resolve(Buffer.from("fake-screenshot-data"))
   })
   const attachMock = vi.fn()
-  const locatorMock = vi.fn().mockImplementation(() => ({
-    screenshot: screenshotMock,
-  }))
 
   const mockTestInfo = {
     attach: attachMock,
   } as unknown as TestInfo
   const mockPage = {
-    locator: locatorMock,
     screenshot: screenshotMock,
   } as unknown as Page
 
@@ -37,7 +33,6 @@ describe("Test2Doc Playwright Screenshots", () => {
       "This is a test to take a screenshot using Test2Doc Playwright.",
     )
 
-    expect(locatorMock).not.toHaveBeenCalled()
     expect(screenshotMock).toHaveBeenCalledOnce()
     expect(attachMock).toHaveBeenCalledWith(
       "this-is-a-test-to-take-a-screenshot-using-test2doc-playwright.png",
@@ -49,16 +44,13 @@ describe("Test2Doc Playwright Screenshots", () => {
   })
 
   it("should take a screenshot with the selector and attach it to the test", async () => {
-    const selector = "#test-selector"
     await screenshot(
       mockTestInfo,
       mockPage,
       "This is a test to take a screenshot with a selector.",
       {},
-      selector,
     )
 
-    expect(locatorMock).toHaveBeenCalledWith(selector)
     expect(screenshotMock).toHaveBeenCalledOnce()
     expect(attachMock).toHaveBeenCalledWith(
       "this-is-a-test-to-take-a-screenshot-with-a-selector.png",

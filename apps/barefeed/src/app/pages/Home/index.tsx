@@ -1,7 +1,6 @@
 "use client"
 
 import { useFeed } from "./useFeed"
-import { Button, Input } from "@headlessui/react"
 
 export const Home = () => {
   const { feed, saveFeeds, isLoading } = useFeed()
@@ -56,16 +55,17 @@ export const Home = () => {
         }}
       >
         <label htmlFor="rssFeedUrl">RSS Feed URL to Follow</label>
-        <Input
+        {/** biome-ignore lint/nursery/useUniqueElementIds: SSR and Client make a mismatch id when using useId */}
+        <input
           id="rssFeedUrl"
           type="text"
           name="rssFeedUrl"
           placeholder="Input RSS Feed URL"
           disabled={isLoading}
         />
-        <Button type="submit" disabled={isLoading}>
+        <button type="submit" disabled={isLoading}>
           Add to Feed
-        </Button>
+        </button>
       </form>
       {isLoading ? (
         <p>Loading...</p>
