@@ -21,11 +21,16 @@ interface DocNode {
   tests?: DocTest[]
 }
 
+interface DocScreenshot {
+  name: string // name of the screenshot file
+  buffer: Buffer // buffer of the screenshot image
+}
+
 interface DocTest {
   title: string
   steps: Array<{
     title?: string
-    screenshot?: string // path to screenshot if available
+    screenshot?: DocScreenshot
   }>
 }
 
@@ -62,7 +67,7 @@ class Test2DocReporter implements Reporter {
   private docs: DocNode[] = []
   private docMap: Map<string, DocTest | DocNode> = new Map()
   private outputDir: string
-  private screenshotMoveQueue: { src: string }[] = []
+  private screenshotMoveQueue: DocScreenshot[] = []
 
   constructor(
     options: Test2DocReporterOptions = {
@@ -131,8 +136,11 @@ class Test2DocReporter implements Reporter {
       const filename = `${convertToKebabCase(step.title)}.png`
       const screenshot = result.attachments.find(
         (attachment) => attachment.name === filename,
-      )?.name
-      if (screenshot) docSection.steps.push({ screenshot })
+      )
+      if (screenshot?.body)
+        docSection.steps.push({
+          screenshot: { name: screenshot.name, buffer: screenshot.body },
+        })
     }
   }
 
@@ -169,9 +177,9 @@ class Test2DocReporter implements Reporter {
   }
 
   private moveScreenshots(output: string) {
-    this.screenshotMoveQueue.forEach(({ src }) => {
-      const dest = `${output}/${src}`
-      renameSync(src, dest)
+    this.screenshotMoveQueue.forEach(({ name, buffer }) => {
+      const dest = `${output}/${name}`
+      writeFileSync(dest, buffer)
     })
   }
 
@@ -238,10 +246,8 @@ class Test2DocReporter implements Reporter {
             if (step.title) {
               markdown += `- ${step.title}\n`
             } else if (step.screenshot) {
-              this.screenshotMoveQueue.push({
-                src: step.screenshot,
-              })
-              markdown += `![screenshot](./${step.screenshot})\n`
+              this.screenshotMoveQueue.push(step.screenshot)
+              markdown += `![screenshot](./${step.screenshot.name})\n`
             }
           }
           markdown += "\n"
