@@ -249,7 +249,6 @@ describe("Test2DocReporter", () => {
     const mockScreenshotBuffer = Buffer.from("mock image data")
 
     reporter.onBegin({} as FullConfig, mockSuiteForPages)
-    reporter.onTestBegin(mockTestSuccess)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
     reporter.onStepEnd(
       mockTestSuccess,
@@ -296,7 +295,7 @@ parse_number_prefixes: true
 
 `,
     )
-    // expect(writeFileSync).toHaveBeenCalledTimes(3)
+    expect(writeFileSync).toHaveBeenCalledTimes(3)
     expect(writeFileSync).toHaveBeenCalledWith(
       "test-output/dashboard-page.md",
       `---
@@ -327,7 +326,6 @@ sidebar_position: 2
     const reporter = setup()
 
     reporter.onBegin({} as FullConfig, mockSuiteForCategories)
-    reporter.onTestBegin(mockTestSuccess)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()

@@ -112,19 +112,10 @@ class Test2DocReporter implements Reporter {
     return docNode
   }
 
-  onTestBegin(test: TestCase) {
-    const docSection = this.docMap.get(test.title)
-    console.log(`Test started: ${test.title}`, docSection)
-    // TODO: Add screenshots here?
-  }
-
   onStepBegin(test: TestCase, _result: TestResult, step: TestStep): void {
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
       docSection.steps.push({ title: step.title })
-
-      // TODO: Add screenshots here?
-      console.log("Screen shot here?")
     } else {
       console.warn(`No documentation section found for test ${test.id}`)
     }
@@ -181,6 +172,7 @@ class Test2DocReporter implements Reporter {
       const dest = `${output}/${name}`
       writeFileSync(dest, buffer)
     })
+    this.screenshotMoveQueue = []
   }
 
   private extractDocMetadata(docTitle: string): ExtractedDocMetadata {
