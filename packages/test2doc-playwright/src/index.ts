@@ -6,7 +6,7 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { mkdirSync, renameSync, writeFileSync } from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
 import { activateTest2Doc } from "./DocMeta.js"
 import type {
   DocusaurusCategoryMetadata,
