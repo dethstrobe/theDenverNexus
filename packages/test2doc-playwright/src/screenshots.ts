@@ -29,7 +29,7 @@ const screenshotHelper = async (
     contentType: "image/png",
   })
 
-  return { target, filename }
+  return { filename }
 }
 
 export const screenshot: ScreenshotFn = async (...args) => {
@@ -38,13 +38,13 @@ export const screenshot: ScreenshotFn = async (...args) => {
 
 export const screenshotAssert: ScreenshotFn = async (
   testInfo,
-  page,
+  target,
   description,
   options = {},
 ) => {
-  const { target, filename } = await screenshotHelper(
+  const { filename } = await screenshotHelper(
     testInfo,
-    page,
+    target,
     description,
     options,
   )
