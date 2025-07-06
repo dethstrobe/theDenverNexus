@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import Test2DocReporter from "./index.js"
 import type {
   FullConfig,
@@ -230,6 +230,12 @@ describe("Test2DocReporter", () => {
 
   beforeEach(() => {
     vi.resetAllMocks()
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date("2024-01-01T00:00:00Z"))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   const setup = () => {
@@ -250,12 +256,15 @@ describe("Test2DocReporter", () => {
 
     reporter.onBegin({} as FullConfig, mockSuiteForPages)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+    const mockScreenshotName = `test2doc-${Date.now() + 500}.png`
+    vi.advanceTimersByTime(1000)
+
     reporter.onStepEnd(
       mockTestSuccess,
       {
         attachments: [
           {
-            name: "given-user-is-on-login-page.png",
+            name: mockScreenshotName,
             body: mockScreenshotBuffer,
             contentType: "image/png",
           },
@@ -263,6 +272,7 @@ describe("Test2DocReporter", () => {
       } as TestResult,
       mockStep,
     )
+
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()
     expect(writeFileSync).toHaveBeenCalledWith(
@@ -285,7 +295,7 @@ parse_number_prefixes: true
 ### should redirect to dashboard on successful login
 
 - Given user is on login page
-![screenshot](./given-user-is-on-login-page.png)
+![screenshot](./${mockScreenshotName})
 
 ## Failed Login
 
@@ -317,7 +327,7 @@ sidebar_position: 2
 `,
     )
     expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/given-user-is-on-login-page.png",
+      `test-output/${mockScreenshotName}`,
       mockScreenshotBuffer,
     )
   })

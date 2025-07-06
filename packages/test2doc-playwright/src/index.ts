@@ -68,6 +68,7 @@ class Test2DocReporter implements Reporter {
   private docMap: Map<string, DocTest | DocNode> = new Map()
   private outputDir: string
   private screenshotMoveQueue: DocScreenshot[] = []
+  private stepStartTime = Date.now()
 
   constructor(
     options: Test2DocReporterOptions = {
@@ -115,6 +116,7 @@ class Test2DocReporter implements Reporter {
   onStepBegin(test: TestCase, _result: TestResult, step: TestStep): void {
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
+      this.stepStartTime = Date.now()
       docSection.steps.push({ title: step.title })
     }
   }
@@ -122,14 +124,23 @@ class Test2DocReporter implements Reporter {
   onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
-      const filename = `${convertToKebabCase(step.title)}.png`
-      const screenshot = result.attachments.find(
-        (attachment) => attachment.name === filename,
-      )
-      if (screenshot?.body)
-        docSection.steps.push({
-          screenshot: { name: screenshot.name, buffer: screenshot.body },
-        })
+      const stepEndTime = Date.now()
+      result.attachments.forEach((attachment) => {
+        const match = attachment.name.match(/test2doc-(\d+).png/) || []
+
+        const screenshotTime = +(match.at(1) ?? 0)
+
+        if (
+          screenshotTime < stepEndTime &&
+          screenshotTime >= this.stepStartTime &&
+          attachment.body
+        ) {
+          docSection.steps.push({
+            screenshot: { name: attachment.name, buffer: attachment.body },
+          })
+        }
+      })
+      this.stepStartTime = Date.now() // Reset step start time
     }
   }
 
@@ -166,8 +177,6 @@ class Test2DocReporter implements Reporter {
   }
 
   private generateScreenshots(output: string) {
-    console.log(`Moving screenshots to ${output}`, this.screenshotMoveQueue)
-    mkdirSync(output, { recursive: true })
     this.screenshotMoveQueue.forEach(({ name, buffer }) => {
       const dest = `${output}/${name}`
       writeFileSync(dest, buffer)
