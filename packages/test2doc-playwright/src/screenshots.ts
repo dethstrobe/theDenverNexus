@@ -6,22 +6,19 @@ import {
   type PageScreenshotOptions,
   type TestInfo,
 } from "@playwright/test"
-import { convertToKebabCase } from "./utils.js"
 
 type ScreenshotFn = (
   testInfo: TestInfo,
   target: Page | Locator,
-  description: string,
   options?: PageScreenshotOptions & PageAssertionsToHaveScreenshotOptions,
 ) => Promise<void>
 
 const screenshotHelper = async (
   testInfo: TestInfo,
   target: Page | Locator,
-  description: string,
   options?: PageScreenshotOptions & PageAssertionsToHaveScreenshotOptions,
 ) => {
-  const filename = `${convertToKebabCase(description)}.png`
+  const filename = `test2doc-${Date.now()}.png`
   const screenshot = target.screenshot(options)
 
   await testInfo.attach(filename, {
@@ -39,15 +36,9 @@ export const screenshot: ScreenshotFn = async (...args) => {
 export const screenshotAssert: ScreenshotFn = async (
   testInfo,
   target,
-  description,
   options = {},
 ) => {
-  const { filename } = await screenshotHelper(
-    testInfo,
-    target,
-    description,
-    options,
-  )
+  const { filename } = await screenshotHelper(testInfo, target, options)
 
   await expect(target).toHaveScreenshot(filename, options)
 }

@@ -27,33 +27,11 @@ describe("Test2Doc Playwright Screenshots", () => {
   })
 
   it("should take a screenshot and attach it to the test", async () => {
-    await screenshot(
-      mockTestInfo,
-      mockPage,
-      "This is a test to take a screenshot using Test2Doc Playwright.",
-    )
+    await screenshot(mockTestInfo, mockPage)
 
     expect(screenshotMock).toHaveBeenCalledOnce()
     expect(attachMock).toHaveBeenCalledWith(
-      "this-is-a-test-to-take-a-screenshot-using-test2doc-playwright.png",
-      {
-        body: expect.any(Buffer),
-        contentType: "image/png",
-      },
-    )
-  })
-
-  it("should take a screenshot with the selector and attach it to the test", async () => {
-    await screenshot(
-      mockTestInfo,
-      mockPage,
-      "This is a test to take a screenshot with a selector.",
-      {},
-    )
-
-    expect(screenshotMock).toHaveBeenCalledOnce()
-    expect(attachMock).toHaveBeenCalledWith(
-      "this-is-a-test-to-take-a-screenshot-with-a-selector.png",
+      expect.stringMatching(/test2doc-(\d+)\.png/),
       {
         body: expect.any(Buffer),
         contentType: "image/png",
@@ -64,16 +42,11 @@ describe("Test2Doc Playwright Screenshots", () => {
   describe("docScreenshotAssert", () => {
     it("should assert that the page has a screenshot", async () => {
       const options = { maxDiffPixels: 100 }
-      await screenshotAssert(
-        mockTestInfo,
-        mockPage,
-        "This is a test to assert a screenshot.",
-        options,
-      )
+      await screenshotAssert(mockTestInfo, mockPage, options)
 
       expect(pwExpect).toHaveBeenCalledWith(mockPage)
       expect(mockToHaveScreenshot).toHaveBeenCalledWith(
-        "this-is-a-test-to-assert-a-screenshot.png",
+        expect.stringMatching(/test2doc-(\d+)\.png/),
         options,
       )
     })
