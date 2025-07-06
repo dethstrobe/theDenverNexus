@@ -116,8 +116,6 @@ class Test2DocReporter implements Reporter {
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
       docSection.steps.push({ title: step.title })
-    } else {
-      console.warn(`No documentation section found for test ${test.id}`)
     }
   }
 
@@ -148,7 +146,7 @@ class Test2DocReporter implements Reporter {
         markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
       const filePath = `${outputDir}/${convertToKebabCase(title)}.md`
       writeFileSync(filePath, markdown)
-      this.moveScreenshots(outputDir)
+      this.generateScreenshots(outputDir)
     } else if (metaType === "category") {
       const filePath = `${outputDir}/${convertToKebabCase(title)}`
       mkdirSync(filePath, { recursive: true })
@@ -158,16 +156,18 @@ class Test2DocReporter implements Reporter {
         JSON.stringify(metadata, null, 2),
       )
       doc.children.forEach((child) => this.buildDocFiles(child, filePath))
-      this.moveScreenshots(filePath)
+      this.generateScreenshots(filePath)
     } else {
       const markdown = this.generateMarkdown(doc, 1)
       const filePath = `${outputDir}/${convertToKebabCase(doc.title)}.md`
       writeFileSync(filePath, markdown)
-      this.moveScreenshots(outputDir)
+      this.generateScreenshots(outputDir)
     }
   }
 
-  private moveScreenshots(output: string) {
+  private generateScreenshots(output: string) {
+    console.log(`Moving screenshots to ${output}`, this.screenshotMoveQueue)
+    mkdirSync(output, { recursive: true })
     this.screenshotMoveQueue.forEach(({ name, buffer }) => {
       const dest = `${output}/${name}`
       writeFileSync(dest, buffer)
@@ -237,7 +237,8 @@ class Test2DocReporter implements Reporter {
           for (const step of test.steps) {
             if (step.title) {
               markdown += `- ${step.title}\n`
-            } else if (step.screenshot) {
+            }
+            if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
               markdown += `![screenshot](./${step.screenshot.name})\n`
             }

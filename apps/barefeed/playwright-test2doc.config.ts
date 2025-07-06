@@ -24,6 +24,16 @@ export default defineConfig({
     },
   ],
 
+  use: {
+    baseURL: "http://localhost:5173",
+    trace: "on-first-retry",
+  },
+  webServer: {
+    command: "pnpm dev",
+    url: "http://localhost:5173",
+    reuseExistingServer: !process.env.CI,
+  },
+
   // Optional: Import settings from your main config
   // Uncomment and adjust the path if you want to inherit from your main config
   // ...require('./playwright.config').default,
