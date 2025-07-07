@@ -28,7 +28,7 @@
     "test": "vitest",
     "test:ui": "playwright test --ui",
     "test:ci": "playwright test --reporter=list",
-    "docs:generate": "playwright test --config=playwright-test2doc.config.ts"
+    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
   },
   "peerDependencies": {
     "react": ">=18",

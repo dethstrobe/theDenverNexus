@@ -14,10 +14,10 @@ describe("withDocMeta", () => {
     expect(title).toBe('My Test Title[test2doc_page]:{"title":"My Test Title"}')
   })
 
-  test("returns title with config data when --test2doc flag is provided on the command line", async () => {
+  test("returns title with config data when test2doc flag is provided on the command line", async () => {
     vi.resetModules()
-    const originalArgv = [...process.argv]
-    process.argv.push("--test2doc")
+    const originalEnv = { ...process.env }
+    process.env["TEST2DOC"] = "true"
 
     const { withDocMeta } = await import("./DocMeta.js")
     const title = withDocMeta("My Test Title", {
@@ -25,7 +25,7 @@ describe("withDocMeta", () => {
     })
     expect(title).toBe('My Test Title[test2doc_page]:{"title":"My Test Title"}')
 
-    process.argv = originalArgv
+    process.env = originalEnv
   })
 })
 

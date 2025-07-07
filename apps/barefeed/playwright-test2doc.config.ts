@@ -9,7 +9,10 @@ export default defineConfig({
   testDir: "./tests",
 
   // Test2Doc Reporter Configuration
-  reporter: [["@test2doc/playwright", { outputDir: "../baredoc/docs" }]],
+  reporter: [
+    ["list"],
+    ["@test2doc/playwright", { outputDir: "../baredoc/docs" }],
+  ],
 
   // Optimized settings for doc generation
   fullyParallel: false,

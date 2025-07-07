@@ -14,7 +14,7 @@ export interface DocusaurusHeaderConfig {
 export type metadataType = "page" | "category"
 
 // Assume false by default
-let test2docActive = process.argv.includes("--test2doc")
+let test2docActive = process.env["TEST2DOC"] === "true"
 
 /**
  * activateTest2Doc - Activates withDocMeta to add Docusaurus Page Meta Data to Describe Title.
