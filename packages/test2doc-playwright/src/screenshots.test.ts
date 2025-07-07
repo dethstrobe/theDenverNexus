@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { screenshot, screenshotAssert } from "./screenshots.js"
+import { screenshot } from "./screenshots.js"
 import type { Page, TestInfo } from "@playwright/test"
 import { expect as pwExpect } from "@playwright/test"
 
@@ -37,18 +37,5 @@ describe("Test2Doc Playwright Screenshots", () => {
         contentType: "image/png",
       },
     )
-  })
-
-  describe("docScreenshotAssert", () => {
-    it("should assert that the page has a screenshot", async () => {
-      const options = { maxDiffPixels: 100 }
-      await screenshotAssert(mockTestInfo, mockPage, options)
-
-      expect(pwExpect).toHaveBeenCalledWith(mockPage)
-      expect(mockToHaveScreenshot).toHaveBeenCalledWith(
-        expect.stringMatching(/test2doc-(\d+)\.png/),
-        options,
-      )
-    })
   })
 })

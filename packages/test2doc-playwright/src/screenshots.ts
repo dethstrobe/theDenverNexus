@@ -1,19 +1,12 @@
-import {
-  expect,
-  type Locator,
-  type Page,
-  type PageAssertionsToHaveScreenshotOptions,
-  type PageScreenshotOptions,
-  type TestInfo,
+import type {
+  Locator,
+  Page,
+  PageAssertionsToHaveScreenshotOptions,
+  PageScreenshotOptions,
+  TestInfo,
 } from "@playwright/test"
 
-type ScreenshotFn = (
-  testInfo: TestInfo,
-  target: Page | Locator,
-  options?: PageScreenshotOptions & PageAssertionsToHaveScreenshotOptions,
-) => Promise<void>
-
-const screenshotHelper = async (
+export const screenshot = async (
   testInfo: TestInfo,
   target: Page | Locator,
   options?: PageScreenshotOptions & PageAssertionsToHaveScreenshotOptions,
@@ -25,20 +18,4 @@ const screenshotHelper = async (
     body: await screenshot,
     contentType: "image/png",
   })
-
-  return { filename }
-}
-
-export const screenshot: ScreenshotFn = async (...args) => {
-  await screenshotHelper(...args)
-}
-
-export const screenshotAssert: ScreenshotFn = async (
-  testInfo,
-  target,
-  options = {},
-) => {
-  const { filename } = await screenshotHelper(testInfo, target, options)
-
-  await expect(target).toHaveScreenshot(filename, options)
 }
