@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 import { withDocMeta } from "@test2doc/playwright/DocMeta"
-import { screenshot, screenshotAssert } from "@test2doc/playwright/screenshots"
+import { screenshot } from "@test2doc/playwright/screenshots"
 
 test.describe(
   withDocMeta("Ping Pong route", { sidebar_position: 2 }),

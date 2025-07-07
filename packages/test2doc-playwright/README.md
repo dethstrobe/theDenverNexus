@@ -68,6 +68,16 @@ export default defineConfig({
     },
   ],
 
+  use: {
+    baseURL: "http://localhost:5173", // change to whatever port your app starts on
+    trace: "on-first-retry",
+  },
+  webServer: {
+    command: "pnpm dev", // change with command to start your server
+    url: "http://localhost:5173", // change to whatever port your app starts on
+    reuseExistingServer: !process.env.CI,
+  },
+
   // Optional: Import settings from your main config
   // Uncomment and adjust the path if you want to inherit from your main config
   // ...require('./playwright.config').default,
@@ -78,21 +88,23 @@ Replace `"./doc/docs"` with a path to the `doc` directory of your Docusaurus app
 
 ##### Add script to run playwright to generate docs
 
-Also add a script to build the docs in your project's `package.json`
+Also add a script to build the docs in your project's `package.json`.
+
+The `TEST2DOC=true` is required to activate the test2doc metadata to pass to the tests in a headless context. For normal test runs you probably don't want the extra noise of the metadata, so leave this out of your standard test run.
 
 ```json
 {
   ...
   "scripts": {
     ...
-    "docs:generate": "playwright test --config=playwright-test2doc.config.ts"
+    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
   }
   ...
 }
 ```
 
 ## Verify installation
-To verify your setup works, run `npm run docs:generate` and check that markdown files appear in your `./doc/docs` directory.
+To verify your setup works, run `npm run docs:generate` and check that markdown files appear in your `./doc/docs` directory, or where you specified the output directory is in the `playwright-test2doc.config.ts` file.
 
 ## How it works
 
@@ -146,5 +158,25 @@ describe(withDocCategory("Title of Category Route", {
           ...
         })
       })
+  })
+```
+
+### Adding Screenshots
+To add screenshots to your documentation use the `screenshot` helper function.
+
+Screenshots will be added after the Step block's title and in the order they're generated.
+
+```ts
+import { screenshot } from "@test2doc/playwright/screenshots"
+...
+
+test.describe(withDocMeta("describe block"), async () => {
+    test("test block", async ({ page }, testInfo) => {
+      ...
+      test.step("step block", async () => {
+        await page.goto("http://localhost:5173/")
+        await screenshot(testInfo, page)
+      })
+    })
   })
 ```
