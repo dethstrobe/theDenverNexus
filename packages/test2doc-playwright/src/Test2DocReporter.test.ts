@@ -242,6 +242,7 @@ describe("Test2DocReporter", () => {
     return new Test2DocReporter({ outputDir: "test-output" })
   }
 
+  // TODO: remove this later, here right now as a hacky solution for testing
   describe("withDocMeta", () => {
     it("loading the reporter file should enable the withDocMeta JSON stringify for Docusaurus Page Header Data", () => {
       expect(withDocMeta("test title", { title: "Test" })).toBe(

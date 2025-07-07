@@ -57,6 +57,7 @@ type ExtractedDocMetadata =
   | ExtractDocMetadataCategory
   | ExtractedDocMetadataUnspecified
 
+// TODO: remove this later, here right now as a hacky solution for testing
 activateTest2Doc()
 
 /**
