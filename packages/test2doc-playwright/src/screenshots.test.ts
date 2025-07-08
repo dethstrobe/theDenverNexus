@@ -28,10 +28,18 @@ describe("Test2Doc Playwright Screenshots", () => {
 
   it("should take a screenshot and attach it to the test", async () => {
     await screenshot(mockTestInfo, mockPage)
+    await screenshot(mockTestInfo, mockPage)
 
-    expect(screenshotMock).toHaveBeenCalledOnce()
+    expect(screenshotMock).toHaveBeenCalledTimes(2)
     expect(attachMock).toHaveBeenCalledWith(
-      expect.stringMatching(/test2doc-(\d+)\.png/),
+      expect.stringMatching(/test2doc-(\d+)-1\.png/),
+      {
+        body: expect.any(Buffer),
+        contentType: "image/png",
+      },
+    )
+    expect(attachMock).toHaveBeenCalledWith(
+      expect.stringMatching(/test2doc-(\d+)-2\.png/),
       {
         body: expect.any(Buffer),
         contentType: "image/png",

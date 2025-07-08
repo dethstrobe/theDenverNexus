@@ -278,11 +278,14 @@ describe("Test2DocReporter", () => {
   it("should generate markdown for each root describe block in a file", () => {
     const reporter = setup()
     const mockScreenshotBuffer = Buffer.from("mock image data")
-    writeFileSync(`${tempDir}/test2doc-1704067218000.png`, mockScreenshotBuffer)
+    writeFileSync(
+      join(tempDir, "test2doc-1704067218000-1.png"),
+      mockScreenshotBuffer,
+    )
 
     reporter.onBegin({} as FullConfig, mockSuiteForPages)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
-    const mockScreenshotName = `test2doc-${Date.now() + 500}.png`
+    const mockScreenshotName = `test2doc-${Date.now() + 500}-1.png`
     vi.advanceTimersByTime(1000)
 
     reporter.onStepEnd(

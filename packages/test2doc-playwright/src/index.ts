@@ -133,20 +133,12 @@ class Test2DocReporter implements Reporter {
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
       const stepEndTime = Date.now()
-      result.attachments.forEach((attachment) => {
-        const match = attachment.name.match(/test2doc-(\d+).png/) || []
 
+      for (const attachment of result.attachments) {
+        const match = attachment.name.match(/test2doc-(\d+)-\d+\.png/) || []
         const screenshotTime = +(match.at(1) ?? 0)
-
-        console.log(
-          "screenshot time, end, and start -> ",
-          screenshotTime,
-          stepEndTime,
-          this.stepStartTime,
-        )
-
         if (
-          screenshotTime < stepEndTime &&
+          screenshotTime <= stepEndTime &&
           screenshotTime >= this.stepStartTime &&
           attachment.body
         ) {
@@ -154,7 +146,7 @@ class Test2DocReporter implements Reporter {
             screenshot: { name: attachment.name, buffer: attachment.body },
           })
         }
-      })
+      }
       this.stepStartTime = Date.now() // Reset step start time
     }
   }
