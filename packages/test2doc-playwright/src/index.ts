@@ -6,7 +6,13 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { mkdirSync, writeFileSync } from "node:fs"
+import {
+  mkdirSync,
+  readdirSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs"
 import { activateTest2Doc } from "./DocMeta.js"
 import type {
   DocusaurusCategoryMetadata,
@@ -14,6 +20,7 @@ import type {
   metadataType,
 } from "./DocMeta.js"
 import { convertToKebabCase } from "./utils.js"
+import { join } from "node:path"
 
 interface DocNode {
   title: string
@@ -153,6 +160,7 @@ class Test2DocReporter implements Reporter {
   }
 
   onEnd() {
+    this.deleteScreenshots(this.outputDir)
     this.docs.forEach((doc) => this.buildDocFiles(doc))
   }
 
@@ -190,6 +198,18 @@ class Test2DocReporter implements Reporter {
       writeFileSync(dest, buffer)
     })
     this.screenshotMoveQueue = []
+  }
+
+  private deleteScreenshots(output: string) {
+    for (const file of readdirSync(output)) {
+      const filePath = join(output, file)
+      const stat = statSync(filePath)
+      if (stat.isDirectory()) {
+        this.deleteScreenshots(filePath)
+      } else if (stat.isFile() && file.startsWith("test2doc-")) {
+        unlinkSync(filePath)
+      }
+    }
   }
 
   private extractDocMetadata(docTitle: string): ExtractedDocMetadata {

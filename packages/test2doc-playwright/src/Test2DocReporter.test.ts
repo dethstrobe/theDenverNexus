@@ -15,6 +15,8 @@ import {
   unlinkSync,
   readFileSync,
   rmdirSync,
+  write,
+  writeFileSync,
 } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
@@ -276,6 +278,7 @@ describe("Test2DocReporter", () => {
   it("should generate markdown for each root describe block in a file", () => {
     const reporter = setup()
     const mockScreenshotBuffer = Buffer.from("mock image data")
+    writeFileSync(`${tempDir}/test2doc-1704067218000.png`, mockScreenshotBuffer)
 
     reporter.onBegin({} as FullConfig, mockSuiteForPages)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
@@ -297,12 +300,9 @@ describe("Test2DocReporter", () => {
     )
 
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
-    reporter.onEnd()
 
-    // Test screenshot cleanup
-    // expect(unlinkSync).toHaveBeenCalledWith(
-    //   "test-output/test2doc-1704067218000.png",
-    // )
+    expect(readdirSync(tempDir)).toHaveLength(1)
+    reporter.onEnd()
 
     expect(readFileSync(`${tempDir}/login-page.md`, "utf8")).toEqual(
       `---
