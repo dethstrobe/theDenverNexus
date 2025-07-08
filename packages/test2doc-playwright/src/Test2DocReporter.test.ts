@@ -8,8 +8,19 @@ import type {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter"
-import { writeFileSync, mkdirSync } from "node:fs"
+import {
+  mkdtempSync,
+  readdirSync,
+  statSync,
+  unlinkSync,
+  readFileSync,
+  rmdirSync,
+} from "node:fs"
+import { join } from "node:path"
+import { tmpdir } from "node:os"
 import { withDocCategory, withDocMeta } from "./DocMeta.js"
+
+const tempDir = mkdtempSync(join(tmpdir(), "test2doc-"))
 
 const baseSuite: Suite = {
   title: "",
@@ -223,26 +234,37 @@ const mockStep: TestStep = {
 }
 
 describe("Test2DocReporter", () => {
-  vi.mock("node:fs", () => ({
-    writeFileSync: vi.fn(),
-    mkdirSync: vi.fn(),
-  }))
-
   beforeEach(() => {
-    vi.resetAllMocks()
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2024-01-01T00:00:00Z"))
   })
 
   afterEach(() => {
     vi.useRealTimers()
+    // Clean up the temporary directory
+    testCleanup()
   })
 
-  const setup = () => {
-    return new Test2DocReporter({ outputDir: "test-output" })
+  function testCleanup(dir = tempDir) {
+    readdirSync(dir).forEach((file) => {
+      const filePath = join(dir, file)
+      if (statSync(filePath).isFile()) {
+        unlinkSync(filePath)
+      } else if (statSync(filePath).isDirectory()) {
+        // If it's a directory, we can remove it recursively if needed
+        testCleanup(filePath)
+        if (readdirSync(filePath).length === 0) {
+          rmdirSync(filePath)
+        }
+      }
+    })
   }
 
-  // TODO: remove this later, here right now as a hacky solution for testing
+  const setup = () => {
+    return new Test2DocReporter({ outputDir: tempDir })
+  }
+
+  // TODO: remove this later
   describe("withDocMeta", () => {
     it("loading the reporter file should enable the withDocMeta JSON stringify for Docusaurus Page Header Data", () => {
       expect(withDocMeta("test title", { title: "Test" })).toBe(
@@ -276,8 +298,13 @@ describe("Test2DocReporter", () => {
 
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()
-    expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/login-page.md",
+
+    // Test screenshot cleanup
+    // expect(unlinkSync).toHaveBeenCalledWith(
+    //   "test-output/test2doc-1704067218000.png",
+    // )
+
+    expect(readFileSync(`${tempDir}/login-page.md`, "utf8")).toEqual(
       `---
 title: Login Page Documentation
 keywords:
@@ -295,20 +322,19 @@ parse_number_prefixes: true
 
 ### should redirect to dashboard on successful login
 
-- Given user is on login page
+Given user is on login page
 ![screenshot](./${mockScreenshotName})
 
 ## Failed Login
 
 ### should display error message on failed login
 
-- Given user is on login page
+Given user is on login page
 
 `,
     )
-    expect(writeFileSync).toHaveBeenCalledTimes(3)
-    expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/dashboard-page.md",
+    expect(readdirSync(tempDir)).toHaveLength(3)
+    expect(readFileSync(`${tempDir}/dashboard-page.md`, "utf8")).toEqual(
       `---
 title: Dashboard Documentation
 description: The dashboard of todo stuff.
@@ -327,8 +353,7 @@ sidebar_position: 2
 
 `,
     )
-    expect(writeFileSync).toHaveBeenCalledWith(
-      `test-output/${mockScreenshotName}`,
+    expect(readFileSync(`${tempDir}/${mockScreenshotName}`)).toEqual(
       mockScreenshotBuffer,
     )
   })
@@ -341,13 +366,9 @@ sidebar_position: 2
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()
 
-    expect(mkdirSync).toHaveBeenCalledOnce()
-    expect(mkdirSync).toHaveBeenCalledWith("test-output/login-page", {
-      recursive: true,
-    })
-
-    expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/login-page/__category__.json",
+    expect(
+      readFileSync(`${tempDir}/login-page/__category__.json`, "utf8"),
+    ).toEqual(
       JSON.stringify(
         {
           label: "Login Page Documentation Label",
@@ -364,8 +385,9 @@ sidebar_position: 2
         2,
       ),
     )
-    expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/login-page/successful-login.md",
+    expect(
+      readFileSync(`${tempDir}/login-page/successful-login.md`, "utf8"),
+    ).toEqual(
       `---
 sidebar_position: 1
 ---
@@ -374,18 +396,19 @@ sidebar_position: 1
 
 ## should redirect to dashboard on successful login
 
-- Given user is on login page
+Given user is on login page
 
 `,
     )
-    expect(writeFileSync).toBeCalledTimes(3)
-    expect(writeFileSync).toHaveBeenCalledWith(
-      "test-output/login-page/failed-login.md",
+    expect(readdirSync(`${tempDir}/login-page`)).toHaveLength(3)
+    expect(
+      readFileSync(`${tempDir}/login-page/failed-login.md`, "utf8"),
+    ).toEqual(
       `# Failed Login
 
 ## should display error message on failed login
 
-- Given user is on login page
+Given user is on login page
 
 `,
     )

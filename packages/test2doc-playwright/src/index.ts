@@ -131,6 +131,13 @@ class Test2DocReporter implements Reporter {
 
         const screenshotTime = +(match.at(1) ?? 0)
 
+        console.log(
+          "screenshot time, end, and start -> ",
+          screenshotTime,
+          stepEndTime,
+          this.stepStartTime,
+        )
+
         if (
           screenshotTime < stepEndTime &&
           screenshotTime >= this.stepStartTime &&
@@ -246,7 +253,7 @@ class Test2DocReporter implements Reporter {
         if (test.steps.length > 0) {
           for (const step of test.steps) {
             if (step.title) {
-              markdown += `- ${step.title}\n`
+              markdown += `${step.title}\n`
             }
             if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
