@@ -60,20 +60,21 @@ export function Login() {
   };
 
   return (
-    <>
+    <main className="bg-bg">
+      <h1 className="text-4xl font-bold text-red-500">YOLO</h1>
       <input
         type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
       />
-      <button onClick={handlePerformPasskeyLogin} disabled={isPending}>
+      <button type="button" onClick={handlePerformPasskeyLogin} disabled={isPending}>
         {isPending ? <>...</> : "Login with passkey"}
       </button>
-      <button onClick={handlePerformPasskeyRegister} disabled={isPending}>
+      <button type="button" onClick={handlePerformPasskeyRegister} disabled={isPending}>
         {isPending ? <>...</> : "Register with passkey"}
       </button>
       {result && <div>{result}</div>}
-    </>
+    </main>
   );
 }

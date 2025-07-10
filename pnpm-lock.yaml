@@ -35,9 +35,15 @@ importers:
       '@simplewebauthn/server':
         specifier: ^13.1.1
         version: 13.1.1
+      '@tailwindcss/vite':
+        specifier: ^4.1.11
+        version: 4.1.11(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))
       rwsdk:
         specifier: 0.1.13
         version: 0.1.13(rollup@4.44.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(webpack@5.99.9)(workerd@1.20250617.0)
+      tailwindcss:
+        specifier: ^4.1.11
+        version: 4.1.11
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.7.4
@@ -135,7 +141,7 @@ importers:
         version: 19.1.0(react@19.1.0)
       rwsdk:
         specifier: 0.1.9
-        version: 0.1.9(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(webpack@5.99.9)(workerd@1.20250617.0)
+        version: 0.1.9(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(webpack@5.99.9)
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.11
@@ -8305,7 +8311,7 @@ snapshots:
       - utf-8-validate
       - workerd
 
-  '@cloudflare/vite-plugin@1.7.4(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(workerd@1.20250617.0)(wrangler@4.23.0(@cloudflare/workers-types@4.20250704.0))':
+  '@cloudflare/vite-plugin@1.7.4(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(wrangler@4.23.0(@cloudflare/workers-types@4.20250704.0))':
     dependencies:
       '@cloudflare/unenv-preset': 2.3.3(unenv@2.0.0-rc.17)(workerd@1.20250617.0)
       '@mjackson/node-fetch-server': 0.6.1
@@ -10243,6 +10249,13 @@ snapshots:
       '@tailwindcss/oxide-wasm32-wasi': 4.1.11
       '@tailwindcss/oxide-win32-arm64-msvc': 4.1.11
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.11
+
+  '@tailwindcss/vite@4.1.11(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))':
+    dependencies:
+      '@tailwindcss/node': 4.1.11
+      '@tailwindcss/oxide': 4.1.11
+      tailwindcss: 4.1.11
+      vite: 6.3.5(@types/node@22.16.2)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)
 
   '@tailwindcss/vite@4.1.11(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))':
     dependencies:
@@ -14717,10 +14730,10 @@ snapshots:
       - webpack
       - workerd
 
-  rwsdk@0.1.9(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(webpack@5.99.9)(workerd@1.20250617.0):
+  rwsdk@0.1.9(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(webpack@5.99.9):
     dependencies:
       '@ast-grep/napi': 0.38.6
-      '@cloudflare/vite-plugin': 1.7.4(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(workerd@1.20250617.0)(wrangler@4.23.0(@cloudflare/workers-types@4.20250704.0))
+      '@cloudflare/vite-plugin': 1.7.4(vite@6.3.5(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1))(wrangler@4.23.0(@cloudflare/workers-types@4.20250704.0))
       '@cloudflare/workers-types': 4.20250704.0
       '@puppeteer/browsers': 2.10.5
       '@types/fs-extra': 11.0.4
