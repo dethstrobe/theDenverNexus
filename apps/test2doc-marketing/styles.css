@@ -1,11 +1,18 @@
+:root {
+  --app-bg-color: #000;
+  --color-gold: #feda4a;
+  --color-cyan: #0d9df6;
+  --color-white: #fff;
+}
+
 body {
   font-family: "Oswald", sans-serif;
-  background-color: black;
+  background-color: var(--app-bg-color);
 }
 
 .opener {
-  color: cyan;
-  background-color: black;
+  color: var(--color-cyan);
+  background-color: var(--app-bg-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,6 +29,7 @@ body {
 .opener-text {
   font-size: 5vw;
   font-weight: normal;
+  text-shadow: 0 0 1rem rgba(128, 128, 255, 0.3);
 }
 
 .logo-container {
@@ -37,9 +45,8 @@ body {
 }
 
 .logo {
-  color: gold;
+  color: var(--color-gold);
   font-family: "Orbitron", sans-serif;
-  font-weight: 900;
   text-align: center;
   position: relative;
   font-size: 55vw;
@@ -47,7 +54,7 @@ body {
     display: block;
   }
   .two {
-    color: white;
+    color: var(--color-white);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -69,7 +76,7 @@ body {
   position: relative;
   transform-origin: center bottom;
   transform: translateZ(0) rotateX(25deg);
-  color: #feda4a;
+  color: var(--color-gold);
   overflow: hidden;
 
   h2,
