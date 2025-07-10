@@ -10,12 +10,15 @@ body {
   background-color: var(--app-bg-color);
 }
 
-.opener {
-  color: var(--color-cyan);
-  background-color: var(--app-bg-color);
+section {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.opener {
+  color: var(--color-cyan);
+  background-color: var(--app-bg-color);
   position: fixed;
   top: 0;
   left: 0;
@@ -38,9 +41,6 @@ body {
   width: 100vw;
   top: 0;
   position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
 }
 
@@ -91,9 +91,6 @@ body {
 
 .subscribe {
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   iframe { 
     border:1px solid #EEE;
   }
