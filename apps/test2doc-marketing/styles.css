@@ -63,7 +63,7 @@ section {
 }
 
 .intro {
-  perspective: 800px;
+  perspective: 100vh;
   overflow: hidden;
   max-width: 3000px;
   margin: auto;
@@ -71,6 +71,8 @@ section {
 
 .crawl {
   font-size: min(7vw, 10rem);
+  letter-spacing: 4px;
+  line-height: 1.5;
   padding-block-start: min(100vh, 500px);
   padding-block-end: 100vh;
   position: relative;
