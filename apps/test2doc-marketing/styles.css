@@ -63,7 +63,7 @@ section {
 }
 
 .intro {
-  perspective: 400px;
+  perspective: 800px;
   overflow: hidden;
   max-width: 3000px;
   margin: auto;
