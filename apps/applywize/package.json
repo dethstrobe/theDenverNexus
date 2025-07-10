@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@prisma/adapter-d1": "~6.8.2",
-    "@prisma/client": "~6.8.2",
+    "@prisma/client": "~6.11.1",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "@tailwindcss/vite": "^4.1.11",
