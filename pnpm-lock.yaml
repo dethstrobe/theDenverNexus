@@ -67,8 +67,8 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
       vibe-rules:
-        specifier: ^0.2.31
-        version: 0.2.57
+        specifier: ^0.3.50
+        version: 0.3.50
       vite:
         specifier: ^6.2.6
         version: 6.3.5(@types/node@22.16.2)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)
@@ -7530,8 +7530,8 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@3.25.73:
-    resolution: {integrity: sha512-fuIKbQAWQl22Ba5d1quwEETQYjqnpKVyZIWAhbnnHgnDd3a+z4YgEfkI5SZ2xMELnLAXo/Flk2uXgysZNf0uaA==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -15952,7 +15952,7 @@ snapshots:
       commander: 11.1.0
       fs-extra: 11.3.0
       import-meta-resolve: 4.1.0
-      zod: 3.25.73
+      zod: 3.25.76
 
   vibe-rules@0.3.50:
     dependencies:
@@ -15960,7 +15960,7 @@ snapshots:
       commander: 11.1.0
       fs-extra: 11.3.0
       import-meta-resolve: 4.1.0
-      zod: 3.25.73
+      zod: 3.25.76
 
   vite-node@3.2.4(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1):
     dependencies:
@@ -16490,6 +16490,6 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zod@3.25.73: {}
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}
