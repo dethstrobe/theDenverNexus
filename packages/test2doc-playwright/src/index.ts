@@ -76,7 +76,7 @@ class Test2DocReporter implements Reporter {
   private docMap: Map<string, DocTest | DocNode> = new Map()
   private outputDir: string
   private screenshotMoveQueue: DocScreenshot[] = []
-  private stepStartTime = Date.now()
+  private seenScreenshot = new Set<string>()
 
   constructor(
     options: Test2DocReporterOptions = {
@@ -124,30 +124,28 @@ class Test2DocReporter implements Reporter {
   onStepBegin(test: TestCase, _result: TestResult, step: TestStep): void {
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
-      this.stepStartTime = Date.now()
       docSection.steps.push({ title: step.title })
     }
   }
 
   onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {
+    const now = Date.now()
     const docSection = this.docMap.get(test.title)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
-      const stepEndTime = Date.now()
-
       for (const attachment of result.attachments) {
-        const match = attachment.name.match(/test2doc-(\d+)-\d+\.png/) || []
-        const screenshotTime = +(match.at(1) ?? 0)
-        if (
-          screenshotTime <= stepEndTime &&
-          screenshotTime >= this.stepStartTime &&
-          attachment.body
-        ) {
+        if (!attachment?.body) continue
+
+        const match = attachment.name.match(/test2doc-(\d+)-\d+\.png/)
+
+        const screenshotTime = +(match?.[1] ?? 0)
+
+        if (screenshotTime < now && !this.seenScreenshot.has(attachment.name)) {
+          this.seenScreenshot.add(attachment.name)
           docSection.steps.push({
             screenshot: { name: attachment.name, buffer: attachment.body },
           })
         }
       }
-      this.stepStartTime = Date.now() // Reset step start time
     }
   }
 

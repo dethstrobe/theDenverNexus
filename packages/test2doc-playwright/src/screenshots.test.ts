@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { screenshot } from "./screenshots.js"
 import type { Page, TestInfo } from "@playwright/test"
-import { expect as pwExpect } from "@playwright/test"
 
 describe("Test2Doc Playwright Screenshots", () => {
   const mockToHaveScreenshot = vi.hoisted(() => vi.fn())

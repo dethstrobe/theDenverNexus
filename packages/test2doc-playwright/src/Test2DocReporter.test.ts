@@ -15,7 +15,6 @@ import {
   unlinkSync,
   readFileSync,
   rmdirSync,
-  write,
   writeFileSync,
 } from "node:fs"
 import { join } from "node:path"
@@ -285,24 +284,50 @@ describe("Test2DocReporter", () => {
 
     reporter.onBegin({} as FullConfig, mockSuiteForPages)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
-    const mockScreenshotName = `test2doc-${Date.now() + 500}-1.png`
-    vi.advanceTimersByTime(1000)
+    const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
+    const mockScreenshotName2 = `test2doc-${Date.now() + 999}-2.png`
+    const mockScreenshotName3 = `test2doc-${Date.now() + 1001}-3.png`
+    const mockAttachmentSuccess = [
+      {
+        name: mockScreenshotName1,
+        body: mockScreenshotBuffer,
+        contentType: "image/png",
+      },
+    ]
+    const mockAttachmentFail = [
+      ...mockAttachmentSuccess,
+      {
+        name: mockScreenshotName2,
+        body: mockScreenshotBuffer,
+        contentType: "image/png",
+      },
+      {
+        name: mockScreenshotName3,
+        body: mockScreenshotBuffer,
+        contentType: "image/png",
+      },
+    ]
+    vi.advanceTimersByTime(600)
 
     reporter.onStepEnd(
       mockTestSuccess,
       {
-        attachments: [
-          {
-            name: mockScreenshotName,
-            body: mockScreenshotBuffer,
-            contentType: "image/png",
-          },
-        ],
+        attachments: mockAttachmentSuccess,
       } as TestResult,
       mockStep,
     )
 
+    vi.advanceTimersByTime(400)
+
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
+    vi.advanceTimersByTime(100)
+    reporter.onStepEnd(
+      mockTestFail,
+      {
+        attachments: mockAttachmentFail,
+      } as TestResult,
+      mockStep,
+    )
 
     expect(readdirSync(tempDir)).toHaveLength(1)
     reporter.onEnd()
@@ -326,17 +351,19 @@ parse_number_prefixes: true
 ### should redirect to dashboard on successful login
 
 Given user is on login page
-![screenshot](./${mockScreenshotName})
+![screenshot](./${mockScreenshotName1})
 
 ## Failed Login
 
 ### should display error message on failed login
 
 Given user is on login page
+![screenshot](./${mockScreenshotName2})
+![screenshot](./${mockScreenshotName3})
 
 `,
     )
-    expect(readdirSync(tempDir)).toHaveLength(3)
+    expect(readdirSync(tempDir)).toHaveLength(5)
     expect(readFileSync(`${tempDir}/dashboard-page.md`, "utf8")).toEqual(
       `---
 title: Dashboard Documentation
@@ -356,7 +383,7 @@ sidebar_position: 2
 
 `,
     )
-    expect(readFileSync(`${tempDir}/${mockScreenshotName}`)).toEqual(
+    expect(readFileSync(`${tempDir}/${mockScreenshotName1}`)).toEqual(
       mockScreenshotBuffer,
     )
   })
