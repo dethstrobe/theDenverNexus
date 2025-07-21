@@ -180,3 +180,21 @@ test.describe(withDocMeta("describe block"), async () => {
     })
   })
 ```
+
+#### Highlight an element
+It's possible to highlight an element by passing in a locator of an element on the page.
+
+```ts
+import { screenshot } from "@test2doc/playwright/screenshots"
+...
+
+test.describe(withDocMeta("describe block"), async () => {
+    test("test block", async ({ page }, testInfo) => {
+      ...
+      test.step("step block", async () => {
+        await page.goto("http://localhost:5173/")
+        await screenshot(testInfo, page.getByRole("header", {name: "Page Title"}))
+      })
+    })
+  })
+```
