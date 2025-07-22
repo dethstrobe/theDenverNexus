@@ -443,4 +443,42 @@ Given user is on login page
 `,
     )
   })
+
+  it("should generate markdown if there is no root describe block", () => {
+    const reporter = setup()
+    const mockSuiteWithoutRootDescribe: Suite = {
+      ...baseSuite,
+      title: "", // Root Suite
+      type: "root",
+      suites: [
+        {
+          ...baseSuite,
+          title: "chromium", // or firefox, webkit, etc.
+          type: "project",
+          suites: [
+            {
+              ...baseSuite,
+              title: "login.test.ts", // Test file name
+              type: "file",
+              suites: [],
+              tests: [mockTestSuccess, mockTestFail],
+            },
+          ],
+        },
+      ],
+    }
+
+    reporter.onBegin({} as FullConfig, mockSuiteWithoutRootDescribe)
+    reporter.onEnd()
+
+    expect(readFileSync(`${tempDir}/login.md`, "utf8")).toEqual(
+      `# login
+
+## should redirect to dashboard on successful login
+
+## should display error message on failed login
+
+`,
+    )
+  })
 })

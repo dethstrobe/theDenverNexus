@@ -89,11 +89,34 @@ class Test2DocReporter implements Reporter {
   onBegin(_config: FullConfig, suite: Suite) {
     this.docs = []
     this.docMap.clear()
-    // this.docMap.set(suite.title, this.docs)
     this.docs =
-      suite.suites[0]?.suites.flatMap(({ suites }) =>
-        suites.map((s) => this.buildDocTree(s)),
-      ) || []
+      suite.suites[0]?.suites.flatMap(({ suites, tests, title }) => [
+        ...suites.map((s) => this.buildDocTree(s)),
+        ...(tests.length > 0 ? [this.buildTestDocTree(title, tests)] : []),
+      ]) || []
+  }
+
+  private buildTestDocTree(filename: string, tests: TestCase[]): DocNode {
+    const title =
+      filename.match(/^(.*?)\.(test|spec)\.(ts|js)$/)?.[1] ?? filename
+    const docNode: DocNode = {
+      title: title,
+      children: [],
+      tests: this.buildDocTests(tests),
+    }
+
+    return docNode
+  }
+
+  private buildDocTests(tests: TestCase[]): DocTest[] {
+    return tests.map((test) => {
+      const testDoc: DocTest = {
+        title: test.title,
+        steps: [],
+      }
+      this.docMap.set(test.title, testDoc)
+      return testDoc
+    })
   }
 
   private buildDocTree(suite: Suite) {
@@ -108,14 +131,8 @@ class Test2DocReporter implements Reporter {
       docNode.children.push(childDocNode)
     }
 
-    for (const test of suite.tests) {
-      const testDoc: DocTest = {
-        title: test.title,
-        steps: [],
-      }
-      this.docMap.set(test.title, testDoc)
-      docNode.tests = docNode.tests || []
-      docNode.tests.push(testDoc)
+    if (suite.tests.length > 0) {
+      docNode.tests = this.buildDocTests(suite.tests)
     }
 
     return docNode
