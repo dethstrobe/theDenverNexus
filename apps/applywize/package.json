@@ -38,7 +38,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.9.6",
     "@cloudflare/workers-types": "^4.20250407.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^24.1.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "prisma": "~6.12.0",
