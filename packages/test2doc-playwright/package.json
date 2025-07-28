@@ -3,9 +3,17 @@
   "version": "0.5.1",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
+    "documentation",
+    "document",
+    "living documentation",
+    "markdown",
+    "generation",
+    "generator",
     "docs",
     "test",
     "playwright",
+    "docusaurus",
+    "reporter",
     "automation"
   ],
   "homepage": "https://github.com/dethstrobe/theDenverNexus/tree/main/packages/test2doc-playwright",
