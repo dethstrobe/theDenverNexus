@@ -114,7 +114,7 @@ class Test2DocReporter implements Reporter {
         title: test.title,
         steps: [],
       }
-      this.docMap.set(test.title, testDoc)
+      this.docMap.set(test.id, testDoc)
       return testDoc
     })
   }
@@ -139,7 +139,7 @@ class Test2DocReporter implements Reporter {
   }
 
   onStepBegin(test: TestCase, _result: TestResult, step: TestStep): void {
-    const docSection = this.docMap.get(test.title)
+    const docSection = this.docMap.get(test.id)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
       docSection.steps.push({ title: step.title })
     }
@@ -147,7 +147,7 @@ class Test2DocReporter implements Reporter {
 
   onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {
     const now = Date.now()
-    const docSection = this.docMap.get(test.title)
+    const docSection = this.docMap.get(test.id)
     if (docSection && step.category === "test.step" && "steps" in docSection) {
       for (const attachment of result.attachments) {
         if (!attachment?.body) continue

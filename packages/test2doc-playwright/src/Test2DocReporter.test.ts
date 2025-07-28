@@ -60,7 +60,7 @@ const baseTestCase: TestCase = {
   ],
   annotations: [],
   expectedStatus: "passed",
-  id: "",
+  id: "mock-id-0",
   parent: baseSuite, // this is just mocked out
   repeatEachIndex: 0,
   results: [],
@@ -73,11 +73,25 @@ const baseTestCase: TestCase = {
 const mockTestSuccess: TestCase = {
   ...baseTestCase,
   title: "should redirect to dashboard on successful login",
+  id: "mock-id-1",
 }
 
 const mockTestFail: TestCase = {
   ...baseTestCase,
   title: "should display error message on failed login",
+  id: "mock-id-2",
+}
+
+const mockTestPrivacyPolicyLogin: TestCase = {
+  ...baseTestCase,
+  title: "should open privacy policy in new tab",
+  id: "mock-id-3",
+}
+
+const mockTestPrivacyPolicyRegistration: TestCase = {
+  ...baseTestCase,
+  title: "should open privacy policy in new tab",
+  id: "mock-id-4",
 }
 
 const mockSuiteForPages: Suite = {
@@ -117,6 +131,38 @@ const mockSuiteForPages: Suite = {
                   title: "Failed Login",
                   tests: [mockTestFail],
                 },
+                {
+                  ...baseSuite,
+                  title: "link to privacy policy",
+                  tests: [mockTestPrivacyPolicyLogin],
+                },
+              ],
+            },
+            {
+              ...baseSuite,
+              title: withDocMeta("Registration Page", {
+                title: "Registration Page Documentation",
+                description: "The registration page for new users.",
+                sidebar_position: 1,
+              }), // Second Describe Block in the test file
+              type: "describe",
+              suites: [
+                {
+                  ...baseSuite,
+                  title: "New User Registration",
+                  tests: [
+                    {
+                      ...baseTestCase,
+                      title: "should register a new user successfully",
+                      id: "mock-id-6",
+                    },
+                  ],
+                },
+                {
+                  ...baseSuite,
+                  title: "link to privacy policy",
+                  tests: [mockTestPrivacyPolicyRegistration],
+                },
               ],
             },
           ],
@@ -142,8 +188,10 @@ const mockSuiteForPages: Suite = {
                     {
                       ...baseTestCase,
                       title: "should display a list of todos",
+                      id: "mock-id-7",
                     },
                   ],
+                  type: "describe",
                 },
                 {
                   ...baseSuite,
@@ -152,8 +200,10 @@ const mockSuiteForPages: Suite = {
                     {
                       ...baseTestCase,
                       title: "should redirect to login page",
+                      id: "mock-id-8",
                     },
                   ],
+                  type: "describe",
                 },
               ],
             },
@@ -287,6 +337,8 @@ describe("Test2DocReporter", () => {
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2 = `test2doc-${Date.now() + 999}-2.png`
     const mockScreenshotName3 = `test2doc-${Date.now() + 1001}-3.png`
+    const mockScreenshotName4 = `test2doc-${Date.now() + 1101}-4.png`
+    const mockScreenshotName5 = `test2doc-${Date.now() + 1201}-5.png`
     const mockAttachmentSuccess = [
       {
         name: mockScreenshotName1,
@@ -303,6 +355,22 @@ describe("Test2DocReporter", () => {
       },
       {
         name: mockScreenshotName3,
+        body: mockScreenshotBuffer,
+        contentType: "image/png",
+      },
+    ]
+    const mockAttachmentPrivacyPolicyLogin = [
+      ...mockAttachmentFail,
+      {
+        name: mockScreenshotName4,
+        body: mockScreenshotBuffer,
+        contentType: "image/png",
+      },
+    ]
+    const mockAttachmentPrivacyPolicyRegistration = [
+      ...mockAttachmentPrivacyPolicyLogin,
+      {
+        name: mockScreenshotName5,
         body: mockScreenshotBuffer,
         contentType: "image/png",
       },
@@ -329,9 +397,56 @@ describe("Test2DocReporter", () => {
       mockStep,
     )
 
+    reporter.onStepBegin(mockTestPrivacyPolicyLogin, {} as TestResult, mockStep)
+    vi.advanceTimersByTime(100)
+    reporter.onStepEnd(
+      mockTestPrivacyPolicyLogin,
+      {
+        attachments: mockAttachmentPrivacyPolicyLogin,
+      } as TestResult,
+      mockStep,
+    )
+
+    reporter.onStepBegin(
+      mockTestPrivacyPolicyRegistration,
+      {} as TestResult,
+      mockStep,
+    )
+    vi.advanceTimersByTime(100)
+    reporter.onStepEnd(
+      mockTestPrivacyPolicyRegistration,
+      {
+        attachments: mockAttachmentPrivacyPolicyRegistration,
+      } as TestResult,
+      mockStep,
+    )
+
     expect(readdirSync(tempDir)).toHaveLength(1)
     reporter.onEnd()
 
+    expect(readdirSync(tempDir)).toHaveLength(8)
+    expect(readFileSync(`${tempDir}/registration-page.md`, "utf8")).toEqual(
+      `---
+title: Registration Page Documentation
+description: The registration page for new users.
+sidebar_position: 1
+---
+
+# Registration Page
+
+## New User Registration
+
+### should register a new user successfully
+
+## link to privacy policy
+
+### should open privacy policy in new tab
+
+Given user is on login page
+![screenshot](./${mockScreenshotName5})
+
+`,
+    )
     expect(readFileSync(`${tempDir}/login-page.md`, "utf8")).toEqual(
       `---
 title: Login Page Documentation
@@ -361,9 +476,15 @@ Given user is on login page
 ![screenshot](./${mockScreenshotName2})
 ![screenshot](./${mockScreenshotName3})
 
+## link to privacy policy
+
+### should open privacy policy in new tab
+
+Given user is on login page
+![screenshot](./${mockScreenshotName4})
+
 `,
     )
-    expect(readdirSync(tempDir)).toHaveLength(5)
     expect(readFileSync(`${tempDir}/dashboard-page.md`, "utf8")).toEqual(
       `---
 title: Dashboard Documentation
