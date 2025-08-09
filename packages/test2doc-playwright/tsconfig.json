@@ -3,7 +3,8 @@
     /* Project Options */
     "target": "es2022" /* Specify ECMAScript target version for emitted JavaScript. */,
     "lib": [
-      "esnext"
+      "esnext",
+      "DOM"
     ] /* Specify a list of library files to be included in the compilation. */,
     "types": ["node"],
     "rootDir": "./src" /* Specify the root directory of input files. */,

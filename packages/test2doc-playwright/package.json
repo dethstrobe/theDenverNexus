@@ -64,7 +64,7 @@
     "format": "biome format --write ."
   },
   "peerDependencies": {
-    "@playwright/test": "^1.52.0"
+    "@playwright/test": "^1.54.1"
   },
   "devDependencies": {
     "vitest": "^3.2.4",
