@@ -47,3 +47,19 @@ test.describe(withDocMeta("RSS Feed Tests", { sidebar_position: 1 }), () => {
     })
   })
 })
+
+test("screenshot test", async ({ page }, testInfo) => {
+  await test.step("Take a screenshot of the page", async () => {
+    await page.goto("http://localhost:5173/screenshot")
+    await screenshot(testInfo, page)
+  })
+
+  await test.step("Take a screenshot and highlight the element", async () => {
+    const element = page.getByRole("group", {
+      name: "Screenshot Functionality",
+    })
+    await element.scrollIntoViewIfNeeded()
+    await expect(element).toBeVisible()
+    await screenshot(testInfo, element)
+  })
+})

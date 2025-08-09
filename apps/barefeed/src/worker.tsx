@@ -11,6 +11,7 @@ import type { User } from "@prisma/client"
 import { env } from "cloudflare:workers"
 export { SessionDurableObject } from "./session/durableObject"
 import { rssData1, rssData2 } from "./app/pages/Home/__mocks__/rssData"
+import { Screenshot } from "./app/pages/Screenshot"
 
 export type AppContext = {
   session: Session | null
@@ -77,6 +78,7 @@ export default defineApp([
         })
       }
     }),
+    route("/screenshot", async () => <Screenshot />),
     route("/protected", [
       ({ ctx }) => {
         if (!ctx.user) {

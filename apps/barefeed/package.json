@@ -28,7 +28,7 @@
     "test": "vitest",
     "test:ui": "playwright test --ui",
     "test:ci": "playwright test --reporter=list",
-    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
+    "doc": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
   },
   "peerDependencies": {
     "react": ">=18",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.5",
-    "@playwright/test": "^1.53.1",
+    "@playwright/test": "^1.54.1",
     "@test2doc/playwright": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
