@@ -106,6 +106,74 @@ The `TEST2DOC=true` is required to activate the test2doc metadata to pass to the
 ## Verify installation
 To verify your setup works, run `npm run docs:generate` and check that markdown files appear in your `./doc/docs` directory, or wherever you specified the output directory in the `playwright-test2doc.config.ts` file.
 
+## Filtering Tests
+It is possible you may wish to opt-in some tests or opt-out other tests from doc generation. This is possible with playwright tags.
+
+### Tag tests
+Adding tags to playwright tests is easy. See the [official docs](https://playwright.dev/docs/test-annotations#tag-tests) for more details. 
+
+There are a few different approaches to tagging, but for this README we're going with passing in a tag array to help support multiple tags. But if you prefer one of the other options playwright supports, feel free to use it.
+
+```ts
+// Add tag to describe block level
+test.describe('Describe Block', {
+  tag: ['@test2doc']
+}, () => {
+  test('this test inherits from the describe block', () => {
+    ...
+  })
+})
+
+// Add tag to tests
+// This example has multiple tags
+test('test title', {
+  tag: ['@test2doc', '@other-tag'],
+}, async ({ page }) => {
+  ...
+});
+
+// Add tag to skip doc generation
+test('test will skip doc generation', {
+  tag: ['@skip-docs'],
+}, async ({ page }) => {
+  ...
+});
+```
+
+### Opt-in Approach
+**Best for:** Legacy codebases or when you want explicit control over which tests generate documentation.
+
+Run only tests with the `@test2doc` tag.
+
+#### Update package.json
+```json
+{
+  ...
+  "scripts": {
+    ...
+    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts --grep @test2doc"
+  }
+  ...
+}
+```
+
+### Opt-out Approach
+**Best for:** Tests that don't need documentation generated, like flaky tests or internal API tests.
+
+Skip tests with the `@skip-docs` tag.
+
+#### Update package.json
+```json
+{
+  ...
+  "scripts": {
+    ...
+    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts --grep-invert @skip-docs"
+  }
+  ...
+}
+```
+
 ## How it works
 
 After this setup, every time you run your Playwright tests, the `@test2doc/playwright` reporter will automatically generate a new markdown file in your specified Docusaurus docs directory for each test file and/or top-level describe block found in your Playwright test files.
