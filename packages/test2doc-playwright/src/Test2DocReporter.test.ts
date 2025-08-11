@@ -1,4 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  MockInstance,
+} from "vitest"
 import Test2DocReporter from "./index.js"
 import type {
   FullConfig,
@@ -601,5 +609,62 @@ Given user is on login page
 
 `,
     )
+  })
+
+  describe("exit test run", () => {
+    let mockExit: MockInstance<
+      (code?: string | number | null | undefined) => never
+    >
+    let mockConsoleError: MockInstance<(...args: any[]) => void>
+
+    beforeEach(() => {
+      mockExit = vi.spyOn(process, "exit").mockImplementation(() => {
+        throw new Error("process.exit called")
+      })
+
+      // Mock console.error to test error messages
+      mockConsoleError = vi.spyOn(console, "error").mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      mockExit.mockRestore()
+      mockConsoleError.mockRestore()
+    })
+
+    it("when there are failed tests", () => {
+      const reporter = setup()
+
+      const mockFailedResult: TestResult = {
+        status: "failed",
+      } as TestResult
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockFailedResult),
+      ).toThrow("process.exit called")
+
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}`,
+      )
+      expect(mockExit).toHaveBeenCalledWith(1)
+      expect(mockExit).toHaveBeenCalledTimes(1)
+    })
+
+    it("when there are tests that timeout", () => {
+      const reporter = setup()
+
+      const mockTimeoutResult: TestResult = {
+        status: "timedOut",
+      } as TestResult
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockTimeoutResult),
+      ).toThrow("process.exit called")
+
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}`,
+      )
+      expect(mockExit).toHaveBeenCalledWith(1)
+      expect(mockExit).toHaveBeenCalledTimes(1)
+    })
   })
 })

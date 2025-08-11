@@ -166,6 +166,15 @@ class Test2DocReporter implements Reporter {
     }
   }
 
+  onTestEnd(test: TestCase, result: TestResult) {
+    if (result.status === "failed" || result.status === "timedOut") {
+      console.error(
+        `Documentation generation aborted due to test failure: ${test.title}`,
+      )
+      process.exit(1)
+    }
+  }
+
   onEnd() {
     this.deleteScreenshots(this.outputDir)
     this.docs.forEach((doc) => this.buildDocFiles(doc))
