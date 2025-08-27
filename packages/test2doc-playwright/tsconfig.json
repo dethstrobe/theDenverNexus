@@ -46,5 +46,11 @@
     "composite": true // Keep composite if you use project references
   },
   "include": ["src/**/*", "bin"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/testUtils/*.ts"
+  ]
 }

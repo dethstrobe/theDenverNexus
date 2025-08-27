@@ -7,290 +7,26 @@ import {
   afterEach,
   MockInstance,
 } from "vitest"
-import Test2DocReporter from "./index.js"
-import type {
-  FullConfig,
-  FullProject,
-  Suite,
-  TestCase,
-  TestResult,
-  TestStep,
-} from "@playwright/test/reporter"
-import {
-  mkdtempSync,
-  readdirSync,
-  statSync,
-  unlinkSync,
-  readFileSync,
-  rmdirSync,
-  writeFileSync,
-} from "node:fs"
+import type { FullConfig, Suite, TestResult } from "@playwright/test/reporter"
+import { readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
-import { tmpdir } from "node:os"
-import { withDocCategory, withDocMeta } from "./DocMeta.js"
+import { withDocMeta } from "./DocMeta.js"
+import {
+  setup,
+  tempDir,
+  testCleanup,
+  mockSuiteForPages,
+  mockSuiteForCategories,
+  mockTestSuccess,
+  mockTestFail,
+  mockTestPrivacyPolicyLogin,
+  mockTestPrivacyPolicyRegistration,
+  mockStep,
+  baseSuite,
+  mockSuiteWithMutliProjects,
+} from "./testUtils/index.js"
 
-const tempDir = mkdtempSync(join(tmpdir(), "test2doc-"))
-
-const baseSuite: Suite = {
-  title: "",
-  suites: [],
-  tests: [],
-  location: { file: "", line: 0, column: 0 },
-  allTests: (): Array<TestCase> => {
-    throw new Error("Function not implemented.")
-  },
-  entries: (): Array<TestCase | Suite> => {
-    throw new Error("Function not implemented.")
-  },
-  project: (): FullProject | undefined => {
-    throw new Error("Function not implemented.")
-  },
-  titlePath: (): Array<string> => {
-    throw new Error("Function not implemented.")
-  },
-  type: "root",
-}
-
-const baseTestCase: TestCase = {
-  title: "base",
-  location: { file: "", line: 0, column: 0 },
-  ok: (): boolean => {
-    throw new Error("Function not implemented.")
-  },
-  outcome: (): "skipped" | "expected" | "unexpected" | "flaky" => {
-    throw new Error("Function not implemented.")
-  },
-  titlePath: (): Array<string> => [
-    "Root Suite",
-    "Parent Describe",
-    "Child Describe",
-    "login test",
-  ],
-  annotations: [],
-  expectedStatus: "passed",
-  id: "mock-id-0",
-  parent: baseSuite, // this is just mocked out
-  repeatEachIndex: 0,
-  results: [],
-  retries: 0,
-  tags: [],
-  timeout: 0,
-  type: "test",
-}
-
-const mockTestSuccess: TestCase = {
-  ...baseTestCase,
-  title: "should redirect to dashboard on successful login",
-  id: "mock-id-1",
-}
-
-const mockTestFail: TestCase = {
-  ...baseTestCase,
-  title: "should display error message on failed login",
-  id: "mock-id-2",
-}
-
-const mockTestPrivacyPolicyLogin: TestCase = {
-  ...baseTestCase,
-  title: "should open privacy policy in new tab",
-  id: "mock-id-3",
-}
-
-const mockTestPrivacyPolicyRegistration: TestCase = {
-  ...baseTestCase,
-  title: "should open privacy policy in new tab",
-  id: "mock-id-4",
-}
-
-const mockSuiteForPages: Suite = {
-  ...baseSuite,
-  title: "", // Root Suite
-  type: "root",
-  suites: [
-    {
-      ...baseSuite,
-      title: "chromium", // or firefox, webkit, etc.
-      type: "project",
-      suites: [
-        {
-          ...baseSuite,
-          title: "login.test.ts", // Test file name
-          type: "file",
-          suites: [
-            {
-              ...baseSuite,
-              title: withDocMeta("Login Page", {
-                title: "Login Page Documentation",
-                keywords: ["login", "password", "username"],
-                description:
-                  "The different login scenarios for the login page.",
-                sidebar_position: 1,
-                parse_number_prefixes: true,
-              }), // First Describe Block in the test file
-              type: "describe",
-              suites: [
-                {
-                  ...baseSuite,
-                  title: "Successful Login",
-                  tests: [mockTestSuccess],
-                },
-                {
-                  ...baseSuite,
-                  title: "Failed Login",
-                  tests: [mockTestFail],
-                },
-                {
-                  ...baseSuite,
-                  title: "link to privacy policy",
-                  tests: [mockTestPrivacyPolicyLogin],
-                },
-              ],
-            },
-            {
-              ...baseSuite,
-              title: withDocMeta("Registration Page", {
-                title: "Registration Page Documentation",
-                description: "The registration page for new users.",
-                sidebar_position: 1,
-              }), // Second Describe Block in the test file
-              type: "describe",
-              suites: [
-                {
-                  ...baseSuite,
-                  title: "New User Registration",
-                  tests: [
-                    {
-                      ...baseTestCase,
-                      title: "should register a new user successfully",
-                      id: "mock-id-6",
-                    },
-                  ],
-                },
-                {
-                  ...baseSuite,
-                  title: "link to privacy policy",
-                  tests: [mockTestPrivacyPolicyRegistration],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          ...baseSuite,
-          title: "dashboard.test.ts", // Test file name
-          type: "file",
-          suites: [
-            {
-              ...baseSuite,
-              title: withDocMeta("Dashboard Page", {
-                title: "Dashboard Documentation",
-                description: "The dashboard of todo stuff.",
-                sidebar_position: 2,
-              }), // First Describe Block in the test file
-              type: "describe",
-              suites: [
-                {
-                  ...baseSuite,
-                  title: "Logged In User",
-                  tests: [
-                    {
-                      ...baseTestCase,
-                      title: "should display a list of todos",
-                      id: "mock-id-7",
-                    },
-                  ],
-                  type: "describe",
-                },
-                {
-                  ...baseSuite,
-                  title: "Logged Out User",
-                  tests: [
-                    {
-                      ...baseTestCase,
-                      title: "should redirect to login page",
-                      id: "mock-id-8",
-                    },
-                  ],
-                  type: "describe",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-}
-
-const mockSuiteForCategories: Suite = {
-  ...baseSuite,
-  title: "", // Root Suite
-  type: "root",
-  suites: [
-    {
-      ...baseSuite,
-      title: "chromium", // or firefox, webkit, etc.
-      type: "project",
-      suites: [
-        {
-          ...baseSuite,
-          title: "login.test.ts", // Test file name
-          type: "file",
-          suites: [
-            {
-              ...baseSuite,
-              title: withDocCategory("Login Page", {
-                label: "Login Page Documentation Label",
-                position: 1,
-                className: "login-page",
-                link: {
-                  type: "generated-index",
-                  title: "Login Page Documentation Title",
-                  description:
-                    "The different login scenarios for the login page.",
-                  slug: "login-page",
-                },
-              }),
-              suites: [
-                {
-                  ...baseSuite,
-                  title: withDocMeta("Successful Login", {
-                    sidebar_position: 1,
-                  }),
-                  tests: [mockTestSuccess],
-                },
-                {
-                  ...baseSuite,
-                  title: "Failed Login",
-                  tests: [mockTestFail],
-                },
-              ],
-              type: "describe",
-            },
-          ],
-        },
-      ],
-    },
-  ],
-}
-
-const baseTestStep: TestStep = {
-  title: "Given user is on login page",
-  category: "test.step",
-  titlePath: (): Array<string> => {
-    throw new Error("Function not implemented.")
-  },
-  annotations: [],
-  attachments: [],
-  duration: 0,
-  startTime: new Date(),
-  steps: [],
-}
-
-const mockStep: TestStep = {
-  ...baseTestStep,
-  title: "Given user is on login page",
-}
+const mockFullConfig: FullConfig = {} as FullConfig
 
 describe("Test2DocReporter", () => {
   beforeEach(() => {
@@ -303,25 +39,6 @@ describe("Test2DocReporter", () => {
     // Clean up the temporary directory
     testCleanup()
   })
-
-  function testCleanup(dir = tempDir) {
-    readdirSync(dir).forEach((file) => {
-      const filePath = join(dir, file)
-      if (statSync(filePath).isFile()) {
-        unlinkSync(filePath)
-      } else if (statSync(filePath).isDirectory()) {
-        // If it's a directory, we can remove it recursively if needed
-        testCleanup(filePath)
-        if (readdirSync(filePath).length === 0) {
-          rmdirSync(filePath)
-        }
-      }
-    })
-  }
-
-  const setup = () => {
-    return new Test2DocReporter({ outputDir: tempDir })
-  }
 
   // TODO: remove this later
   describe("withDocMeta", () => {
@@ -340,7 +57,7 @@ describe("Test2DocReporter", () => {
       mockScreenshotBuffer,
     )
 
-    reporter.onBegin({} as FullConfig, mockSuiteForPages)
+    reporter.onBegin(mockFullConfig, mockSuiteForPages)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2 = `test2doc-${Date.now() + 999}-2.png`
@@ -520,7 +237,7 @@ sidebar_position: 2
   it("should generate a directory and a __category__.json, and a page for each describe block child under the category describe", () => {
     const reporter = setup()
 
-    reporter.onBegin({} as FullConfig, mockSuiteForCategories)
+    reporter.onBegin(mockFullConfig, mockSuiteForCategories)
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
     reporter.onEnd()
@@ -597,7 +314,7 @@ Given user is on login page
       ],
     }
 
-    reporter.onBegin({} as FullConfig, mockSuiteWithoutRootDescribe)
+    reporter.onBegin(mockFullConfig, mockSuiteWithoutRootDescribe)
     reporter.onEnd()
 
     expect(readFileSync(`${tempDir}/login.md`, "utf8")).toEqual(
@@ -666,5 +383,41 @@ Given user is on login page
       expect(mockExit).toHaveBeenCalledWith(1)
       expect(mockExit).toHaveBeenCalledTimes(1)
     })
+  })
+
+  it("should generate documentation for each project", () => {
+    const reporter = setup()
+
+    reporter.onBegin(mockFullConfig, mockSuiteWithMutliProjects)
+    reporter.onEnd()
+
+    expect(readdirSync(tempDir)).toHaveLength(3)
+
+    expect(readFileSync(`${tempDir}/login.md`, "utf8")).toEqual(
+      `# login
+
+## how to login
+
+## how to logout
+
+`,
+    )
+    expect(
+      readFileSync(`${tempDir}/auth-setup-ts.md`, "utf8"),
+    ).toEqual(`# auth.setup.ts
+
+## setup auth
+
+`)
+
+    expect(
+      readFileSync(`${tempDir}/authenticated.md`, "utf8"),
+    ).toEqual(`# authenticated
+
+## user name and profile should be visible
+
+## setting button should set
+
+`)
   })
 })
