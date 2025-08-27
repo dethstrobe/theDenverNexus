@@ -385,13 +385,13 @@ Given user is on login page
     })
   })
 
-  it("should generate documentation for each project", () => {
+  it("should generate documentation for each project (expect for .setup.ts files)", () => {
     const reporter = setup()
 
     reporter.onBegin(mockFullConfig, mockSuiteWithMutliProjects)
     reporter.onEnd()
 
-    expect(readdirSync(tempDir)).toHaveLength(3)
+    expect(readdirSync(tempDir)).toHaveLength(2)
 
     expect(readFileSync(`${tempDir}/login.md`, "utf8")).toEqual(
       `# login
@@ -402,13 +402,6 @@ Given user is on login page
 
 `,
     )
-    expect(
-      readFileSync(`${tempDir}/auth-setup-ts.md`, "utf8"),
-    ).toEqual(`# auth.setup.ts
-
-## setup auth
-
-`)
 
     expect(
       readFileSync(`${tempDir}/authenticated.md`, "utf8"),

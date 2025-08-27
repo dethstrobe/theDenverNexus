@@ -178,6 +178,8 @@ Skip tests with the `@skip-docs` tag.
 
 After this setup, every time you run your Playwright tests, the `@test2doc/playwright` reporter will automatically generate a new markdown file in your specified Docusaurus docs directory for each test file and/or top-level describe block found in your Playwright test files.
 
+> **Note:** Any test files with a `.setup.ts` (or `.setup.js`) extension are automatically ignored and will not generate documentation. This is to prevent Playwright global setup/auth files from appearing in your docs.
+
 ### Adding Docusaurus Page Metadata
 Docusaurus supports [markdown front matter](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter) to allow for more control of pages and to help position links in the sidebar.
 

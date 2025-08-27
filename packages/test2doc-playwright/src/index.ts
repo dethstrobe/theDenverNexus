@@ -91,10 +91,13 @@ class Test2DocReporter implements Reporter {
     this.docMap.clear()
     this.docs = suite.suites.flatMap(
       (project) =>
-        project.suites.flatMap(({ suites, tests, title }) => [
-          ...suites.map((s) => this.buildDocTree(s)),
-          ...(tests.length > 0 ? [this.buildTestDocTree(title, tests)] : []),
-        ]) || [],
+        project.suites.flatMap(({ suites, tests, title }) => {
+          if (/\.setup\.[jt]s$/.test(title)) return []
+          return [
+            ...suites.map((s) => this.buildDocTree(s)),
+            ...(tests.length > 0 ? [this.buildTestDocTree(title, tests)] : []),
+          ]
+        }) || [],
     )
   }
 
