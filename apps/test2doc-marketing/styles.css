@@ -42,6 +42,7 @@ section {
   top: 0;
   position: fixed;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .logo {
@@ -93,7 +94,23 @@ section {
 
 .subscribe {
   height: 100vh;
-  iframe { 
-    border:1px solid #EEE;
+  flex-direction: column;
+  iframe {
+    border: 1px solid #eee;
+  }
+  .links {
+    width: 480px;
+    margin-block-start: 3em;
+    border-block-start: 0.25em solid var(--color-gold);
+    border-block-end: 0.25em solid var(--color-gold);
+    padding: 0.5em 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    img {
+      max-width: 2rem;
+      height: 2rem;
+    }
   }
 }
