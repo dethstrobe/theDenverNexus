@@ -1,0 +1,55 @@
+name: Deploy Action
+permissions:
+  contents: read
+  id-token: write
+  deployments: write
+inputs:
+  environement-url:
+    description: The application URL
+    required: true
+  hosting_token:
+    description: The token needed to access cloudflare host
+    required: true
+  hosting_account:
+    description: The id of the cloudflare account
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Create Deployment
+      id: deployment-status
+      uses: chrnorm/deployment-action@v2
+      env:
+        environment-url: ${{ inputs.environment-url }}
+      with:
+        token: ${{ github.token }}
+        environment-url: ${{ env.environment-url }}
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        name: dist
+    - name: Cloudflare Wrangler
+      uses: cloudflare/wrangler-action@v3
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.hosting_token }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ inputs.hosting_account }}
+      with:
+        apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+    - name: Successful Deployment
+      if: success()
+      uses: chrnorm/deployment-status@v2
+      with:
+        token: ${{ github.token }}
+        environment-url: ${{ steps.action.outputs.environment_url }}
+        deployment-id: ${{ steps.action.outputs.deployment_id }}
+        state: success
+    - name: Failed Deployment
+      if: failure()
+      uses: chrnorm/deployment-status@v2
+      with:
+        token: ${{ github.token }}
+        environment-url: ${{ steps.action.outputs.environment_url }}
+        deployment-id: ${{ steps.action.outputs.deployment_id }}
+        state: failure
