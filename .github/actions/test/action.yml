@@ -1,0 +1,25 @@
+name: Test Action
+permissions:
+  contents: read
+  id-token: write
+inputs:
+  app:
+    description: The app to test
+    default: barefeed
+  artifact_path:
+    description: The artifact path to be uploaded
+    default: test-results
+runs:
+  using: composite
+  steps:
+    - name: Run Tests
+      run: |
+        cd apps/${APP}
+        pnpm run test:ci
+    - name: Artifact Upload
+      uses: actions/upload-artifact@v4
+      env:
+        ARTIFACT_PATH: ${{ inputs.artifact_path }}
+      with:
+        name: coverage report file name here
+        path: ${{ env.ARTIFACT_PATH }}

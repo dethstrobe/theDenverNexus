@@ -1,0 +1,52 @@
+name: Barefeed Workflow
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Branch Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - name: Node Setup
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: "latest"
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Run Tests
+        uses: "./.github/actions/test"
+        with:
+          app: "barefeed"
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Branch Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - name: Node Setup
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: "latest"
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Build Artifact
+        uses: "./.github/actions/build"
+        with:
+          app: "barefeed"
