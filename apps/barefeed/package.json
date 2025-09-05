@@ -60,7 +60,7 @@
     "jsdom": "^26.1.0",
     "msw": "^2.10.2",
     "prisma": "~6.14.0",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "vibe-rules": "^0.3.50",
     "vite": "^6.3.5",
     "vitest": "^3.2.4",
