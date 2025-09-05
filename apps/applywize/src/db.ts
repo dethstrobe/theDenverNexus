@@ -1,7 +1,7 @@
-import { PrismaClient } from "@generated/prisma";
+import { PrismaClient } from "@generated/prisma/client";
 import { PrismaD1 } from "@prisma/adapter-d1";
 
-export type * from "@generated/prisma";
+export type * from "@generated/prisma/client";
 
 export let db: PrismaClient;
 
