@@ -200,7 +200,7 @@ class Test2DocReporter implements Reporter {
       mkdirSync(filePath, { recursive: true })
 
       writeFileSync(
-        `${filePath}/__category__.json`,
+        `${filePath}/_category_.json`,
         JSON.stringify(metadata, null, 2),
       )
       doc.children.forEach((child) => this.buildDocFiles(child, filePath))

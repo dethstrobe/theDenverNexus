@@ -5,7 +5,7 @@ import {
   vi,
   beforeEach,
   afterEach,
-  MockInstance,
+  type MockInstance,
 } from "vitest"
 import type { FullConfig, Suite, TestResult } from "@playwright/test/reporter"
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
@@ -234,7 +234,7 @@ sidebar_position: 2
     )
   })
 
-  it("should generate a directory and a __category__.json, and a page for each describe block child under the category describe", () => {
+  it("should generate a directory and a _category_.json, and a page for each describe block child under the category describe", () => {
     const reporter = setup()
 
     reporter.onBegin(mockFullConfig, mockSuiteForCategories)
@@ -243,7 +243,7 @@ sidebar_position: 2
     reporter.onEnd()
 
     expect(
-      readFileSync(`${tempDir}/login-page/__category__.json`, "utf8"),
+      readFileSync(`${tempDir}/login-page/_category_.json`, "utf8"),
     ).toEqual(
       JSON.stringify(
         {
