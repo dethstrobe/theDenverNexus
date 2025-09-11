@@ -182,7 +182,9 @@ class Test2DocReporter implements Reporter {
 
   onEnd() {
     this.deleteScreenshots(this.outputDir)
-    this.docs.forEach((doc) => this.buildDocFiles(doc))
+    this.docs.forEach((doc) => {
+      this.buildDocFiles(doc)
+    })
   }
 
   private buildDocFiles(doc: DocNode, outputDir: string = this.outputDir) {
@@ -203,7 +205,9 @@ class Test2DocReporter implements Reporter {
         `${filePath}/_category_.json`,
         JSON.stringify(metadata, null, 2),
       )
-      doc.children.forEach((child) => this.buildDocFiles(child, filePath))
+      doc.children.forEach((child) => {
+        this.buildDocFiles(child, filePath)
+      })
       this.generateScreenshots(filePath)
     } else {
       const markdown = this.generateMarkdown(doc, 1)

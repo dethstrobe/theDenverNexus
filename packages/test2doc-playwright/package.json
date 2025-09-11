@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
     "documentation",
@@ -59,7 +59,9 @@
     "clean": "rm -rf dist",
     "build": "tsc --project tsconfig.json",
     "build:watch": "tsc --project tsconfig.json --watch",
-    "test": "vitest",
+    "test": "vitest run && pnpm int",
+    "unit": "vitest",
+    "int": "playwright test",
     "lint": "biome lint .",
     "format": "biome format --write ."
   },
@@ -67,7 +69,8 @@
     "@playwright/test": "^1.54.1"
   },
   "devDependencies": {
-    "vitest": "^3.2.4",
-    "@types/node": "^24.0.4"
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.0.4",
+    "vitest": "^3.2.4"
   }
 }

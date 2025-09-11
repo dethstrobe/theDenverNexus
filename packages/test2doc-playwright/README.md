@@ -268,3 +268,25 @@ test.describe(withDocMeta("describe block"), async () => {
     })
   })
 ```
+
+##### Add a label while highlighting an element
+In case the highlight is not enough, you can add a label under the highlighted element.
+
+```ts
+import { screenshot } from "@test2doc/playwright/screenshots"
+...
+
+test.describe(withDocMeta("describe block"), async () => {
+    test("test block", async ({ page }, testInfo) => {
+      ...
+      test.step("step block", async () => {
+        await page.goto("http://localhost:5173/")
+        await screenshot(
+          testInfo,
+          page.getByRole("header", {name: "Page Title"},
+          { label: { text: "Heading of the Page" } }
+        ))
+      })
+    })
+  })
+```
