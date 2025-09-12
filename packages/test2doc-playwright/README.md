@@ -349,6 +349,11 @@ To style the highlight and label we expose a few properties on the `annotation` 
   - **Description**: The width of the border for the highlight box.
   - **Default**: `2`
 
+- **`position`**:
+  - **Type**: `"above" | "below" | "left" | "right"`
+  - **Description**: Determines the position of the label text relative to the highlighted element.
+  - **Default**: `"below"` (the label will be placed below the highlighted element)
+
 ```ts
 test.describe(withDocMeta("describe block"), async () => {
     test("test block", async ({ page }, testInfo) => {
@@ -370,6 +375,7 @@ test.describe(withDocMeta("describe block"), async () => {
             highlightFillStyle: "rgba(255, 165, 0, 0.3)",
             highlightStrokeStyle: "#FFA500",
             highlightLineWidth: 2,
+            position: "above"
           }}
         ))
       })

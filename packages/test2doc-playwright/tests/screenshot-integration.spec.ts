@@ -2,8 +2,8 @@ import { test, expect, type Page, type TestInfo } from "@playwright/test"
 import { screenshot } from "../src/screenshots.js"
 import { writeFileSync, readFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
-import { fileURLToPath } from "url"
-import { dirname } from "path"
+import { fileURLToPath } from "node:url"
+import { dirname } from "node:path"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -12,7 +12,7 @@ const setup = async (page: Page) => {
   return page.setContent(`
       <html>
         <body style="margin: 0; padding: 20px; background: white;">
-          <button id="test-button" style="padding: 10px 20px; background: blue; color: white; display: block;">
+          <button id="test-button" style="margin: auto; margin-top: 25%; background: blue; color: white; display: block;">
             Click Me
           </button>
 
@@ -109,4 +109,33 @@ test("screenshot style the rendering of the highlight and label", async ({
   })
 
   expectScreenshotToMatch(testInfo, "style-highlight-label.png")
+})
+
+test("screenshot label positioning", async ({ page }, testInfo) => {
+  await setup(page)
+
+  const button = page.getByRole("button", { name: "Click Me" })
+  await screenshot(testInfo, button, {
+    annotation: { text: "Test Button", position: "above" },
+  })
+
+  expectScreenshotToMatch(testInfo, "label-position-above.png")
+
+  await screenshot(testInfo, button, {
+    annotation: { text: "Test Button", position: "below" },
+  })
+
+  expectScreenshotToMatch(testInfo, "label-position-below.png")
+
+  await screenshot(testInfo, button, {
+    annotation: { text: "Test Button", position: "left" },
+  })
+
+  expectScreenshotToMatch(testInfo, "label-position-left.png")
+
+  await screenshot(testInfo, button, {
+    annotation: { text: "Test Button", position: "right" },
+  })
+
+  expectScreenshotToMatch(testInfo, "label-position-right.png")
 })

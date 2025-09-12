@@ -19,7 +19,7 @@ interface AnnotationOptions {
   highlightFillStyle?: string // Highlight background
   highlightStrokeStyle?: string // Highlight border
   highlightLineWidth?: number // Highlight border width
-  // position?: "above" | "below" | "left" | "right"
+  position?: "above" | "below" | "left" | "right"
 }
 
 interface ScreenshotOptions extends PageScreenshotOptions {
@@ -81,16 +81,42 @@ export const screenshot = async (
               } = ctx.measureText(annotation.text)
               const textHeight =
                 actualBoundingBoxAscent + actualBoundingBoxDescent
-              const centerX = box.x + box.width / 2 - textWidth / 2
-              const centerY = box.y + box.height + 20
               const padding = 4
+              let labelPosition: { x: number; y: number };
+
+              switch (annotation.position) {
+                case "above":
+                  labelPosition = {
+                    x: box.x + box.width / 2 - textWidth / 2,
+                    y: box.y - textHeight / 2,
+                  };
+                  break;
+                case "left":
+                  labelPosition = {
+                    x: box.x - textWidth - padding * 2 - 5,
+                    y: box.y + box.height / 2 + textHeight / 2,
+                  };
+                  break;
+                case "right":
+                  labelPosition = {
+                    x: box.x + box.width + padding * 2 + 5,
+                    y: box.y + box.height / 2 + textHeight / 2,
+                  };
+                  break;
+                default:
+                  labelPosition = {
+                    x: box.x + box.width / 2 - textWidth / 2,
+                    y: box.y + box.height + 20,
+                  };
+                  break;
+              }
               if( annotation.labelBoxFillStyle || annotation.labelBoxStrokeStyle ) {
                 ctx.fillStyle = annotation.labelBoxFillStyle ?? "rgba(0, 0, 0, 0)"
                 ctx.strokeStyle = annotation.labelBoxStrokeStyle ?? "rgba(0, 0, 0, 0)"
                 ctx.lineWidth = annotation.labelBoxLineWidth ?? 2
                 ctx.fillRect(
-                  centerX - padding,
-                  centerY - textHeight - padding,
+                  labelPosition.x - padding,
+                  labelPosition.y - textHeight - padding,
                   textWidth + padding * 2,
                   textHeight + padding * 2,
                 )
@@ -98,9 +124,9 @@ export const screenshot = async (
 
               ctx.strokeStyle = annotation?.strokeStyle ?? "rgba(0, 0, 0, 0.1)"
               ctx.lineWidth = annotation?.lineWidth ?? 2
-              ctx.strokeText(annotation.text, centerX, centerY)
+              ctx.strokeText(annotation.text, labelPosition.x, labelPosition.y)
               ctx.fillStyle = annotation?.fillStyle ?? "rgba(0, 0, 0, 1)"
-              ctx.fillText(annotation.text, centerX, centerY)
+              ctx.fillText(annotation.text, labelPosition.x, labelPosition.y)
             }
           }
 
