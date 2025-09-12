@@ -20,7 +20,7 @@
     "migrate:dev": "prisma generate && wrangler d1 migrations apply DB --local",
     "migrate:new": "rw-scripts migrate-new",
     "migrate:prd": "wrangler d1 migrations apply DB --remote",
-    "postinstall": "husky && npx playwright install",
+    "postinstall": "##husky && npx playwright install",
     "prepare": "vibe-rules install cursor",
     "preview": "vite preview",
     "release": "rw-scripts ensure-deploy-env && npm run clean && prisma generate && RWSDK_DEPLOY=1 npm run build && wrangler deploy",
