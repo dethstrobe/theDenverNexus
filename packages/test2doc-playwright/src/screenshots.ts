@@ -7,18 +7,29 @@ import type {
 
 let screenshotCounter = 0
 
-interface LabelOptions {
-  text: string
+interface AnnotationOptions {
+  text?: string // Text to display for label
+  fillStyle?: string // Label text color
+  font?: string // Font size and family
+  strokeStyle?: string // Label outline color
+  lineWidth?: number // Label outline width
+  labelBoxFillStyle?: string // Label background color
+  labelBoxStrokeStyle?: string // Label border color
+  labelBoxLineWidth?: number // Label border width
+  highlightFillStyle?: string // Highlight background
+  highlightStrokeStyle?: string // Highlight border
+  highlightLineWidth?: number // Highlight border width
+  // position?: "above" | "below" | "left" | "right"
 }
 
 interface ScreenshotOptions extends PageScreenshotOptions {
-  label?: LabelOptions
+  annotation?: AnnotationOptions
 }
 
 export const screenshot = async (
   testInfo: TestInfo,
   target: Page | Locator,
-  { label, ...options }: ScreenshotOptions = {},
+  { annotation, ...options }: ScreenshotOptions = {},
 ) => {
   const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png`
 
@@ -31,7 +42,7 @@ export const screenshot = async (
     const boundingBox = await target.boundingBox()
     if (boundingBox) {
       await page.evaluate(
-        ({ boundingBox: box, label: labelOptions }) => {
+        ({ boundingBox: box, annotation }) => {
           const canvas = document.createElement("canvas")
           canvas.id = "test2doc-highlight-canvas"
           canvas.style.cssText = `
@@ -53,41 +64,49 @@ export const screenshot = async (
           const ctx = canvas.getContext("2d")
           if (ctx) {
             // Draw highlight rectangle
-            ctx.strokeStyle = "rgba(246, 255, 0, 0.8)"
-            ctx.lineWidth = 2
+            ctx.strokeStyle = annotation?.highlightStrokeStyle ?? "rgba(255, 165, 0, 1)"
+            ctx.lineWidth = annotation?.highlightLineWidth ?? 2
             ctx.strokeRect(box.x, box.y, box.width, box.height)
 
             // Add subtle fill
-            ctx.fillStyle = "rgba(240, 255, 107, 0.25)"
+            ctx.fillStyle = annotation?.highlightFillStyle ?? "rgba(255, 165, 0, 0.3)"
             ctx.fillRect(box.x, box.y, box.width, box.height)
 
-            if (labelOptions?.text) {
+            if (annotation?.text) {
+              ctx.font = annotation?.font ?? "14px Arial"
               const {
                 width: textWidth,
                 actualBoundingBoxAscent,
                 actualBoundingBoxDescent,
-              } = ctx.measureText(labelOptions.text)
+              } = ctx.measureText(annotation.text)
               const textHeight =
                 actualBoundingBoxAscent + actualBoundingBoxDescent
               const centerX = box.x + box.width / 2 - textWidth / 2
               const centerY = box.y + box.height + 20
               const padding = 4
-              ctx.fillStyle = "rgba(0, 0, 0, 0.8)"
-              ctx.fillRect(
-                centerX - padding,
-                centerY - textHeight - padding,
-                textWidth + padding * 2,
-                textHeight + padding * 2,
-              )
+              if( annotation.labelBoxFillStyle || annotation.labelBoxStrokeStyle ) {
+                ctx.fillStyle = annotation.labelBoxFillStyle ?? "rgba(0, 0, 0, 0)"
+                ctx.strokeStyle = annotation.labelBoxStrokeStyle ?? "rgba(0, 0, 0, 0)"
+                ctx.lineWidth = annotation.labelBoxLineWidth ?? 2
+                ctx.fillRect(
+                  centerX - padding,
+                  centerY - textHeight - padding,
+                  textWidth + padding * 2,
+                  textHeight + padding * 2,
+                )
+              }
 
-              ctx.fillStyle = "white"
-              ctx.fillText(labelOptions.text, centerX, centerY)
+              ctx.strokeStyle = annotation?.strokeStyle ?? "rgba(0, 0, 0, 0.1)"
+              ctx.lineWidth = annotation?.lineWidth ?? 2
+              ctx.strokeText(annotation.text, centerX, centerY)
+              ctx.fillStyle = annotation?.fillStyle ?? "rgba(0, 0, 0, 1)"
+              ctx.fillText(annotation.text, centerX, centerY)
             }
           }
 
           document.body.appendChild(canvas)
         },
-        { boundingBox, label },
+        { boundingBox, annotation },
       )
 
       screenshot = await page.screenshot(options)

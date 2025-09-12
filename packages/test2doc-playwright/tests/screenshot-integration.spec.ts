@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test"
+import { test, expect, type Page, type TestInfo } from "@playwright/test"
 import { screenshot } from "../src/screenshots.js"
 import { writeFileSync, readFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
@@ -24,55 +24,44 @@ const setup = async (page: Page) => {
     `)
 }
 
+const expectScreenshotToMatch = (
+  testInfo: TestInfo,
+  screenshotFileName: string,
+) => {
+  const screenshotAttachment = testInfo.attachments.pop()
+
+  const expectedPath = join(
+    __dirname,
+    "expected-screenshots",
+    screenshotFileName,
+  )
+
+  if (existsSync(expectedPath)) {
+    const expectedBuffer = readFileSync(expectedPath)
+    expect(screenshotAttachment?.body).toEqual(expectedBuffer)
+  } else {
+    writeFileSync(expectedPath, screenshotAttachment?.body ?? Buffer.from(""))
+    console.warn(
+      `Expected screenshot did not exist. Created at ${expectedPath}. Please verify it is correct.`,
+    )
+  }
+}
+
 test("screenshot of a page", async ({ page }, testInfo) => {
   await setup(page)
 
   await screenshot(testInfo, page)
 
-  const screenshotAttachment = testInfo.attachments.pop()
-
-  const expectedPath = join(
-    __dirname,
-    "expected-screenshots",
-    "page-screenshot.png",
-  )
-
-  if (existsSync(expectedPath)) {
-    const expectedBuffer = readFileSync(expectedPath)
-    expect(screenshotAttachment?.body).toEqual(expectedBuffer)
-  } else {
-    writeFileSync(expectedPath, screenshotAttachment?.body ?? Buffer.from(""))
-    console.warn(
-      `Expected screenshot did not exist. Created at ${expectedPath}. Please verify it is correct.`,
-    )
-  }
+  expectScreenshotToMatch(testInfo, "screenshot-page.png")
 })
 
-test("screenshot highlighting an element with label", async ({
-  page,
-}, testInfo) => {
+test("screenshot highlighting an element", async ({ page }, testInfo) => {
   await setup(page)
 
   const button = page.getByRole("button", { name: "Click Me" })
   await screenshot(testInfo, button)
 
-  const screenshotAttachment = testInfo.attachments.pop()
-
-  const expectedPath = join(
-    __dirname,
-    "expected-screenshots",
-    "element-screenshot.png",
-  )
-
-  if (existsSync(expectedPath)) {
-    const expectedBuffer = readFileSync(expectedPath)
-    expect(screenshotAttachment?.body).toEqual(expectedBuffer)
-  } else {
-    writeFileSync(expectedPath, screenshotAttachment?.body ?? Buffer.from(""))
-    console.warn(
-      `Expected screenshot did not exist. Created at ${expectedPath}. Please verify it is correct.`,
-    )
-  }
+  expectScreenshotToMatch(testInfo, "highlight-element.png")
 })
 
 test("screenshot of element off the screen should be scrolled into view", async ({
@@ -83,23 +72,7 @@ test("screenshot of element off the screen should be scrolled into view", async 
   const button = page.getByRole("button", { name: "Below the fold Button" })
   await screenshot(testInfo, button)
 
-  const screenshotAttachment = testInfo.attachments.pop()
-
-  const expectedPath = join(
-    __dirname,
-    "expected-screenshots",
-    "element-off-screen-screenshot.png",
-  )
-
-  if (existsSync(expectedPath)) {
-    const expectedBuffer = readFileSync(expectedPath)
-    expect(screenshotAttachment?.body).toEqual(expectedBuffer)
-  } else {
-    writeFileSync(expectedPath, screenshotAttachment?.body ?? Buffer.from(""))
-    console.warn(
-      `Expected screenshot did not exist. Created at ${expectedPath}. Please verify it is correct.`,
-    )
-  }
+  expectScreenshotToMatch(testInfo, "element-off-screen.png")
 })
 
 test("screenshot highlighting an element with label text", async ({
@@ -108,23 +81,32 @@ test("screenshot highlighting an element with label text", async ({
   await setup(page)
 
   const button = page.getByRole("button", { name: "Click Me" })
-  await screenshot(testInfo, button, { label: { text: "Test Button" } })
+  await screenshot(testInfo, button, { annotation: { text: "Test Button" } })
 
-  const screenshotAttachment = testInfo.attachments.pop()
+  expectScreenshotToMatch(testInfo, "highlighting-element-label.png")
+})
 
-  const expectedPath = join(
-    __dirname,
-    "expected-screenshots",
-    "element-screenshot-with-label.png",
-  )
+test("screenshot style the rendering of the highlight and label", async ({
+  page,
+}, testInfo) => {
+  await setup(page)
 
-  if (existsSync(expectedPath)) {
-    const expectedBuffer = readFileSync(expectedPath)
-    expect(screenshotAttachment?.body).toEqual(expectedBuffer)
-  } else {
-    writeFileSync(expectedPath, screenshotAttachment?.body ?? Buffer.from(""))
-    console.warn(
-      `Expected screenshot did not exist. Created at ${expectedPath}. Please verify it is correct.`,
-    )
-  }
+  const button = page.getByRole("button", { name: "Click Me" })
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "This is the test button",
+      fillStyle: "white",
+      font: "14px Comic Sans MS",
+      strokeStyle: "#000000AA",
+      lineWidth: 4,
+      labelBoxFillStyle: "hsla(170, 45%, 45%, 0.5)",
+      labelBoxStrokeStyle: "#0f0",
+      labelBoxLineWidth: 2,
+      highlightFillStyle: "rgba(255, 165, 0, 0.3)",
+      highlightStrokeStyle: "#FFA500",
+      highlightLineWidth: 2,
+    },
+  })
+
+  expectScreenshotToMatch(testInfo, "style-highlight-label.png")
 })
