@@ -352,7 +352,7 @@ To style the highlight and label we expose a few properties on the `annotation` 
 - **`position`**:
   - **Type**: `"above" | "below" | "left" | "right"`
   - **Description**: Determines the position of the label text relative to the highlighted element.
-  - **Default**: `"below"` (the label will be placed below the highlighted element)
+  - **Default**: `"below"` - automatically repositioned if insufficient space below the element.
 
 ```ts
 test.describe(withDocMeta("describe block"), async () => {

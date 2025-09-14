@@ -139,3 +139,66 @@ test("screenshot label positioning", async ({ page }, testInfo) => {
 
   expectScreenshotToMatch(testInfo, "label-position-right.png")
 })
+
+test("positioning label intelligently when no position is specified", async ({
+  page,
+}, testInfo) => {
+  await page.setContent(`
+      <html>
+        <body style="margin: 0; padding: 0; background: white; height: 100vh; box-sizing: border-box; position: relative;">
+          <button id="top-left-button" style="position: absolute; top: 0; left: 0; background: blue; color: white; display: block;">
+            Top Left Button
+          </button>
+
+          <button id="top-right-button" style="position: absolute; top: 0; right: 0; background: blue; color: white; display: block;">
+            Top Right Button
+          </button>
+
+          <section aria-label="left side" style="position: relative; height: 100%; width: 50%; border: 2px solid black; box-sizing: border-box; float: left; text-align: center;">
+            left side
+          </section>
+
+          <button id="middle-button" style="position: absolute; top: 50%; left: 50%; transform: translateX(-50%); background: orange; color: white; display: block;">
+            Middle Button
+          </button>
+
+          <section aria-label="right side" style="position: relative; height: 100%; width: 50%; border: 2px solid black; box-sizing: border-box; float: right; text-align: center;">
+            right side
+          </section>
+
+          <button id="bottom-left-button" style="position: absolute; bottom: 0; left: 0; background: green; color: white; display: block;">
+            Bottom Left Button
+          </button>
+
+          <button id="bottom-right-button" style="position: absolute; bottom: 0; right: 0; background: green; color: white; display: block;">
+            Bottom Right Button
+          </button>
+        </body>
+      </html>
+    `)
+  const topLeftButton = page.getByRole("region", { name: "left side" })
+  await screenshot(testInfo, topLeftButton, {
+    annotation: { text: "Label on the right side" },
+  })
+  expectScreenshotToMatch(testInfo, "auto-position-right.png")
+
+  const topRightButton = page.getByRole("region", { name: "right side" })
+  await screenshot(testInfo, topRightButton, {
+    annotation: { text: "Label on the left side" },
+  })
+  expectScreenshotToMatch(testInfo, "auto-position-left.png")
+
+  const middleButton = page.getByRole("button", { name: "Middle Button" })
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label on the bottom side" },
+  })
+  expectScreenshotToMatch(testInfo, "auto-position-bottom.png")
+
+  const bottomLeftButton = page.getByRole("button", {
+    name: "Bottom Left Button",
+  })
+  await screenshot(testInfo, bottomLeftButton, {
+    annotation: { text: "Label on the top side" },
+  })
+  expectScreenshotToMatch(testInfo, "auto-position-top.png")
+})

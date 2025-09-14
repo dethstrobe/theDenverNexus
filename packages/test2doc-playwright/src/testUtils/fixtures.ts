@@ -1,11 +1,10 @@
-import {
+import type {
   FullProject,
   Suite,
   TestCase,
   TestStep,
 } from "@playwright/test/reporter"
 import { withDocCategory, withDocMeta } from "../DocMeta.js"
-import { b } from "vitest/dist/chunks/suite.d.FvehnV49.js"
 
 let mockId = 0
 

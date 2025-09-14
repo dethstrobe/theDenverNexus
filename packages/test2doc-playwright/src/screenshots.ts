@@ -64,12 +64,14 @@ export const screenshot = async (
           const ctx = canvas.getContext("2d")
           if (ctx) {
             // Draw highlight rectangle
-            ctx.strokeStyle = annotation?.highlightStrokeStyle ?? "rgba(255, 165, 0, 1)"
+            ctx.strokeStyle =
+              annotation?.highlightStrokeStyle ?? "rgba(255, 165, 0, 1)"
             ctx.lineWidth = annotation?.highlightLineWidth ?? 2
             ctx.strokeRect(box.x, box.y, box.width, box.height)
 
             // Add subtle fill
-            ctx.fillStyle = annotation?.highlightFillStyle ?? "rgba(255, 165, 0, 0.3)"
+            ctx.fillStyle =
+              annotation?.highlightFillStyle ?? "rgba(255, 165, 0, 0.3)"
             ctx.fillRect(box.x, box.y, box.width, box.height)
 
             if (annotation?.text) {
@@ -82,37 +84,74 @@ export const screenshot = async (
               const textHeight =
                 actualBoundingBoxAscent + actualBoundingBoxDescent
               const padding = 4
-              let labelPosition: { x: number; y: number };
 
-              switch (annotation.position) {
+              let position = annotation.position
+              if (!position) {
+                console.log({
+                  x: box.x,
+                  width: box.width,
+                  textWidth,
+                  innerWidth: window.innerWidth,
+                })
+                console.log({
+                  y: box.y,
+                  height: box.height,
+                  textHeight,
+                  scrollY: window.scrollY,
+                  innerHeight: window.innerHeight,
+                })
+                if (box.y - window.scrollY > window.innerHeight * 0.6) {
+                  position = "above"
+                } else if (
+                  box.y - textHeight < window.scrollY &&
+                  box.y + box.height + textHeight >
+                    window.innerHeight + window.scrollY
+                ) {
+                  if (box.x + box.width + textWidth < window.innerWidth) {
+                    position = "right"
+                  } else if (box.x - textWidth > 0) {
+                    position = "left"
+                  }
+                } else {
+                  position = "below"
+                }
+              }
+
+              let labelPosition: { x: number; y: number }
+              switch (position) {
                 case "above":
                   labelPosition = {
                     x: box.x + box.width / 2 - textWidth / 2,
                     y: box.y - textHeight / 2,
-                  };
-                  break;
+                  }
+                  break
                 case "left":
                   labelPosition = {
                     x: box.x - textWidth - padding * 2 - 5,
                     y: box.y + box.height / 2 + textHeight / 2,
-                  };
-                  break;
+                  }
+                  break
                 case "right":
                   labelPosition = {
                     x: box.x + box.width + padding * 2 + 5,
                     y: box.y + box.height / 2 + textHeight / 2,
-                  };
-                  break;
+                  }
+                  break
                 default:
                   labelPosition = {
                     x: box.x + box.width / 2 - textWidth / 2,
                     y: box.y + box.height + 20,
-                  };
-                  break;
+                  }
+                  break
               }
-              if( annotation.labelBoxFillStyle || annotation.labelBoxStrokeStyle ) {
-                ctx.fillStyle = annotation.labelBoxFillStyle ?? "rgba(0, 0, 0, 0)"
-                ctx.strokeStyle = annotation.labelBoxStrokeStyle ?? "rgba(0, 0, 0, 0)"
+              if (
+                annotation.labelBoxFillStyle ||
+                annotation.labelBoxStrokeStyle
+              ) {
+                ctx.fillStyle =
+                  annotation.labelBoxFillStyle ?? "rgba(0, 0, 0, 0)"
+                ctx.strokeStyle =
+                  annotation.labelBoxStrokeStyle ?? "rgba(0, 0, 0, 0)"
                 ctx.lineWidth = annotation.labelBoxLineWidth ?? 2
                 ctx.fillRect(
                   labelPosition.x - padding,

@@ -14,6 +14,7 @@ export interface DocusaurusHeaderConfig {
 export type metadataType = "page" | "category"
 
 // Assume false by default
+// biome-ignore lint/complexity/useLiteralKeys: TS recommends accessing Index Signatures with dot notation
 let test2docActive = process.env["TEST2DOC"] === "true"
 
 /**

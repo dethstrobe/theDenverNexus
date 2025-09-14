@@ -17,7 +17,7 @@ describe("withDocMeta", () => {
   test("returns title with config data when test2doc flag is provided on the command line", async () => {
     vi.resetModules()
     const originalEnv = { ...process.env }
-    process.env["TEST2DOC"] = "true"
+    process.env.TEST2DOC = "true"
 
     const { withDocMeta } = await import("./DocMeta.js")
     const title = withDocMeta("My Test Title", {
