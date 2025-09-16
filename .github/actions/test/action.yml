@@ -13,6 +13,7 @@ runs:
   using: composite
   steps:
     - name: Run Tests
+      shell: bash
       run: |
         cd apps/${APP}
         pnpm run test:ci
