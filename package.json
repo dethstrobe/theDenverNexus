@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:barefeed": "cd apps/barefeed && pnpm test:ci",
     "format": "biome format --write ."
   },
   "keywords": [],

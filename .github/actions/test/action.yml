@@ -12,14 +12,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Change App Directory
+    - name: Run Tests
       shell: bash
       env:
         APP: ${{ inputs.app }}
-      run: cd apps/${APP}
-    - name: Run Tests
-      shell: bash
-      run: pnpm run test:ci
+      run: pnpm run test:${APP}
     - name: Artifact Upload
       uses: actions/upload-artifact@v4
       env:
