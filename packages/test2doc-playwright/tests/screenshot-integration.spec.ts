@@ -202,3 +202,54 @@ test("positioning label intelligently when no position is specified", async ({
   })
   expectScreenshotToMatch(testInfo, "auto-position-top.png")
 })
+
+test("screenshot with arrow pointing to the element", async ({
+  page,
+}, testInfo) => {
+  await setup(page)
+
+  const button = page.getByRole("button", { name: "Click Me" })
+  await screenshot(testInfo, button, {
+    annotation: { text: "Test Button", position: "above", showArrow: true },
+  })
+
+  expectScreenshotToMatch(testInfo, "arrow-position-above.png")
+
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Test Button",
+      fillStyle: "white",
+      position: "below",
+      showArrow: true,
+      arrowLineWidth: 1,
+      arrowStrokeStyle: "purple",
+      labelBoxFillStyle: "purple",
+    },
+  })
+
+  expectScreenshotToMatch(testInfo, "arrow-position-below.png")
+
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Test Button",
+      position: "left",
+      showArrow: true,
+      arrowStrokeStyle: "rgba(255, 0, 0, 0.5)",
+      labelBoxStrokeStyle: "rgba(255, 0, 0, 0.5)",
+      labelBoxLineWidth: 3,
+    },
+  })
+
+  expectScreenshotToMatch(testInfo, "arrow-position-left.png")
+
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Test Button",
+      position: "right",
+      showArrow: true,
+      arrowLineWidth: 4,
+    },
+  })
+
+  expectScreenshotToMatch(testInfo, "arrow-position-right.png")
+})
