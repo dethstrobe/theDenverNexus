@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:test2doc": "cd packages/test2doc-playwright && pnpm clean && pnpm build",
+    "publish:test2doc": "cd packages/test2doc-playwright && pnpm publish  --provenance --access public",
     "test:barefeed": "cd apps/barefeed && pnpm test:ci",
+    "test:test2doc": "cd packages/test2doc-playwright && pnpm test",
     "format": "biome format --write ."
   },
   "keywords": [],
