@@ -97,14 +97,17 @@ export const screenshot = async (
                 // TODO: adding padding/margin to calculations
                 if (box.y - window.scrollY > window.innerHeight * 0.6) {
                   return "above"
-                } else if (
+                }
+
+                if (
                   box.y - textHeight < window.scrollY &&
                   box.y + box.height + textHeight >
                     window.innerHeight + window.scrollY
                 ) {
                   if (box.x + box.width + textWidth < window.innerWidth) {
                     return "right"
-                  } else if (box.x - textWidth > 0) {
+                  }
+                  if (box.x - textWidth > 0) {
                     return "left"
                   }
                 }
@@ -148,31 +151,32 @@ export const screenshot = async (
                     ? labelPosition.x + textWidth + padding
                     : position === "right"
                       ? labelPosition.x - padding / 2
-                      // top or bottom
-                      : labelPosition.x + textWidth / 2
+                      : // top or bottom
+                        labelPosition.x + textWidth / 2
                 const arrowLabelEndY =
                   position === "above"
                     ? labelPosition.y + padding / 2
                     : position === "below"
                       ? labelPosition.y - textHeight - padding / 2
-                      // left or right
-                      : box.y + box.height / 2
+                      : // left or right
+                        box.y + box.height / 2
 
                 const arrowStartX =
                   position === "left"
                     ? box.x
                     : position === "right"
                       ? box.x + box.width
-                      // top or bottom
-                      : box.x + box.width / 2
+                      : // top or bottom
+                        box.x + box.width / 2
                 const arrowStartY =
                   position === "above"
                     ? box.y
                     : position === "below"
                       ? box.y + box.height
-                      // left or right
-                      : box.y + box.height / 2
-                const arrowColor = annotation.arrowStrokeStyle ?? "rgba(255, 0, 0, 1)"
+                      : // left or right
+                        box.y + box.height / 2
+                const arrowColor =
+                  annotation.arrowStrokeStyle ?? "rgba(255, 0, 0, 1)"
 
                 ctx.strokeStyle = arrowColor
                 ctx.lineWidth = annotation.arrowLineWidth ?? 2
@@ -182,7 +186,10 @@ export const screenshot = async (
                 ctx.stroke()
 
                 // Draw arrowhead
-                const angle = Math.atan2(arrowStartY - arrowLabelEndY, arrowStartX - arrowLabelEndX)
+                const angle = Math.atan2(
+                  arrowStartY - arrowLabelEndY,
+                  arrowStartX - arrowLabelEndX,
+                )
                 const headLength = (annotation.arrowLineWidth ?? 2) * 5 // Length of the arrowhead
                 ctx.fillStyle = arrowColor
                 ctx.lineJoin = "round"
@@ -216,7 +223,11 @@ export const screenshot = async (
                 ctx.lineWidth = annotation.labelBoxLineWidth ?? 2
                 const paddingBothSides = padding * 2
                 const labelBoxX = labelPosition.x - padding
-                const labelBoxY = labelPosition.y - textHeight + actualBoundingBoxDescent - padding
+                const labelBoxY =
+                  labelPosition.y -
+                  textHeight +
+                  actualBoundingBoxDescent -
+                  padding
                 const labelBoxWidth = textWidth + paddingBothSides
                 const labelBoxHeight = textHeight + paddingBothSides
                 ctx.fillRect(
