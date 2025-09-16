@@ -27,8 +27,8 @@ runs:
     - name: Download Build Artifact
       uses: actions/download-artifact@v4
       with:
+        name: build-artifact
         path: dist
-        name: dist
     - name: Cloudflare Wrangler
       uses: cloudflare/wrangler-action@v3
       env:
