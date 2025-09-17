@@ -20,6 +20,8 @@ jobs:
           node-version: "latest"
       - name: Install Dependencies
         run: pnpm install
+      - name: Install Playwright Dependencies
+        run: pnpm playwright install --with-deps
       - name: Run Tests
         uses: "./.github/actions/test"
         with:

@@ -61,15 +61,16 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist && rm -rf tsconfig.tsbuildinfo",
     "build": "tsc --project tsconfig.json",
     "build:watch": "tsc --project tsconfig.json --watch",
-    "test": "vitest run && pnpm int && pnpm int:a",
-    "unit": "vitest",
+    "clean": "rm -rf dist && rm -rf tsconfig.tsbuildinfo",
+    "format": "biome format --write .",
     "int": "playwright test",
     "int:a": "playwright test --config=playwright-annotation.config.ts",
     "lint": "biome lint .",
-    "format": "biome format --write ."
+    "postinstall": "pnpm playwright install",
+    "test": "vitest run && pnpm int",
+    "unit": "vitest"
   },
   "peerDependencies": {
     "@playwright/test": "^1.54.1"
