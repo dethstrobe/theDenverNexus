@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
     "documentation",
@@ -40,6 +40,11 @@
       "import": "./dist/screenshots.js",
       "require": "./dist/screenshots.js",
       "types": "./dist/screenshots.d.ts"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js",
+      "require": "./dist/types.js"
     }
   },
   "main": "dist/index.js",
@@ -59,9 +64,10 @@
     "clean": "rm -rf dist && rm -rf tsconfig.tsbuildinfo",
     "build": "tsc --project tsconfig.json",
     "build:watch": "tsc --project tsconfig.json --watch",
-    "test": "vitest run && pnpm int",
+    "test": "vitest run && pnpm int && pnpm int:a",
     "unit": "vitest",
     "int": "playwright test",
+    "int:a": "playwright test --config=playwright-annotation.config.ts",
     "lint": "biome lint .",
     "format": "biome format --write ."
   },
@@ -70,7 +76,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@types/node": "^24.0.4",
+    "@types/node": "^24.5.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }

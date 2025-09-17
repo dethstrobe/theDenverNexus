@@ -9,7 +9,7 @@ let screenshotCounter = 0
 
 type Position = "above" | "below" | "left" | "right"
 
-interface AnnotationOptions {
+export interface AnnotationOptions {
   text?: string // Text to display for label
   fillStyle?: string // Label text color
   font?: string // Font size and family
@@ -34,8 +34,12 @@ interface ScreenshotOptions extends PageScreenshotOptions {
 export const screenshot = async (
   testInfo: TestInfo,
   target: Page | Locator,
-  { annotation, ...options }: ScreenshotOptions = {},
+  { annotation: overrideAnnotations, ...options }: ScreenshotOptions = {},
 ) => {
+  const annotation: AnnotationOptions = {
+    ...(testInfo.project?.use?.test2doc?.annotationDefaults ?? {}),
+    ...overrideAnnotations,
+  }
   const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png`
 
   let screenshot: Buffer

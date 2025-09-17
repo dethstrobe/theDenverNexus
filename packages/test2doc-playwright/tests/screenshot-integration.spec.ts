@@ -28,12 +28,16 @@ const expectScreenshotToMatch = (
   testInfo: TestInfo,
   screenshotFileName: string,
 ) => {
+  const hasDefaultAnnotations =
+    !!testInfo.project?.use?.test2doc?.annotationDefaults
   const screenshotAttachment = testInfo.attachments.pop()
 
   const expectedPath = join(
     __dirname,
     "expected-screenshots",
-    screenshotFileName,
+    hasDefaultAnnotations
+      ? `annotated-${screenshotFileName}`
+      : screenshotFileName,
   )
 
   if (existsSync(expectedPath)) {

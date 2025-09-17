@@ -399,3 +399,31 @@ test.describe(withDocMeta("describe block"), async () => {
     })
   })
 ```
+
+##### Configure Annotation Defaults
+If you want to set default values for the annotation object you can do so in your `playwright-test2doc.config.ts`. Just set the `annotationDefaults` object in the `test2doc` playwright global options. These defaults will be applied to all screenshots, but can still be overridden on a per-screenshot basis.
+```ts
+import { defineConfig, ... } from "@playwright/test"
+import "@test2doc/types" // Add this import to add test2doc to the global options
+
+export default defineConfig({
+  ...
+  use: {
+    ...
+    test2doc: {
+      annotationDefaults: {
+        fillStyle: "white",
+        labelBoxFillStyle: "rgba(0, 123, 255, 0.6)",
+        font: "bold 16px Helvetica, Arial, sans-serif",
+        highlightStrokeStyle: "rgba(0, 123, 255, 1)",
+        highlightFillStyle: "rgba(0, 0, 0, 0)",
+        highlightLineWidth: 3,
+        showArrow: true,
+        arrowStrokeStyle: "rgba(0, 123, 255, 1)",
+      },
+    },
+    ...
+  },
+  ...
+})
+```
