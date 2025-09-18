@@ -73,9 +73,27 @@ export const mockTestPrivacyPolicyLogin: TestCase = {
   id: `mock-id-${++mockId}`,
 }
 
+export const mockTestNewUserRegistration: TestCase = {
+  ...baseTestCase,
+  title: "should register a new user successfully",
+  id: `mock-id-${++mockId}`,
+}
+
 export const mockTestPrivacyPolicyRegistration: TestCase = {
   ...baseTestCase,
   title: "should open privacy policy in new tab",
+  id: `mock-id-${++mockId}`,
+}
+
+export const mockTestLoggedInUser: TestCase = {
+  ...baseTestCase,
+  title: "should display a list of todos",
+  id: `mock-id-${++mockId}`,
+}
+
+export const mockTestLoggedOutUser: TestCase = {
+  ...baseTestCase,
+  title: "should redirect to login page",
   id: `mock-id-${++mockId}`,
 }
 
@@ -135,13 +153,7 @@ export const mockSuiteForPages: Suite = {
                 {
                   ...baseSuite,
                   title: "New User Registration",
-                  tests: [
-                    {
-                      ...baseTestCase,
-                      title: "should register a new user successfully",
-                      id: `mock-id-${++mockId}`,
-                    },
-                  ],
+                  tests: [mockTestNewUserRegistration],
                 },
                 {
                   ...baseSuite,
@@ -169,25 +181,13 @@ export const mockSuiteForPages: Suite = {
                 {
                   ...baseSuite,
                   title: "Logged In User",
-                  tests: [
-                    {
-                      ...baseTestCase,
-                      title: "should display a list of todos",
-                      id: `mock-id-${++mockId}`,
-                    },
-                  ],
+                  tests: [mockTestLoggedInUser],
                   type: "describe",
                 },
                 {
                   ...baseSuite,
                   title: "Logged Out User",
-                  tests: [
-                    {
-                      ...baseTestCase,
-                      title: "should redirect to login page",
-                      id: `mock-id-${++mockId}`,
-                    },
-                  ],
+                  tests: [mockTestLoggedOutUser],
                   type: "describe",
                 },
               ],

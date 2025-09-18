@@ -24,20 +24,30 @@ import {
   mockStep,
   baseSuite,
   mockSuiteWithMutliProjects,
+  mockTestNewUserRegistration,
+  mockTestLoggedInUser,
+  mockTestLoggedOutUser,
 } from "./testUtils/index.js"
 
 const mockFullConfig: FullConfig = {} as FullConfig
 
 describe("Test2DocReporter", () => {
+  let mockLogging: MockInstance<(...args: any[]) => void>
   beforeEach(() => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2024-01-01T00:00:00Z"))
+
+    // Mock print to terminal
+    mockLogging = vi
+      .spyOn(process.stdout, "write")
+      .mockImplementation(() => true)
   })
 
   afterEach(() => {
     vi.useRealTimers()
     // Clean up the temporary directory
     testCleanup()
+    mockLogging.mockRestore()
   })
 
   // TODO: remove this later
@@ -110,9 +120,19 @@ describe("Test2DocReporter", () => {
       mockStep,
     )
 
+    reporter.onTestEnd(mockTestSuccess, { status: "passed" } as TestResult)
+
     vi.advanceTimersByTime(400)
 
     reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
+    reporter.onStepEnd(
+      mockTestFail,
+      {
+        attachments: mockAttachmentSuccess,
+      } as TestResult,
+      mockStep,
+    )
+    reporter.onTestEnd(mockTestFail, { status: "passed" } as TestResult)
     vi.advanceTimersByTime(100)
     reporter.onStepEnd(
       mockTestFail,
@@ -131,6 +151,13 @@ describe("Test2DocReporter", () => {
       } as TestResult,
       mockStep,
     )
+    reporter.onTestEnd(mockTestPrivacyPolicyLogin, {
+      status: "passed",
+    } as TestResult)
+
+    reporter.onTestEnd(mockTestNewUserRegistration, {
+      status: "passed",
+    } as TestResult)
 
     reporter.onStepBegin(
       mockTestPrivacyPolicyRegistration,
@@ -145,6 +172,14 @@ describe("Test2DocReporter", () => {
       } as TestResult,
       mockStep,
     )
+
+    reporter.onTestEnd(mockTestPrivacyPolicyRegistration, {
+      status: "passed",
+    } as TestResult)
+    reporter.onTestEnd(mockTestLoggedInUser, { status: "passed" } as TestResult)
+    reporter.onTestEnd(mockTestLoggedOutUser, {
+      status: "passed",
+    } as TestResult)
 
     expect(readdirSync(tempDir)).toHaveLength(1)
     reporter.onEnd()
@@ -232,6 +267,36 @@ sidebar_position: 2
     expect(readFileSync(`${tempDir}/${mockScreenshotName1}`)).toEqual(
       mockScreenshotBuffer,
     )
+
+    // Logging expectations
+    expect(mockLogging).toHaveBeenCalledWith(
+      "Starting documentation generation for 7 tests...\n",
+    )
+    expect(mockLogging).toHaveBeenCalledWith(
+      "Found 3 documentation sections\n\n",
+    )
+
+    // Progress bar updates
+    expect(mockLogging).toHaveBeenCalledWith("\r\x1b[K") // Clear line
+    expect(mockLogging).toHaveBeenCalledWith("[.......] 0/7 (0%)")
+    expect(mockLogging).toHaveBeenCalledWith("[P......] 1/7 (14%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PP.....] 2/7 (29%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PPP....] 3/7 (43%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PPPP...] 4/7 (57%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PPPPP..] 5/7 (71%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PPPPPP.] 6/7 (86%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PPPPPPP] 7/7 (100%)")
+
+    expect(mockLogging).toHaveBeenCalledWith("\n\n")
+    expect(mockLogging).toHaveBeenCalledWith("Cleaning up old screenshots...\n")
+    expect(mockLogging).toHaveBeenCalledWith(
+      "Generating documentation files...\n",
+    )
+    expect(mockLogging).toHaveBeenCalledWith(
+      "Documentation generation completed.\n",
+    )
+    expect(mockLogging).toHaveBeenCalledWith(`Output directory: ${tempDir}\n`)
+    expect(mockLogging).toHaveBeenCalledWith("Processed 5 screenshots\n")
   })
 
   it("should generate a directory and a _category_.json, and a page for each describe block child under the category describe", () => {
@@ -332,20 +397,15 @@ Given user is on login page
     let mockExit: MockInstance<
       (code?: string | number | null | undefined) => never
     >
-    let mockConsoleError: MockInstance<(...args: any[]) => void>
 
     beforeEach(() => {
       mockExit = vi.spyOn(process, "exit").mockImplementation(() => {
         throw new Error("process.exit called")
       })
-
-      // Mock console.error to test error messages
-      mockConsoleError = vi.spyOn(console, "error").mockImplementation(() => {})
     })
 
     afterEach(() => {
       mockExit.mockRestore()
-      mockConsoleError.mockRestore()
     })
 
     it("when there are failed tests", () => {
@@ -359,8 +419,8 @@ Given user is on login page
         reporter.onTestEnd(mockTestSuccess, mockFailedResult),
       ).toThrow("process.exit called")
 
-      expect(mockConsoleError).toHaveBeenCalledWith(
-        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}`,
+      expect(mockLogging).toHaveBeenCalledWith(
+        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
       )
       expect(mockExit).toHaveBeenCalledWith(1)
       expect(mockExit).toHaveBeenCalledTimes(1)
@@ -377,8 +437,8 @@ Given user is on login page
         reporter.onTestEnd(mockTestSuccess, mockTimeoutResult),
       ).toThrow("process.exit called")
 
-      expect(mockConsoleError).toHaveBeenCalledWith(
-        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}`,
+      expect(mockLogging).toHaveBeenCalledWith(
+        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
       )
       expect(mockExit).toHaveBeenCalledWith(1)
       expect(mockExit).toHaveBeenCalledTimes(1)

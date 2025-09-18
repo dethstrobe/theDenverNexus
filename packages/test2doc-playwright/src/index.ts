@@ -77,6 +77,9 @@ class Test2DocReporter implements Reporter {
   private outputDir: string
   private screenshotMoveQueue: DocScreenshot[] = []
   private seenScreenshot = new Set<string>()
+  private totalTests = 0
+  private completedTests = 0
+  private testResults: ("P" | "F" | "S" | ".")[] = []
 
   constructor(
     options: Test2DocReporterOptions = {
@@ -99,6 +102,13 @@ class Test2DocReporter implements Reporter {
           ]
         }) || [],
     )
+    this.testResults = new Array(this.totalTests).fill(".")
+
+    writeLine(
+      `Starting documentation generation for ${this.totalTests} tests...`,
+    )
+    writeLine(`Found ${this.docs.length} documentation sections\n`)
+    this.updateProgressBar()
   }
 
   private buildTestDocTree(filename: string, tests: TestCase[]): DocNode {
@@ -115,6 +125,7 @@ class Test2DocReporter implements Reporter {
 
   private buildDocTests(tests: TestCase[]): DocTest[] {
     return tests.map((test) => {
+      ++this.totalTests
       const testDoc: DocTest = {
         title: test.title,
         steps: [],
@@ -172,19 +183,48 @@ class Test2DocReporter implements Reporter {
   }
 
   onTestEnd(test: TestCase, result: TestResult) {
-    if (result.status === "failed" || result.status === "timedOut") {
-      console.error(
+    if (result.status === "passed") {
+      this.testResults[this.completedTests] = "P"
+    } else if (result.status === "failed" || result.status === "timedOut") {
+      this.testResults[this.completedTests] = "F"
+      this.updateProgressBar()
+      writeLine(
         `Documentation generation aborted due to test failure: ${test.title}`,
       )
       process.exit(1)
+    } else if (result.status === "skipped") {
+      this.testResults[this.completedTests] = "S"
     }
+
+    this.completedTests++
+    this.updateProgressBar()
+  }
+
+  private updateProgressBar() {
+    // Move cursor to beginning of line and clear it
+    process.stdout.write("\r\x1b[K")
+
+    // Write the progress bar
+    const progressBar = `[${this.testResults.join("")}]`
+    const percentage = Math.round((this.completedTests / this.totalTests) * 100)
+    process.stdout.write(
+      `${progressBar} ${this.completedTests}/${this.totalTests} (${percentage}%)`,
+    )
   }
 
   onEnd() {
+    writeLine("\n")
+
+    writeLine("Cleaning up old screenshots...")
     this.deleteScreenshots(this.outputDir)
+
+    writeLine("Generating documentation files...")
     this.docs.forEach((doc) => {
       this.buildDocFiles(doc)
     })
+    writeLine("Documentation generation completed.")
+    writeLine(`Output directory: ${this.outputDir}`)
+    writeLine(`Processed ${this.seenScreenshot.size} screenshots`)
   }
 
   private buildDocFiles(doc: DocNode, outputDir: string = this.outputDir) {
@@ -271,7 +311,7 @@ class Test2DocReporter implements Reporter {
           }
           break
         default:
-          console.warn(
+          writeLine(
             `Unsupported metadata type for key "${key}": ${typeof value}`,
           )
           break
@@ -318,6 +358,11 @@ class Test2DocReporter implements Reporter {
 
     return markdown
   }
+}
+
+function writeLine(line: string) {
+  // eslint-disable-next-line no-restricted-properties
+  process.stdout.write(`${line}\n`)
 }
 
 export default Test2DocReporter
