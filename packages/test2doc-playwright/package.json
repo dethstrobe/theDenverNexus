@@ -69,7 +69,7 @@
     "int:a": "playwright test --config=playwright-annotation.config.ts",
     "lint": "biome lint .",
     "postinstall": "pnpm playwright install",
-    "test": "vitest run && pnpm int",
+    "test": "vitest run && pnpm int && pnpm int:a",
     "unit": "vitest"
   },
   "peerDependencies": {

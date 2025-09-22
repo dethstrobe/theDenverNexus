@@ -15,9 +15,17 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.1",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^2.0.5",
     "@playwright/test": "^1.53.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "semantic-release": "^24.2.9",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
