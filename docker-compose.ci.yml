@@ -1,0 +1,15 @@
+services:
+  playwright-ci:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+    volumes:
+      # Mount source for development
+      - ./packages/test2doc-playwright:/workspace/packages/test2doc-playwright
+      # Mount expected screenshots directory
+      - ./packages/test2doc-playwright/tests/expected-screenshots:/workspace/packages/test2doc-playwright/tests/expected-screenshots
+    environment:
+      - NODE_ENV=test
+      - CI=true
+    working_dir: /workspace/packages/test2doc-playwright
+    command: pnpm test

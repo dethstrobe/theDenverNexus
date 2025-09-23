@@ -1,0 +1,35 @@
+# Use the same image as GitHub Actions Playwright runner
+FROM mcr.microsoft.com/playwright:v1.48.0-jammy
+
+WORKDIR /workspace
+
+# Copy package.json to extract pnpm version
+COPY package.json ./
+
+# Install pnpm using the version specified in package.json
+RUN npm install -g $(node -pe "require('./package.json').packageManager")
+
+# Set environment to match CI
+ENV NODE_ENV=test
+ENV CI=true
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Copy package files first (for better caching)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/test2doc-playwright/package.json ./packages/test2doc-playwright/
+COPY apps/barefeed/package.json ./apps/barefeed/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build the package
+RUN pnpm build:test2doc
+
+# Set the working directory to the test package
+WORKDIR /workspace/packages/test2doc-playwright
+
+# Default command
+CMD ["pnpm", "test"]

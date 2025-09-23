@@ -8,7 +8,10 @@
     "publish:test2doc": "cd packages/test2doc-playwright && pnpm publish  --provenance --access public",
     "test:barefeed": "cd apps/barefeed && pnpm test:ci",
     "test:test2doc": "cd packages/test2doc-playwright && pnpm test",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "docker:ci:build": "docker build -f Dockerfile.ci -t test2doc-ci .",
+    "docker:ci:test": "docker-compose -f docker-compose.ci.yml run --rm playwright-ci",
+    "docker:ci:shell": "docker-compose -f docker-compose.ci.yml run --rm playwright-ci bash"
   },
   "keywords": [],
   "author": "",

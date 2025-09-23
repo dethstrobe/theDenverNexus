@@ -35,6 +35,7 @@ const expectScreenshotToMatch = (
   const expectedPath = join(
     __dirname,
     "expected-screenshots",
+    process.platform,
     hasDefaultAnnotations
       ? `annotated-${screenshotFileName}`
       : screenshotFileName,
