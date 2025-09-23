@@ -22,7 +22,6 @@ jobs:
       - name: Run Tests in Docker
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}:/workspace \
             -e CI=true \
             test2doc-ci
   #     - name: Install pnpm
