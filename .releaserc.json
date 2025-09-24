@@ -40,7 +40,8 @@
         "publishConfig": {
           "access": "public",
           "provenance": true
-        }
+        },
+        "npmPublish": false
       }
     ],
     [

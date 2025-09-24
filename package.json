@@ -13,7 +13,7 @@
     "docker:ci:test": "docker-compose -f docker-compose.ci.yml run --rm playwright-ci",
     "docker:ci:shell": "docker-compose -f docker-compose.ci.yml run --rm playwright-ci bash",
     "prepare": "husky",
-    "release": "semantic-release"
+    "version": "semantic-release"
   },
   "keywords": [],
   "author": "",
