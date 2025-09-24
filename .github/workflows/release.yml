@@ -4,9 +4,8 @@ on:
     branches: [main]
     paths:
       - 'packages/test2doc-playwright/src/**'
-    paths-ignore:
-      - 'packages/test2doc-playwright/src/testsUtils/**'
-      - 'packages/test2doc-playwright/src/*.test.ts'
+      - '!packages/test2doc-playwright/src/testsUtils/**'
+      - '!packages/test2doc-playwright/src/*.test.ts'
   workflow_dispatch:
 
 permissions:
