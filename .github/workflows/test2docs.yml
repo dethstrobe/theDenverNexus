@@ -16,53 +16,38 @@ jobs:
       - name: Branch Checkout
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        run: docker build -f Dockerfile.ci -t test2doc-ci .
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
-      - name: Run Tests in Docker
-        run: |
-          docker run --rm \
-            -e CI=true \
-            test2doc-ci
-  #     - name: Install pnpm
-  #       uses: pnpm/action-setup@v4
-  #       with:
-  #         run_install: false
-  #     - name: Node Setup
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         cache: pnpm
-  #         node-version: "latest"
-  #     - name: Install Dependencies
-  #       run: pnpm install --frozen-lockfile
-  #     - name: Install Playwright Dependencies
-  #       run: pnpm playwright install --with-deps
-  #     - name: Run Tests
-  #       # uses: "./.github/actions/test"
-  #       # with:
-  #       #   app: "test2doc"
-  #       run: pnpm run test:test2doc
-  #       env:
-  #         CI: true
-  # # build:
-  # #   needs: test
-  # #   runs-on: ubuntu-latest
-  # #   steps:
-  # #     - name: Branch Checkout
-  # #       uses: actions/checkout@v4
-  # #     - name: Install pnpm
-  # #       uses: pnpm/action-setup@v4
-  # #       with:
-  # #         run_install: false
-  # #     - name: Node Setup
-  # #       uses: actions/setup-node@v4
-  # #       with:
-  # #         cache: pnpm
-  # #         node-version: "latest"
-  # #         registry-url: "https://registry.npmjs.org"
-  # #     - name: Install Dependencies
-  # #       run: pnpm install
-  # #     - name: Publish Package
-  # #       run: pnpm publish:test2doc
-  # #       env:
-  # #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Node Setup
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: "latest"
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('packages/test2doc-playwright/package.json') }}
+
+      - name: Install Playwright Dependencies
+        run: pnpm playwright install --with-deps
+
+      - name: Run Tests
+        run: pnpm run test:test2doc
+        env:
+          CI: true
+
+      - name: Upload Screenshot Diffs
+        if: failure()  # Only when tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-diffs-${{ github.run_number }}
+          path: packages/test2doc-playwright/tests/expected-screenshots/*-diff.png
+          retention-days: 30

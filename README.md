@@ -8,7 +8,7 @@ A library to generate docs from tests.
 ```
 pnpm docker:ci:test
 ```
-Run tests like in Github Actions to see why our CI is failing or to update tests.
+Run tests like in Github Actions (not exactly the same though) to see why our CI is failing or to update tests.
 
 ```
 pnpm docker:ci:shell

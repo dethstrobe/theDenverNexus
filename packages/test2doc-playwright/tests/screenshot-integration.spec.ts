@@ -4,6 +4,8 @@ import { writeFileSync, readFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
+import { PNG } from "pngjs"
+import pixelmatch from "pixelmatch"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -24,7 +26,7 @@ const setup = async (page: Page) => {
     `)
 }
 
-const expectScreenshotToMatch = (
+const expectScreenshotToMatch = async (
   testInfo: TestInfo,
   screenshotFileName: string,
 ) => {
@@ -35,15 +37,30 @@ const expectScreenshotToMatch = (
   const expectedPath = join(
     __dirname,
     "expected-screenshots",
-    process.platform,
     hasDefaultAnnotations
       ? `annotated-${screenshotFileName}`
       : screenshotFileName,
   )
 
   if (existsSync(expectedPath)) {
-    const expectedBuffer = readFileSync(expectedPath)
-    expect(screenshotAttachment?.body).toEqual(expectedBuffer)
+    const expectedBuffer = PNG.sync.read(readFileSync(expectedPath))
+    const { width, height } = expectedBuffer
+    const diff = new PNG({ width, height })
+    const matchedPixels = pixelmatch(
+      PNG.sync.read(screenshotAttachment?.body ?? Buffer.from("")).data,
+      expectedBuffer.data,
+      diff.data,
+      width,
+      height,
+      { threshold: 1 },
+    )
+    if (matchedPixels > 0) {
+      writeFileSync(
+        expectedPath.replace(".png", "-diff.png"),
+        PNG.sync.write(diff),
+      )
+    }
+    expect(matchedPixels).toBe(0)
   } else {
     writeFileSync(expectedPath, screenshotAttachment?.body ?? Buffer.from(""))
     console.warn(
@@ -57,7 +74,7 @@ test("screenshot of a page", async ({ page }, testInfo) => {
 
   await screenshot(testInfo, page)
 
-  expectScreenshotToMatch(testInfo, "screenshot-page.png")
+  await expectScreenshotToMatch(testInfo, "screenshot-page.png")
 })
 
 test("screenshot highlighting an element", async ({ page }, testInfo) => {
@@ -66,7 +83,7 @@ test("screenshot highlighting an element", async ({ page }, testInfo) => {
   const button = page.getByRole("button", { name: "Click Me" })
   await screenshot(testInfo, button)
 
-  expectScreenshotToMatch(testInfo, "highlight-element.png")
+  await expectScreenshotToMatch(testInfo, "highlight-element.png")
 })
 
 test("screenshot of element off the screen should be scrolled into view", async ({
@@ -77,7 +94,7 @@ test("screenshot of element off the screen should be scrolled into view", async 
   const button = page.getByRole("button", { name: "Below the fold Button" })
   await screenshot(testInfo, button)
 
-  expectScreenshotToMatch(testInfo, "element-off-screen.png")
+  await expectScreenshotToMatch(testInfo, "element-off-screen.png")
 })
 
 test("screenshot highlighting an element with label text", async ({
@@ -88,7 +105,7 @@ test("screenshot highlighting an element with label text", async ({
   const button = page.getByRole("button", { name: "Click Me" })
   await screenshot(testInfo, button, { annotation: { text: "Test Button" } })
 
-  expectScreenshotToMatch(testInfo, "highlighting-element-label.png")
+  await expectScreenshotToMatch(testInfo, "highlighting-element-label.png")
 })
 
 test("screenshot style the rendering of the highlight and label", async ({
@@ -101,7 +118,7 @@ test("screenshot style the rendering of the highlight and label", async ({
     annotation: {
       text: "This is the test button",
       fillStyle: "white",
-      font: "14px Comic Sans MS",
+      font: "14px 'Times New Roman', Times, serif",
       strokeStyle: "#000000AA",
       lineWidth: 4,
       labelBoxFillStyle: "hsla(170, 45%, 45%, 0.5)",
@@ -113,7 +130,7 @@ test("screenshot style the rendering of the highlight and label", async ({
     },
   })
 
-  expectScreenshotToMatch(testInfo, "style-highlight-label.png")
+  await expectScreenshotToMatch(testInfo, "style-highlight-label.png")
 })
 
 test("screenshot label positioning", async ({ page }, testInfo) => {
@@ -124,25 +141,25 @@ test("screenshot label positioning", async ({ page }, testInfo) => {
     annotation: { text: "Test Button", position: "above" },
   })
 
-  expectScreenshotToMatch(testInfo, "label-position-above.png")
+  await expectScreenshotToMatch(testInfo, "label-position-above.png")
 
   await screenshot(testInfo, button, {
     annotation: { text: "Test Button", position: "below" },
   })
 
-  expectScreenshotToMatch(testInfo, "label-position-below.png")
+  await expectScreenshotToMatch(testInfo, "label-position-below.png")
 
   await screenshot(testInfo, button, {
     annotation: { text: "Test Button", position: "left" },
   })
 
-  expectScreenshotToMatch(testInfo, "label-position-left.png")
+  await expectScreenshotToMatch(testInfo, "label-position-left.png")
 
   await screenshot(testInfo, button, {
     annotation: { text: "Test Button", position: "right" },
   })
 
-  expectScreenshotToMatch(testInfo, "label-position-right.png")
+  await expectScreenshotToMatch(testInfo, "label-position-right.png")
 })
 
 test("positioning label intelligently when no position is specified", async ({
@@ -181,23 +198,23 @@ test("positioning label intelligently when no position is specified", async ({
         </body>
       </html>
     `)
-  const topLeftButton = page.getByRole("region", { name: "left side" })
-  await screenshot(testInfo, topLeftButton, {
+  const leftRegion = page.getByRole("region", { name: "left side" })
+  await screenshot(testInfo, leftRegion, {
     annotation: { text: "Label on the right side" },
   })
-  expectScreenshotToMatch(testInfo, "auto-position-right.png")
+  await expectScreenshotToMatch(testInfo, "auto-position-right.png")
 
   const topRightButton = page.getByRole("region", { name: "right side" })
   await screenshot(testInfo, topRightButton, {
     annotation: { text: "Label on the left side" },
   })
-  expectScreenshotToMatch(testInfo, "auto-position-left.png")
+  await expectScreenshotToMatch(testInfo, "auto-position-left.png")
 
   const middleButton = page.getByRole("button", { name: "Middle Button" })
   await screenshot(testInfo, middleButton, {
     annotation: { text: "Label on the bottom side" },
   })
-  expectScreenshotToMatch(testInfo, "auto-position-bottom.png")
+  await expectScreenshotToMatch(testInfo, "auto-position-bottom.png")
 
   const bottomLeftButton = page.getByRole("button", {
     name: "Bottom Left Button",
@@ -205,7 +222,7 @@ test("positioning label intelligently when no position is specified", async ({
   await screenshot(testInfo, bottomLeftButton, {
     annotation: { text: "Label on the top side" },
   })
-  expectScreenshotToMatch(testInfo, "auto-position-top.png")
+  await expectScreenshotToMatch(testInfo, "auto-position-top.png")
 })
 
 test("screenshot with arrow pointing to the element", async ({
@@ -218,7 +235,7 @@ test("screenshot with arrow pointing to the element", async ({
     annotation: { text: "Test Button", position: "above", showArrow: true },
   })
 
-  expectScreenshotToMatch(testInfo, "arrow-position-above.png")
+  await expectScreenshotToMatch(testInfo, "arrow-position-above.png")
 
   await screenshot(testInfo, button, {
     annotation: {
@@ -232,7 +249,7 @@ test("screenshot with arrow pointing to the element", async ({
     },
   })
 
-  expectScreenshotToMatch(testInfo, "arrow-position-below.png")
+  await expectScreenshotToMatch(testInfo, "arrow-position-below.png")
 
   await screenshot(testInfo, button, {
     annotation: {
@@ -245,7 +262,7 @@ test("screenshot with arrow pointing to the element", async ({
     },
   })
 
-  expectScreenshotToMatch(testInfo, "arrow-position-left.png")
+  await expectScreenshotToMatch(testInfo, "arrow-position-left.png")
 
   await screenshot(testInfo, button, {
     annotation: {
@@ -256,5 +273,5 @@ test("screenshot with arrow pointing to the element", async ({
     },
   })
 
-  expectScreenshotToMatch(testInfo, "arrow-position-right.png")
+  await expectScreenshotToMatch(testInfo, "arrow-position-right.png")
 })

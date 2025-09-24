@@ -4,10 +4,13 @@ services:
       context: .
       dockerfile: Dockerfile.ci
     volumes:
-      # Mount source for development
-      - ./packages/test2doc-playwright:/workspace/packages/test2doc-playwright
-      # Mount expected screenshots directory
-      - ./packages/test2doc-playwright/tests/expected-screenshots:/workspace/packages/test2doc-playwright/tests/expected-screenshots
+      # Mount the test files so changes are reflected
+      - ./packages/test2doc-playwright/tests:/workspace/packages/test2doc-playwright/tests
+      # Mount the source code
+      - ./packages/test2doc-playwright/src:/workspace/packages/test2doc-playwright/src
+      # Protect node_modules from being overwritten
+      - /workspace/node_modules
+      - /workspace/packages/test2doc-playwright/node_modules
     environment:
       - NODE_ENV=test
       - CI=true
