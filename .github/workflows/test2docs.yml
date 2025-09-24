@@ -2,8 +2,16 @@ name: Test2Docs Workflow
 on:
   push:
     branches: [main]
+    paths:
+      - 'packages/test2doc-playwright/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/test2docs.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'packages/test2doc-playwright/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/test2docs.yml'
 
 permissions:
   contents: read
