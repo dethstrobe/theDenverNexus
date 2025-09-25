@@ -35,10 +35,13 @@
       }
     ],
     [
-      "@semantic-release/exec",
+      "@semantic-release/npm",
       {
-        "prepareCmd": "pnpm version ${nextRelease.version} --no-git-tag-version",
-        "publishCmd": "pnpm publish --access public --provenance"
+        "npmPublish": true,
+        "publishConfig": {
+          "access": "public",
+          "provenance": true
+        }
       }
     ],
     [
