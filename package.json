@@ -20,7 +20,8 @@
   "packageManager": "pnpm@10.17.1",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "devDependencies": {
     "@biomejs/biome": "^2.0.5",
@@ -34,7 +35,6 @@
     "@semantic-release/github": "^11.0.6",
     "husky": "^9.1.7",
     "semantic-release": "^24.2.9",
-    "semantic-release-monorepo": "^8.0.2",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
