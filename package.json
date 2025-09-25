@@ -12,8 +12,7 @@
     "docker:ci:build": "docker build -f Dockerfile.ci -t test2doc-ci .",
     "docker:ci:test": "docker-compose -f docker-compose.ci.yml run --rm playwright-ci",
     "docker:ci:shell": "docker-compose -f docker-compose.ci.yml run --rm playwright-ci bash",
-    "prepare": "husky",
-    "versioning": "semantic-release"
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +34,7 @@
     "@semantic-release/github": "^11.0.6",
     "husky": "^9.1.7",
     "semantic-release": "^24.2.9",
+    "semantic-release-monorepo": "^8.0.2",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
