@@ -1,4 +1,5 @@
 {
+  "extends": "semantic-release-monorepo",
   "branches": ["main"],
   "plugins": [
     [
@@ -34,14 +35,10 @@
       }
     ],
     [
-      "@semantic-release/npm",
+      "@semantic-release/exec",
       {
-        "pkgRoot": "packages/test2doc-playwright",
-        "publishConfig": {
-          "access": "public",
-          "provenance": true
-        },
-        "npmPublish": false
+        "prepareCmd": "cd packages/test2doc-playwright && pnpm version ${nextRelease.version} --no-git-tag-version",
+        "publishCmd": "cd packages/test2doc-playwright && pnpm publish --access public"
       }
     ],
     [
