@@ -34,17 +34,6 @@
       }
     ],
     [
-      "@semantic-release/npm",
-      {
-        "pkgRoot": "packages/test2doc-playwright",
-        "publishConfig": {
-          "access": "public",
-          "provenance": true
-        },
-        "npmPublish": false
-      }
-    ],
-    [
       "@semantic-release/git",
       {
         "assets": [
