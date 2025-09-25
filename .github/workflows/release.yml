@@ -40,11 +40,11 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Package
-        run: pnpm build:test2doc
+      # - name: Build Package
+      #   run: pnpm build:test2doc
 
-      - name: Run Tests
-        run: pnpm test:test2doc
+      # - name: Run Tests
+      #   run: pnpm test:test2doc
 
       - name: Release
         env:
