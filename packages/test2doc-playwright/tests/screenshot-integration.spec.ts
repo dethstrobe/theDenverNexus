@@ -26,6 +26,42 @@ const setup = async (page: Page) => {
     `)
 }
 
+const setupWithRegions = async (page: Page) => {
+  await page.setContent(`
+    <html>
+      <body style="margin: 0; padding: 0; background: white; height: 100vh; box-sizing: border-box; position: relative;">
+        <button id="top-left-button" style="position: absolute; top: 0; left: 0; background: blue; color: white; display: block;">
+          Top Left Button
+        </button>
+
+        <button id="top-right-button" style="position: absolute; top: 0; right: 0; background: blue; color: white; display: block;">
+          Top Right Button
+        </button>
+
+        <section aria-label="left side" style="position: relative; height: 100%; width: 50%; border: 2px solid black; box-sizing: border-box; float: left; text-align: center;">
+          left side
+        </section>
+
+        <button id="middle-button" style="position: absolute; top: 50%; left: 50%; transform: translateX(-50%); background: orange; color: white; display: block;">
+          Middle Button
+        </button>
+
+        <section aria-label="right side" style="position: relative; height: 100%; width: 50%; border: 2px solid black; box-sizing: border-box; float: right; text-align: center;">
+          right side
+        </section>
+
+        <button id="bottom-left-button" style="position: absolute; bottom: 0; left: 0; background: green; color: white; display: block;">
+          Bottom Left Button
+        </button>
+
+        <button id="bottom-right-button" style="position: absolute; bottom: 0; right: 0; background: green; color: white; display: block;">
+          Bottom Right Button
+        </button>
+      </body>
+    </html>
+  `)
+}
+
 const expectScreenshotToMatch = async (
   testInfo: TestInfo,
   screenshotFileName: string,
@@ -165,39 +201,8 @@ test("screenshot label positioning", async ({ page }, testInfo) => {
 test("positioning label intelligently when no position is specified", async ({
   page,
 }, testInfo) => {
-  await page.setContent(`
-      <html>
-        <body style="margin: 0; padding: 0; background: white; height: 100vh; box-sizing: border-box; position: relative;">
-          <button id="top-left-button" style="position: absolute; top: 0; left: 0; background: blue; color: white; display: block;">
-            Top Left Button
-          </button>
+  await setupWithRegions(page)
 
-          <button id="top-right-button" style="position: absolute; top: 0; right: 0; background: blue; color: white; display: block;">
-            Top Right Button
-          </button>
-
-          <section aria-label="left side" style="position: relative; height: 100%; width: 50%; border: 2px solid black; box-sizing: border-box; float: left; text-align: center;">
-            left side
-          </section>
-
-          <button id="middle-button" style="position: absolute; top: 50%; left: 50%; transform: translateX(-50%); background: orange; color: white; display: block;">
-            Middle Button
-          </button>
-
-          <section aria-label="right side" style="position: relative; height: 100%; width: 50%; border: 2px solid black; box-sizing: border-box; float: right; text-align: center;">
-            right side
-          </section>
-
-          <button id="bottom-left-button" style="position: absolute; bottom: 0; left: 0; background: green; color: white; display: block;">
-            Bottom Left Button
-          </button>
-
-          <button id="bottom-right-button" style="position: absolute; bottom: 0; right: 0; background: green; color: white; display: block;">
-            Bottom Right Button
-          </button>
-        </body>
-      </html>
-    `)
   const leftRegion = page.getByRole("region", { name: "left side" })
   await screenshot(testInfo, leftRegion, {
     annotation: { text: "Label on the right side" },
@@ -274,4 +279,64 @@ test("screenshot with arrow pointing to the element", async ({
   })
 
   await expectScreenshotToMatch(testInfo, "arrow-position-right.png")
+})
+
+test("screenshot multiple targets", async ({ page }, testInfo) => {
+  await setupWithRegions(page)
+
+  const topLeftButton = page.getByRole("button", { name: "Top Left Button" })
+  const topRightButton = page.getByRole("button", { name: "Top Right Button" })
+  const middleButton = page.getByRole("button", { name: "Middle Button" })
+  const bottomLeftButton = page.getByRole("button", {
+    name: "Bottom Left Button",
+  })
+  const bottomRightButton = page.getByRole("button", {
+    name: "Bottom Right Button",
+  })
+
+  await screenshot(
+    testInfo,
+    [
+      { target: topLeftButton },
+      {
+        target: topRightButton,
+        options: { annotation: { text: "Top Right", position: "left" } },
+      },
+      {
+        target: middleButton,
+        options: {
+          annotation: {
+            text: "Middle",
+            showArrow: true,
+            arrowStrokeStyle: "red",
+            highlightFillStyle: "rgba(255, 0, 0, 0.3)",
+            highlightStrokeStyle: "rgba(255, 0, 0, 1)",
+            highlightLineWidth: 2,
+          },
+        },
+      },
+      {
+        target: bottomLeftButton,
+        options: {
+          annotation: {
+            text: "Bottom Left",
+            font: "12px Arial, sans-serif",
+            labelBoxFillStyle: "yellow",
+          },
+        },
+      },
+      {
+        target: bottomRightButton,
+        options: {
+          annotation: {
+            text: "Bottom Right",
+            font: "bold 12px Arial, sans-serif",
+          },
+        },
+      },
+    ],
+    { annotation: { font: "14px 'Times New Roman', Times, serif" } },
+  )
+
+  await expectScreenshotToMatch(testInfo, "multiple-targets.png")
 })

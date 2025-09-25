@@ -31,30 +31,63 @@ interface ScreenshotOptions extends PageScreenshotOptions {
   annotation?: AnnotationOptions
 }
 
+interface MultiLocatorScreenshot {
+  target: Locator
+  options?: ScreenshotOptions
+}
+
 export const screenshot = async (
   testInfo: TestInfo,
-  target: Page | Locator,
+  target: Page | Locator | MultiLocatorScreenshot[],
   { annotation: overrideAnnotations, ...options }: ScreenshotOptions = {},
 ) => {
   const annotation: AnnotationOptions = {
     ...(testInfo.project?.use?.test2doc?.annotationDefaults ?? {}),
     ...overrideAnnotations,
   }
+
   const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png`
 
-  let screenshot: Buffer
-  if ("highlight" in target) {
-    const page = target.page()
+  const screenshotBuffer: Buffer =
+    "highlight" in target || Array.isArray(target)
+      ? await generateScreenshotBuffer(
+          Array.isArray(target) ? target : [{ target }],
+          options,
+          annotation,
+        )
+      : await target.screenshot(options)
 
-    await target.scrollIntoViewIfNeeded()
+  await testInfo.attach(filename, {
+    body: screenshotBuffer,
+    contentType: "image/png",
+  })
+}
 
-    const boundingBox = await target.boundingBox()
-    if (boundingBox) {
-      await page.evaluate(
-        ({ boundingBox: box, annotation }) => {
-          const canvas = document.createElement("canvas")
-          canvas.id = "test2doc-highlight-canvas"
-          canvas.style.cssText = `
+async function generateScreenshotBuffer(
+  targets: MultiLocatorScreenshot[],
+  options: ScreenshotOptions,
+  annotation: AnnotationOptions,
+): Promise<Buffer> {
+  const firstTarget = targets.at(0)?.target
+  if (!firstTarget) throw new Error("No targets provided for screenshot")
+
+  const page = firstTarget.page()
+  await firstTarget.scrollIntoViewIfNeeded()
+
+  const boundingBoxes = await Promise.all(
+    targets.map(({ target }) => target.boundingBox()),
+  )
+  const annotations = targets.map(({ options }) => ({
+    ...annotation,
+    ...options?.annotation,
+  }))
+
+  if (boundingBoxes) {
+    await page.evaluate(
+      ({ boundingBoxes: boxes, annotations }) => {
+        const canvas = document.createElement("canvas")
+        canvas.id = "test2doc-highlight-canvas"
+        canvas.style.cssText = `
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
@@ -67,11 +100,14 @@ export const screenshot = async (
             opacity: 1 !important;
           `
 
-          canvas.width = window.innerWidth
-          canvas.height = window.innerHeight
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
 
-          const ctx = canvas.getContext("2d")
-          if (ctx) {
+        const ctx = canvas.getContext("2d")
+        if (ctx) {
+          for (const [index, box] of boxes.entries()) {
+            if (!box) continue
+            const annotation = annotations[index]
             // Draw highlight rectangle
             ctx.strokeStyle =
               annotation?.highlightStrokeStyle ?? "rgba(255, 165, 0, 1)"
@@ -256,29 +292,23 @@ export const screenshot = async (
               ctx.fillText(annotation.text, labelPosition.x, labelPosition.y)
             }
           }
+        }
 
-          document.body.appendChild(canvas)
-        },
-        { boundingBox, annotation },
-      )
+        document.body.appendChild(canvas)
+      },
+      { boundingBoxes, annotations },
+    )
 
-      screenshot = await page.screenshot(options)
+    const screenshotBuffer = await page.screenshot(options)
 
-      // Clean up canvas
-      await page.evaluate(() => {
-        const canvas = document.getElementById("test2doc-highlight-canvas")
-        if (canvas) canvas.remove()
-      })
-    } else {
-      screenshot = await page.screenshot(options)
-    }
-  } else {
-    // Target is already a page
-    screenshot = await target.screenshot(options)
+    // Clean up canvas
+    await page.evaluate(() => {
+      const canvas = document.getElementById("test2doc-highlight-canvas")
+      if (canvas) canvas.remove()
+    })
+
+    return screenshotBuffer
   }
 
-  await testInfo.attach(filename, {
-    body: screenshot,
-    contentType: "image/png",
-  })
+  return await page.screenshot(options)
 }
