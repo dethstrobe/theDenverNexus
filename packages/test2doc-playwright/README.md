@@ -427,3 +427,51 @@ export default defineConfig({
   ...
 })
 ```
+
+
+#### Highlight multiple elements
+In the event that you need to highlight multiple elements, you can pass in an array with `MultiLocatorScreenshot` objects.
+
+The `MultiLocatorScreenshot` has 2 keys, `target`, a Playwright Locator, and options, which is a combination of `PageScreenshotOptions` and Annotation options.
+
+**Note:** Only the first item in the array will be attempted to scroll into view.
+
+```ts
+test.describe(withDocMeta("describe block"), async () => {
+    test("test block", async ({ page }, testInfo) => {
+      ...
+      test.step("step block", async () => {
+        await page.goto("http://localhost:5173/")
+
+        await screenshot(
+          testInfo,
+          [
+            { 
+              target: page.getByRole(
+                "header", { name: "Page Title" }
+              ),
+            },
+            {
+              target: page.getByRole(
+                "aside", { name: "Sidebar" }
+              ),
+              options: {
+                annotation: {
+                  text: "Sidebar Element",
+                  position: "left",
+                  showArrow: true,
+                  arrowStrokeStyle: "red",
+                },
+              },
+            },
+          ],
+          {
+            // Values applied to all annotations
+            annotation: {
+              font: "14px 'Times New Roman', Times, serif"
+            },
+          },
+        )
+    })
+  })
+```
