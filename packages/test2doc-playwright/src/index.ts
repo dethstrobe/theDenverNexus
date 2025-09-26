@@ -9,6 +9,7 @@ import type {
 import {
   mkdirSync,
   readdirSync,
+  rmdirSync,
   statSync,
   unlinkSync,
   writeFileSync,
@@ -216,7 +217,7 @@ class Test2DocReporter implements Reporter {
     writeLine("\n")
 
     writeLine("Cleaning up old screenshots...")
-    this.deleteScreenshots(this.outputDir)
+    this.cleanupTest2DocFiles(this.outputDir)
 
     writeLine("Generating documentation files...")
     this.docs.forEach((doc) => {
@@ -234,11 +235,11 @@ class Test2DocReporter implements Reporter {
       const markdownHeader = this.generateHeader(metadata)
       const markdown =
         markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
-      const filePath = `${outputDir}/${convertToKebabCase(title)}.md`
+      const filePath = `${outputDir}/test2doc-${convertToKebabCase(title)}.md`
       writeFileSync(filePath, markdown)
       this.generateScreenshots(outputDir)
     } else if (metaType === "category") {
-      const filePath = `${outputDir}/${convertToKebabCase(title)}`
+      const filePath = `${outputDir}/test2doc-${convertToKebabCase(title)}`
       mkdirSync(filePath, { recursive: true })
 
       writeFileSync(
@@ -251,7 +252,7 @@ class Test2DocReporter implements Reporter {
       this.generateScreenshots(filePath)
     } else {
       const markdown = this.generateMarkdown(doc, 1)
-      const filePath = `${outputDir}/${convertToKebabCase(doc.title)}.md`
+      const filePath = `${outputDir}/test2doc-${convertToKebabCase(doc.title)}.md`
       writeFileSync(filePath, markdown)
       this.generateScreenshots(outputDir)
     }
@@ -265,12 +266,21 @@ class Test2DocReporter implements Reporter {
     this.screenshotMoveQueue = []
   }
 
-  private deleteScreenshots(output: string) {
+  private cleanupTest2DocFiles(output: string) {
     for (const file of readdirSync(output)) {
       const filePath = join(output, file)
       const stat = statSync(filePath)
       if (stat.isDirectory()) {
-        this.deleteScreenshots(filePath)
+        this.cleanupTest2DocFiles(filePath)
+        const filesInDir = readdirSync(filePath)
+        if (filesInDir.length === 0) {
+          rmdirSync(filePath)
+        } else if (
+          filesInDir.length === 1 &&
+          filesInDir.at(0) === "_category_.json"
+        ) {
+          rmdirSync(filePath, { recursive: true })
+        }
       } else if (stat.isFile() && file.startsWith("test2doc-")) {
         unlinkSync(filePath)
       }

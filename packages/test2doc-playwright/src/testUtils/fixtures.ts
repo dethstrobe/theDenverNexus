@@ -251,7 +251,7 @@ export const mockSuiteForCategories: Suite = {
   ],
 }
 
-export const mockSuiteWithMutliProjects: Suite = {
+export const mockSuiteWithMultiProjects: Suite = {
   ...baseSuite,
   title: "", // Root Suite
   type: "root",

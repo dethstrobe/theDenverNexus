@@ -8,7 +8,7 @@ import {
   type MockInstance,
 } from "vitest"
 import type { FullConfig, Suite, TestResult } from "@playwright/test/reporter"
-import { readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { withDocMeta } from "./DocMeta.js"
 import {
@@ -23,7 +23,7 @@ import {
   mockTestPrivacyPolicyRegistration,
   mockStep,
   baseSuite,
-  mockSuiteWithMutliProjects,
+  mockSuiteWithMultiProjects,
   mockTestNewUserRegistration,
   mockTestLoggedInUser,
   mockTestLoggedOutUser,
@@ -65,6 +65,20 @@ describe("Test2DocReporter", () => {
     writeFileSync(
       join(tempDir, "test2doc-1704067218000-1.png"),
       mockScreenshotBuffer,
+    )
+    writeFileSync(join(tempDir, "test2doc-old.md"), "# Old Documentation")
+    mkdirSync(join(tempDir, "test2doc-old-dir"))
+    mkdirSync(join(tempDir, "test2doc-old-category-dir"))
+    writeFileSync(
+      join(tempDir, "test2doc-old-category-dir/_category_.json"),
+      JSON.stringify(
+        {
+          label: "This needs to be cleaned up",
+          position: 1,
+        },
+        null,
+        2,
+      ),
     )
 
     reporter.onBegin(mockFullConfig, mockSuiteForPages)
@@ -181,11 +195,13 @@ describe("Test2DocReporter", () => {
       status: "passed",
     } as TestResult)
 
-    expect(readdirSync(tempDir)).toHaveLength(1)
+    expect(readdirSync(tempDir)).toHaveLength(4)
     reporter.onEnd()
 
     expect(readdirSync(tempDir)).toHaveLength(8)
-    expect(readFileSync(`${tempDir}/registration-page.md`, "utf8")).toEqual(
+    expect(
+      readFileSync(`${tempDir}/test2doc-registration-page.md`, "utf8"),
+    ).toEqual(
       `---
 title: Registration Page Documentation
 description: The registration page for new users.
@@ -207,7 +223,7 @@ Given user is on login page
 
 `,
     )
-    expect(readFileSync(`${tempDir}/login-page.md`, "utf8")).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-login-page.md`, "utf8")).toEqual(
       `---
 title: Login Page Documentation
 keywords:
@@ -245,7 +261,9 @@ Given user is on login page
 
 `,
     )
-    expect(readFileSync(`${tempDir}/dashboard-page.md`, "utf8")).toEqual(
+    expect(
+      readFileSync(`${tempDir}/test2doc-dashboard-page.md`, "utf8"),
+    ).toEqual(
       `---
 title: Dashboard Documentation
 description: The dashboard of todo stuff.
@@ -308,7 +326,7 @@ sidebar_position: 2
     reporter.onEnd()
 
     expect(
-      readFileSync(`${tempDir}/login-page/_category_.json`, "utf8"),
+      readFileSync(`${tempDir}/test2doc-login-page/_category_.json`, "utf8"),
     ).toEqual(
       JSON.stringify(
         {
@@ -327,7 +345,10 @@ sidebar_position: 2
       ),
     )
     expect(
-      readFileSync(`${tempDir}/login-page/successful-login.md`, "utf8"),
+      readFileSync(
+        `${tempDir}/test2doc-login-page/test2doc-successful-login.md`,
+        "utf8",
+      ),
     ).toEqual(
       `---
 sidebar_position: 1
@@ -341,9 +362,12 @@ Given user is on login page
 
 `,
     )
-    expect(readdirSync(`${tempDir}/login-page`)).toHaveLength(3)
+    expect(readdirSync(`${tempDir}/test2doc-login-page`)).toHaveLength(3)
     expect(
-      readFileSync(`${tempDir}/login-page/failed-login.md`, "utf8"),
+      readFileSync(
+        `${tempDir}/test2doc-login-page/test2doc-failed-login.md`,
+        "utf8",
+      ),
     ).toEqual(
       `# Failed Login
 
@@ -382,7 +406,7 @@ Given user is on login page
     reporter.onBegin(mockFullConfig, mockSuiteWithoutRootDescribe)
     reporter.onEnd()
 
-    expect(readFileSync(`${tempDir}/login.md`, "utf8")).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-login.md`, "utf8")).toEqual(
       `# login
 
 ## should redirect to dashboard on successful login
@@ -448,12 +472,12 @@ Given user is on login page
   it("should generate documentation for each project (expect for .setup.ts files)", () => {
     const reporter = setup()
 
-    reporter.onBegin(mockFullConfig, mockSuiteWithMutliProjects)
+    reporter.onBegin(mockFullConfig, mockSuiteWithMultiProjects)
     reporter.onEnd()
 
     expect(readdirSync(tempDir)).toHaveLength(2)
 
-    expect(readFileSync(`${tempDir}/login.md`, "utf8")).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-login.md`, "utf8")).toEqual(
       `# login
 
 ## how to login
@@ -464,7 +488,7 @@ Given user is on login page
     )
 
     expect(
-      readFileSync(`${tempDir}/authenticated.md`, "utf8"),
+      readFileSync(`${tempDir}/test2doc-authenticated.md`, "utf8"),
     ).toEqual(`# authenticated
 
 ## user name and profile should be visible
@@ -472,5 +496,58 @@ Given user is on login page
 ## setting button should set
 
 `)
+  })
+
+  it("should not clean up user directories with generated files", () => {
+    const reporter = setup()
+    writeFileSync(join(tempDir, "test2doc-old.md"), "# Old Documentation")
+    mkdirSync(join(tempDir, "test2doc-clean-me-up-dir"))
+    mkdirSync(join(tempDir, "test2doc-login-page"))
+    mkdirSync(join(tempDir, "test2doc-orphan-dir"))
+
+    writeFileSync(
+      join(tempDir, "test2doc-login-page/_category_.json"),
+      JSON.stringify(
+        {
+          label: "This needs to be cleaned up",
+          position: 1,
+        },
+        null,
+        2,
+      ),
+    )
+    const handWrittenContent =
+      "# Hand-Written Documentation\n\nThis is some hand-written documentation for the login feature."
+    writeFileSync(
+      join(tempDir, "test2doc-login-page/hand-written-file.md"),
+      handWrittenContent,
+    )
+    const anotherHandWrittenContent =
+      "# Another Hand-Written Documentation\n\nThis is some hand-written documentation for the category feature."
+    writeFileSync(
+      join(tempDir, "test2doc-orphan-dir/another-hand-written-file.md"),
+      anotherHandWrittenContent,
+    )
+
+    reporter.onBegin(mockFullConfig, mockSuiteForCategories)
+
+    expect(readdirSync(tempDir)).toHaveLength(4)
+    reporter.onEnd()
+
+    expect(readdirSync(tempDir)).toHaveLength(2)
+    expect(readdirSync(join(tempDir, "test2doc-login-page"))).toHaveLength(4)
+    expect(
+      readFileSync(
+        join(tempDir, "test2doc-login-page/hand-written-file.md"),
+        "utf8",
+      ),
+    ).toBe(handWrittenContent)
+    expect(readdirSync(join(tempDir, "test2doc-orphan-dir"))).toHaveLength(1)
+    expect(
+      readFileSync(
+        join(tempDir, "test2doc-orphan-dir/another-hand-written-file.md"),
+        "utf8",
+      ),
+    ).toBe(anotherHandWrittenContent)
   })
 })
