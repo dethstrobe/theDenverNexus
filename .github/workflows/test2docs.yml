@@ -47,8 +47,11 @@ jobs:
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
 
+      - name: Build Test2Doc
+        run: pnpm build:test2doc
+
       - name: Run Tests
-        run: pnpm run test:test2doc
+        run: pnpm test:test2doc
         env:
           CI: true
 
