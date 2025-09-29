@@ -1,0 +1,131 @@
+---
+title: Setup
+sidebar_position: 2
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Setup
+
+## Configure Playwright to work with Test2Doc's Reporter
+Create a new config to run Test2Doc: `playwright-test2doc.config.ts`
+
+```ts
+// playwright-test2doc.config.ts
+import { defineConfig, devices } from "@playwright/test"
+
+/**
+ * Test2Doc Playwright Configuration
+ * This config is optimized for generating documentation from your tests.
+ */
+export default defineConfig({
+  // Test directory - adjust to match your project structure
+  testDir: './tests',
+
+  // Test2Doc Reporter Configuration
+  reporter: [
+    ['@test2doc/playwright', { 
+      outputDir: './doc/docs'  // Change this to your Docusaurus docs directory
+    }]
+  ],
+
+  // Optimized settings for doc generation
+  fullyParallel: false,
+  workers: 1,  // Single worker for consistent output
+  retries: 0,  // No retries needed for doc generation
+
+  // Use only one browser for faster doc generation
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+
+  // use: {
+  //   baseURL: "http://localhost:8080", // change to whatever port your app starts on
+  //   trace: "on-first-retry",
+  // },
+  // webServer: {
+  //   command: "pnpm dev", // change with command to start your server
+  //   url: "http://localhost:8080", // change to whatever port your app starts on
+  //   reuseExistingServer: !process.env.CI,
+  // },
+
+  // Optional: Import settings from your main config
+  // Uncomment and adjust the path if you want to inherit from your main config
+  // ...require('./playwright.config').default,
+});
+```
+
+Replace `"./doc/docs"` with a path to the `doc` directory of your Docusaurus app.
+
+### Add script to run Playwright to generate docs
+
+Also add a script to build the docs in your project's `package.json`.
+
+The `TEST2DOC=true` is required to activate the test2doc metadata to pass to the tests in a headless context. For normal test runs, you probably don't want the extra noise of the metadata, so leave this out of your standard test run.
+
+```json
+{
+  ...
+  "scripts": {
+    ...
+    "doc:gen": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
+  }
+  ...
+}
+```
+
+## Verify installation
+Steps to validate that the installation worked.
+### Run Playwright using Test2Doc Reporter
+Run the `doc:gen` script.
+<Tabs groupId="package-managers">
+  <TabItem value="npm" label="npm" default>
+
+```bash
+npm run doc:gen
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+
+```bash
+yarn doc:gen
+```
+
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm doc:gen
+```
+
+  </TabItem>
+</Tabs>
+
+### See markdown output
+Then check that markdown files appear in your `./doc/docs` directory, or wherever you specified the output directory in the `playwright-test2doc.config.ts` file.
+
+You should see files prefixed with `test2doc-`.
+
+#### Example output
+```
+doc/docs/
+├─ intro.md
+├─ getting-started/
+│  ├─ _category_.json
+│  └─ setup.md
+├─ test2doc-login-page/
+│  ├─ _category_.json
+│  ├─ test2doc-successful-login.md
+│  ├─ test2doc-failed-login.md
+│  ├─ test2doc-1759081371398-1.png
+│  └─ test2doc-1759081371431-2.png
+├─ test2doc-registration/
+│  ├─ _category_.json
+│  └─ test2doc-registration.md
+└─ guides/
+   └─ manual-overview.md
+```

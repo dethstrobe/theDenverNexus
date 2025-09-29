@@ -97,14 +97,14 @@ The `TEST2DOC=true` is required to activate the test2doc metadata to pass to the
   ...
   "scripts": {
     ...
-    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
+    "doc:gen": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts"
   }
   ...
 }
 ```
 
 ## Verify installation
-To verify your setup works, run `npm run docs:generate` and check that markdown files appear in your `./doc/docs` directory, or wherever you specified the output directory in the `playwright-test2doc.config.ts` file.
+To verify your setup works, run `npm run doc:gen` and check that markdown files appear in your `./doc/docs` directory, or wherever you specified the output directory in the `playwright-test2doc.config.ts` file.
 
 ## Filtering Tests
 It is possible you may wish to opt-in some tests or opt-out other tests from doc generation. This is possible with playwright tags.
@@ -151,7 +151,7 @@ Run only tests with the `@test2doc` tag.
   ...
   "scripts": {
     ...
-    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts --grep @test2doc"
+    "doc:gen": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts --grep @test2doc"
   }
   ...
 }
@@ -168,7 +168,7 @@ Skip tests with the `@skip-docs` tag.
   ...
   "scripts": {
     ...
-    "docs:generate": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts --grep-invert @skip-docs"
+    "doc:gen": "TEST2DOC=true playwright test --config=playwright-test2doc.config.ts --grep-invert @skip-docs"
   }
   ...
 }
@@ -438,7 +438,6 @@ export default defineConfig({
   ...
 })
 ```
-
 
 #### Highlight multiple elements
 In the event that you need to highlight multiple elements, you can pass in an array with `MultiLocatorScreenshot` objects.

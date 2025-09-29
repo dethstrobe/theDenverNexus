@@ -1,0 +1,106 @@
+---
+title: Installation
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Installation
+
+## Prerequisites
+
+### Install Playwright
+If you don't have Playwright currently installed, you can follow [Playwright's installation guide](https://playwright.dev/docs/intro#installing-playwright).
+
+For simplicity, we copied the install commands for Playwright here.
+
+<Tabs groupId="package-managers">
+  <TabItem value="npm" label="npm" default>
+
+```sh
+npm init playwright@latest
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+
+```sh
+yarn create playwright
+```
+
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+
+```sh
+pnpm create playwright
+```
+
+  </TabItem>
+</Tabs>
+> When prompted, choose / confirm:
+> 
+> - TypeScript or JavaScript (default: TypeScript)
+> - Tests folder name (default: tests, or e2e if tests already exists)
+> - Add a GitHub Actions workflow (recommended for CI)
+> - Install Playwright browsers (default: yes)
+
+### Install Docusaurus
+This reporter generates markdown files for Docusaurus. If you don't have a Docusaurus app set up yet, there is an install guide [here](https://docusaurus.io/docs/installation). If you have a monorepo, I recommend using these [instructions](https://docusaurus.io/docs/installation#monorepos).
+
+Alternatively, you can install the Docusaurus app within your current repo with:
+
+<Tabs groupId="package-managers">
+  <TabItem value="npm" label="npm">
+
+```sh
+npm init docusaurus@latest doc classic -- --typescript
+```
+
+  </TabItem>
+
+  <TabItem value="yarn" label="yarn">
+
+```sh
+yarn create docusaurus@latest doc classic --typescript
+```
+
+  </TabItem>
+
+  <TabItem value="pnpm" label="pnpm">
+
+```sh
+pnpm create docusaurus@latest doc classic -- --typescript
+```
+
+  </TabItem>
+</Tabs>
+
+This will make a `doc` directory with your Docusaurus app.
+
+## Install the Reporter
+After installing Playwright, you can add the `@test2doc/playwright` with your package manager of choice:
+
+<Tabs groupId="package-managers">
+  <TabItem value="npm" label="npm" default>
+
+```sh
+npm install @test2doc/playwright -D
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+
+```sh
+yarn add @test2doc/playwright --dev
+```
+
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+
+```sh
+pnpm install @test2doc/playwright -D
+```
+
+  </TabItem>
+</Tabs>
