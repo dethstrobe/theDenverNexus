@@ -1,6 +1,7 @@
 ---
 slug: proof-of-concept
 title: Proof of Concept
+subtitle: v0 for the Playwright Reporter
 authors: [dethstrobe]
 tags: [development]
 ---
