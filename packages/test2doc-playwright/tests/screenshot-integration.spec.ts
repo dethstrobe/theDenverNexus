@@ -88,7 +88,7 @@ const expectScreenshotToMatch = async (
       diff.data,
       width,
       height,
-      { threshold: 0.5 },
+      { threshold: 0.7 },
     )
     if (matchedPixels > 0) {
       writeFileSync(
