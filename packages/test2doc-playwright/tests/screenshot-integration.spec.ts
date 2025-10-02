@@ -340,3 +340,94 @@ test("screenshot multiple targets", async ({ page }, testInfo) => {
 
   await expectScreenshotToMatch(testInfo, "multiple-targets.png")
 })
+
+test("positioning label based off of degrees", async ({ page }, testInfo) => {
+  await setupWithRegions(page)
+
+  const middleButton = page.getByRole("button", { name: "Middle Button" })
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label at 0°", position: 0 },
+  })
+  await expectScreenshotToMatch(testInfo, "label-position-0.png")
+
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label at 45°", position: 45 },
+  })
+  await expectScreenshotToMatch(testInfo, "label-position-45.png")
+
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label at 90°", position: 90 },
+  })
+  await expectScreenshotToMatch(testInfo, "label-position-90.png")
+
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label at 120°", position: 120 },
+  })
+  await expectScreenshotToMatch(testInfo, "label-position-120.png")
+
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label at 258°", position: 258 },
+  })
+  await expectScreenshotToMatch(testInfo, "label-position-258.png")
+
+  await screenshot(testInfo, middleButton, {
+    annotation: { text: "Label at 270°", position: 270 },
+  })
+  await expectScreenshotToMatch(testInfo, "label-position-270.png")
+})
+
+test("positioning arrow based off of degrees", async ({ page }, testInfo) => {
+  await setupWithRegions(page)
+
+  const middleButton = page.getByRole("button", { name: "Middle Button" })
+  await screenshot(
+    testInfo,
+    [
+      {
+        target: middleButton,
+        options: {
+          annotation: {
+            text: "Label at 10°",
+            position: 10,
+            labelBoxFillStyle: "rgba(255, 0, 0, 0.3)",
+            labelBoxStrokeStyle: "rgba(255, 0, 0, 1)",
+            labelBoxLineWidth: 2,
+          },
+        },
+      },
+      {
+        target: middleButton,
+        options: {
+          annotation: { text: "Label at 120°", position: 120 },
+        },
+      },
+      {
+        target: middleButton,
+        options: {
+          annotation: { text: "Label at 80°", position: 80 },
+        },
+      },
+      {
+        target: middleButton,
+        options: {
+          annotation: { text: "Label at 300°", position: 300 },
+        },
+      },
+      {
+        target: middleButton,
+        options: {
+          annotation: {
+            text: "Label at 260°",
+            position: 260,
+            labelBoxFillStyle: "rgba(0, 255, 255, 0.5)",
+          },
+        },
+      },
+    ],
+    { annotation: { showArrow: true } },
+  )
+  await expectScreenshotToMatch(
+    testInfo,
+    "label-position-degrees-with-arrows.png",
+  )
+})
