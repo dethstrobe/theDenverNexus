@@ -130,28 +130,31 @@ async function generateScreenshotBuffer(
                 actualBoundingBoxAscent + actualBoundingBoxDescent
               const margin = annotation.showArrow ? 24 : 4
               const padding = 4
+              const centerBox = {
+                x: box.x + box.width / 2,
+                y: box.y + box.height / 2,
+              }
 
               const getPosition = (pos?: Position): Position => {
                 if (pos) return pos
 
-                // TODO: adding padding/margin to calculations
-                if (box.y - window.scrollY > window.innerHeight * 0.6) {
-                  return "above"
-                }
+                // Calculate angle from box center to screen center
+                const screenCenterX = window.innerWidth / 2
+                const screenCenterY = window.innerHeight / 2
 
-                if (
-                  box.y - textHeight < window.scrollY &&
-                  box.y + box.height + textHeight >
-                    window.innerHeight + window.scrollY
-                ) {
-                  if (box.x + box.width + textWidth < window.innerWidth) {
-                    return "right"
-                  }
-                  if (box.x - textWidth > 0) {
-                    return "left"
-                  }
-                }
-                return "below"
+                // Calculate angle from box to screen center
+                const dx = screenCenterX - centerBox.x
+                const dy = screenCenterY - centerBox.y
+
+                // Convert to angle in degrees (0° = right, 90° = down, etc.)
+                let angle = Math.atan2(dy, dx) * (180 / Math.PI)
+
+                // Normalize to 0-360 range
+                if (angle < 0) angle += 360
+
+                // Convert from math convention (0° = right) to clock convention (0° = top)
+                // and return the angle directly
+                return (angle + 90) % 360
               }
 
               const toDegree = (pos?: Position): number => {
@@ -174,10 +177,6 @@ async function generateScreenshotBuffer(
               }
 
               const position = toDegree(getPosition(annotation.position))
-              const centerBox = {
-                x: box.x + box.width / 2,
-                y: box.y + box.height / 2,
-              }
 
               function getLabelPosition(
                 box: { x: number; y: number; width: number; height: number },
