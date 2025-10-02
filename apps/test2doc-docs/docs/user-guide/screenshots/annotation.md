@@ -84,9 +84,9 @@ A box that is drawn around the element you wish to highlight.
 The location of where the label is rendered.
 
 - **`position`**:
-  - **Type**: `"above" | "below" | "left" | "right"`
-  - **Description**: Determines the position of the label text relative to the highlighted element.
-  - **Default**: `"below"` - automatically repositioned if insufficient space below the element.
+  - **Type**: `"above" | "below" | "left" | "right" | number`
+  - **Description**: Determines the position of the label text relative to the highlighted element. Uses clock convention where 0° = top, 90° = right, etc. If a number is provided, it positions the label at that degree angle. Defaults to automatically positioning towards the screen center.
+  - **Default**: Automatically positions label towards the center of the screen.
 
 ### Arrow
 Used to point from the label to the element being highlighted.
@@ -143,6 +143,10 @@ test.describe(withDocMeta("describe block"), async () => {
 
 ### Example screenshot
 ![A screenshot showing every annotation option in use](./annotation-usage.png)
+
+### Example of `position` by number
+If [`position`](#positioning) is set to a number, it will render is a clockwise rotation around the highlighted element.
+<img src="/img/position-degree.png" alt="screenshot showing multiple labels around a highlighted element" width="348" height="162" />
 
 ## Configure Annotation Defaults
 If you want to set default values for the annotation object you can do so in your `playwright-test2doc.config.ts`. Just set the `annotationDefaults` object in the `test2doc` playwright global options. These defaults will be applied to all screenshots, but can still be overridden on a per-screenshot basis.
