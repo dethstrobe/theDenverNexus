@@ -361,9 +361,9 @@ To style the highlight and label we expose a few properties on the `annotation` 
   - **Default**: `2`
 
 - **`position`**:
-  - **Type**: `"above" | "below" | "left" | "right"`
-  - **Description**: Determines the position of the label text relative to the highlighted element.
-  - **Default**: `"below"` - automatically repositioned if insufficient space below the element.
+  - **Type**: `"above" | "below" | "left" | "right" | number`
+  - **Description**: Determines the position of the label text relative to the highlighted element. Uses clock convention where 0° = top, 90° = right, etc. If a number is provided, it positions the label at that degree angle. Defaults to automatically positioning towards the screen center.
+  - **Default**: Automatically positions label towards the center of the screen.
 - **`showArrow`**:
   - **Type**: `boolean`
   - **Description**: Whether to display an arrow pointing from the label to the highlighted element. When enabled, creates a visual connection between the annotation text and the target element.
@@ -468,7 +468,7 @@ test.describe(withDocMeta("describe block"), async () => {
               options: {
                 annotation: {
                   text: "Sidebar Element",
-                  position: "left",
+                  position: 270,
                   showArrow: true,
                   arrowStrokeStyle: "red",
                 },
