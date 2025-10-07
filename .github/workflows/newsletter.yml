@@ -22,7 +22,7 @@ jobs:
 
           if [ -z "$ADDED" ]; then
             echo "No newly added markdown files under apps/test2doc-docs/blog — exiting."
-            exit 0
+            exit 1
           fi
 
           echo "Found added files:"
