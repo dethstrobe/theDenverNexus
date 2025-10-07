@@ -40,6 +40,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
+        working-directory: apps/test2doc-docs
         run: pnpm install --frozen-lockfile
 
       - name: Send newsletter
@@ -47,4 +48,4 @@ jobs:
         env:
           MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
           MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
-        run: echo "remember to uncomment out newsletter script" # pnpm newsletter
+        run: pnpm newsletter
