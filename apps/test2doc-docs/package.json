@@ -14,7 +14,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "newsletter": "node email/index.ts",
+    "newsletter": "tsx email/index.ts",
     "test:mail": "vitest"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "juice": "^11.0.3",
     "mailgun.js": "^12.1.0",
     "marked": "^16.3.0",
+    "tsx": "^4.20.6",
     "typescript": "~5.9.3"
   },
   "browserslist": {
