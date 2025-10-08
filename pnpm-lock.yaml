@@ -71,7 +71,7 @@ importers:
         version: 0.3.11(rollup@4.52.2)(typescript@5.9.3)(vite@7.1.7(@types/node@24.6.1)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6))(webpack@5.102.0)(workerd@1.20250617.0)
       tailwindcss:
         specifier: ^4.1.11
-        version: 4.1.13
+        version: 4.1.14
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.13.6
@@ -172,7 +172,7 @@ importers:
         version: 0.3.11(rollup@4.52.2)(typescript@5.9.3)(vite@7.1.7(@types/node@24.6.1)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6))(webpack@5.102.0)(workerd@1.20251004.0)
       tailwindcss:
         specifier: ^4.1.11
-        version: 4.1.13
+        version: 4.1.14
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.0.5
@@ -8000,6 +8000,9 @@ packages:
 
   tailwindcss@4.1.13:
     resolution: {integrity: sha512-i+zidfmTqtwquj4hMEwdjshYYgMbOrPzb9a0M3ZgNa0JMoZeFC6bxZvO8yr8ozS6ix2SDz0+mvryPeBs2TFE+w==}
+
+  tailwindcss@4.1.14:
+    resolution: {integrity: sha512-b7pCxjGO98LnxVkKjaZSDeNuljC4ueKUddjENJOADtubtdo8llTaJy7HwBMeLNSSo2N5QIAgklslK1+Ir8r6CA==}
 
   tapable@2.2.3:
     resolution: {integrity: sha512-ZL6DDuAlRlLGghwcfmSn9sK3Hr6ArtyudlSAiCqQ6IfE+b+HHbydbYDIG15IfS5do+7XQQBdBiubF/cV2dnDzg==}
@@ -18179,6 +18182,8 @@ snapshots:
   symbol-tree@3.2.4: {}
 
   tailwindcss@4.1.13: {}
+
+  tailwindcss@4.1.14: {}
 
   tapable@2.2.3: {}
 
