@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/workers-types"]
+  },
+  "include": [
+    "./**/*.ts",
+    "../src/worker-configuration.d.ts", // output of `wrangler types`
+  ],
+}
