@@ -1,7 +1,7 @@
 import type { ExportedHandler } from "@cloudflare/workers-types"
 
 export default {
-  async fetch(request, env, _ctx): Promise<Response> {
+  async fetch(request, env, _ctx) {
     const url = new URL(request.url)
     const pathname = url.pathname
     if (pathname === "/404") {
@@ -14,15 +14,28 @@ export default {
       outbound.append(k, v)
     }
 
-    return fetch(
-      "https://api.mailgun.net/v3/lists/newsletter@test2doc.com/members",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${btoa(`api:${env.MAILGUN_API_KEY}`)}`,
+    try {
+      const res = await fetch(
+        "https://api.mailgun.net/v3/lists/newsletter@test2doc.com/members",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${btoa(`api:${env.MAILGUN_API_KEY}`)}`,
+          },
+          body: outbound,
         },
-        body: outbound,
-      },
-    )
+      )
+
+      if (!res.ok) {
+        return new Response(`Error: ${res.statusText}`, { status: 500 })
+      }
+
+      return new Response(
+        `<!doctype html><html><head><meta http-equiv="refresh" content="0;url=/thanks"></head><body><script>location.replace("/thanks")</script></body></html>`,
+        { status: 202 },
+      )
+    } catch (e) {
+      return new Response(`Error: ${e}`, { status: 500 })
+    }
   },
 } satisfies ExportedHandler<Env>

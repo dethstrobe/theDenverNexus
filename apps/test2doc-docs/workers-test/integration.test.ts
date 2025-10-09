@@ -1,7 +1,7 @@
 import { SELF, fetchMock } from "cloudflare:test"
 import { describe, it, expect, beforeAll, afterEach } from "vitest"
 
-describe("Hello World worker", () => {
+describe("newsletter worker", () => {
   beforeAll(() => {
     fetchMock.activate()
     fetchMock.disableNetConnect()
@@ -57,7 +57,9 @@ describe("Hello World worker", () => {
     })
 
     const response = await SELF.fetch(req)
-    expect(response.status).toBe(200)
-    expect(await response.json()).toMatchObject({ message: "queued" })
+    expect(response.status).toBe(202)
+    const text = await response.text()
+    expect(text).toContain('<meta http-equiv="refresh" content="0;url=/thanks"')
+    expect(text).toContain('location.replace("/thanks")')
   })
 })
