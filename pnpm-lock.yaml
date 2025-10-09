@@ -55,8 +55,8 @@ importers:
         specifier: ~6.16.1
         version: 6.16.3
       '@prisma/client':
-        specifier: ~6.16.1
-        version: 6.16.3(prisma@6.16.2(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ~6.17.0
+        version: 6.17.0(prisma@6.16.2(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)
       '@simplewebauthn/browser':
         specifier: ^13.1.0
         version: 13.2.0
@@ -147,8 +147,8 @@ importers:
         specifier: ~6.16.1
         version: 6.16.3
       '@prisma/client':
-        specifier: ~6.16.1
-        version: 6.16.3(prisma@6.16.2(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ~6.17.0
+        version: 6.17.0(prisma@6.16.2(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)
       '@simplewebauthn/browser':
         specifier: ^13.1.0
         version: 13.2.0
@@ -2574,8 +2574,8 @@ packages:
   '@prisma/adapter-d1@6.16.3':
     resolution: {integrity: sha512-bZkE5qsIJ1EgrC+tGhi32fcvKL8lMEIjTZwuJAmNxS2NUo9qpWZaw8OaEERd/6a8MRLLTLE5pV63V9PQTvgDYQ==}
 
-  '@prisma/client@6.16.3':
-    resolution: {integrity: sha512-JfNfAtXG+/lIopsvoZlZiH2k5yNx87mcTS4t9/S5oufM1nKdXYxOvpDC1XoTCFBa5cQh7uXnbMPsmZrwZY80xw==}
+  '@prisma/client@6.17.0':
+    resolution: {integrity: sha512-b42mTLOdLEZ6e/igu8CLdccAUX9AwHknQQ1+pHOftnzDP2QoyZyFvcANqSLs5ockimFKJnV7Ljf+qrhNYf6oAg==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -11835,7 +11835,7 @@ snapshots:
       '@prisma/driver-adapter-utils': 6.16.3
       ky: 1.7.5
 
-  '@prisma/client@6.16.3(prisma@6.16.2(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)':
+  '@prisma/client@6.17.0(prisma@6.16.2(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)':
     optionalDependencies:
       prisma: 6.16.2(magicast@0.3.5)(typescript@5.9.3)
       typescript: 5.9.3
