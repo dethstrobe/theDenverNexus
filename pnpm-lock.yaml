@@ -62,7 +62,7 @@ importers:
         version: 13.2.0
       '@simplewebauthn/server':
         specifier: ^13.1.1
-        version: 13.2.1
+        version: 13.2.2
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.13(vite@7.1.7(@types/node@24.6.1)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6))
@@ -154,7 +154,7 @@ importers:
         version: 13.2.0
       '@simplewebauthn/server':
         specifier: ^13.1.1
-        version: 13.2.1
+        version: 13.2.2
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.13(vite@7.1.7(@types/node@24.6.1)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6))
@@ -2819,8 +2819,8 @@ packages:
   '@simplewebauthn/browser@13.2.0':
     resolution: {integrity: sha512-N3fuA1AAnTo5gCStYoIoiasPccC+xPLx2YU88Dv0GeAmPQTWHETlZQq5xZ0DgUq1H9loXMWQH5qqUjcI7BHJ1A==}
 
-  '@simplewebauthn/server@13.2.1':
-    resolution: {integrity: sha512-Inmfye5opZXe3HI0GaksqBnQiM7glcNySoG6DH1GgkO1Lh9dvuV4XSV9DK02DReUVX39HpcDob9nxHELjECoQw==}
+  '@simplewebauthn/server@13.2.2':
+    resolution: {integrity: sha512-HcWLW28yTMGXpwE9VLx9J+N2KEUaELadLrkPEEI9tpI5la70xNEVEsu/C+m3u7uoq4FulLqZQhgBCzR9IZhFpA==}
     engines: {node: '>=20.0.0'}
 
   '@sinclair/typebox@0.27.8':
@@ -12109,7 +12109,7 @@ snapshots:
 
   '@simplewebauthn/browser@13.2.0': {}
 
-  '@simplewebauthn/server@13.2.1':
+  '@simplewebauthn/server@13.2.2':
     dependencies:
       '@hexagon/base64': 1.1.28
       '@levischuck/tiny-cbor': 0.2.11
