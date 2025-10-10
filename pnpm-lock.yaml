@@ -288,7 +288,7 @@ importers:
         version: 12.1.0
       marked:
         specifier: ^16.3.0
-        version: 16.3.0
+        version: 16.4.0
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
@@ -5922,8 +5922,8 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  marked@16.3.0:
-    resolution: {integrity: sha512-K3UxuKu6l6bmA5FUwYho8CfJBlsUWAooKtdGgMcERSpF7gcBUrCGsLH7wDaaNOzwq18JzSUDyoEb/YsrqMac3w==}
+  marked@16.4.0:
+    resolution: {integrity: sha512-CTPAcRBq57cn3R8n3hwc2REddc28hjR7RzDXQ+lXLmMJYqn20BaI2cGw6QjgZGIgVfp2Wdfw4aMzgNteQ6qJgQ==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -10362,7 +10362,7 @@ snapshots:
       '@docsearch/css': 4.1.0
       ai: 5.0.60(zod@4.1.11)
       algoliasearch: 5.39.0
-      marked: 16.3.0
+      marked: 16.4.0
       zod: 4.1.11
     optionalDependencies:
       '@types/react': 19.2.0
@@ -15474,7 +15474,7 @@ snapshots:
 
   marked@15.0.12: {}
 
-  marked@16.3.0: {}
+  marked@16.4.0: {}
 
   math-intrinsics@1.1.0: {}
 
