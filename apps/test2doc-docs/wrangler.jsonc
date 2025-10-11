@@ -24,7 +24,7 @@
     "production": {
       "name": "newsletter-proxy-worker",
       "workers_dev": false,
-      "routes": ["https://test2doc.com/api/*"],
+      "routes": ["*test2doc.com/api/*"],
       "zone_id": "fafa91271f2b6c916edc417782e5522b"
     }
   },

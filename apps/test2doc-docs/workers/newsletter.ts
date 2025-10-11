@@ -33,7 +33,10 @@ export default {
 
       return new Response(
         `<!doctype html><html><head><meta http-equiv="refresh" content="0;url=/thanks"></head><body><script>location.replace("/thanks")</script></body></html>`,
-        { status: 202 },
+        {
+          status: 202,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        },
       )
     } catch (e) {
       return new Response(`Error: ${e}`, { status: 500 })

@@ -64,6 +64,7 @@ describe("newsletter worker", () => {
 
     const response = await SELF.fetch(req)
     expect(response.status).toBe(202)
+    expect(response.headers.get("content-type")).toMatch(/text\/html/i)
     const text = await response.text()
     expect(text).toContain('<meta http-equiv="refresh" content="0;url=/thanks"')
     expect(text).toContain('location.replace("/thanks")')
