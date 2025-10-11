@@ -1,6 +1,6 @@
-import { themes as prismThemes } from "prism-react-renderer"
-import type { Config } from "@docusaurus/types"
-import type * as Preset from "@docusaurus/preset-classic"
+import { themes as prismThemes } from "prism-react-renderer";
+import type { Config } from "@docusaurus/types";
+import type * as Preset from "@docusaurus/preset-classic";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -63,7 +63,7 @@ const config: Config = {
           onUntruncatedBlogPosts: "warn",
         },
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: ["./src/css/reset.css", "./src/css/custom.css"],
         },
       } satisfies Preset.Options,
     ],
@@ -136,13 +136,13 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} [Company Name]. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} TEST2DOCS. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
-}
+};
 
-export default config
+export default config;
