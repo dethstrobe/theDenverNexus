@@ -4,7 +4,7 @@ export default {
   async fetch(request, env, _ctx) {
     const url = new URL(request.url)
     const pathname = url.pathname
-    if (pathname === "/404") {
+    if (pathname !== "/api/newsletter") {
       return new Response("Not found", { status: 404 })
     }
     const incoming = await request.formData()
@@ -13,6 +13,7 @@ export default {
       // v may be string or File/Blob — append preserves it
       outbound.append(k, v)
     }
+    outbound.append("upsert", "yes")
 
     try {
       const res = await fetch(

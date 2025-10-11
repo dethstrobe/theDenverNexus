@@ -16,7 +16,11 @@
     "newsletter": "tsx email/index.ts",
     "test:e2e": "playwright test",
     "test:mail": "vitest run -c vitest.email.config.ts email/workflow.test.ts",
-    "test:worker": "vitest run -c vitest.worker.config.ts workers-test/integration.test.ts"
+    "test:worker": "vitest run -c vitest.worker.config.ts workers-test/integration.test.ts",
+    "build:worker": "tsc -p workers/tsconfig.json",
+    "worker:publish": "wrangler deploy --env preview",
+    "worker:secret": "wrangler secret put MAILGUN_API_KEY --env preview",
+    "worker:dev": "wrangler dev"
   },
   "dependencies": {
     "@docusaurus/core": "3.9.1",
@@ -25,7 +29,8 @@
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "wrangler": "^4.42.2"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.9.11",

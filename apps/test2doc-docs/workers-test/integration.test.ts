@@ -31,6 +31,12 @@ describe("newsletter worker", () => {
           typeof req.body === "string" &&
           req.body.includes("test@example.com")
         ) {
+          if (!req.body.includes("upsert")) {
+            return {
+              statusCode: 400,
+              data: JSON.stringify({ message: "bad request" }),
+            }
+          }
           return {
             statusCode: 200,
             data: JSON.stringify({ message: "queued" }),
@@ -61,5 +67,15 @@ describe("newsletter worker", () => {
     const text = await response.text()
     expect(text).toContain('<meta http-equiv="refresh" content="0;url=/thanks"')
     expect(text).toContain('location.replace("/thanks")')
+  })
+
+  it("returns 404 for non-newsletter paths", async () => {
+    const req = new Request("https://test2doc.com/invalid-path", {
+      method: "POST",
+    })
+    const response = await SELF.fetch(req)
+    expect(response.status).toBe(404)
+    const text = await response.text()
+    expect(text).toBe("Not found")
   })
 })
