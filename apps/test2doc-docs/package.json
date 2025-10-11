@@ -12,7 +12,11 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "newsletter": "tsx email/index.ts",
+    "test:e2e": "playwright test",
+    "test:mail": "vitest run -c vitest.email.config.ts email/workflow.test.ts",
+    "test:worker": "vitest run -c vitest.worker.config.ts workers-test/integration.test.ts"
   },
   "dependencies": {
     "@docusaurus/core": "3.9.1",
@@ -24,9 +28,18 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.9.11",
+    "@cloudflare/workers-types": "^4.20251003.0",
     "@docusaurus/module-type-aliases": "3.8.1",
     "@docusaurus/tsconfig": "3.9.1",
     "@docusaurus/types": "3.8.1",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^24.7.0",
+    "gray-matter": "^4.0.3",
+    "juice": "^11.0.3",
+    "mailgun.js": "^12.1.0",
+    "marked": "^16.3.0",
+    "tsx": "^4.20.6",
     "typescript": "~5.9.3"
   },
   "browserslist": {

@@ -1,0 +1,38 @@
+{
+  // Cloudflare Worker name
+  "name": "newsletter-proxy-worker",
+
+  // your Cloudflare account id (replace in file or supply in CI)
+  "account_id": "YOUR_ACCOUNT_ID",
+
+  // worker runtime compatibility date
+  "compatibility_date": "2025-10-07",
+
+  // entry file (relative path from repo root). Use the TS file if you want Wrangler to build it.
+  "main": "workers/newsletter.ts",
+
+  // type: "javascript" is fine for module workers
+  "type": "javascript",
+
+  // optional base URL override (useful for tests / local mocks)
+  "vars": {
+    "MAILGUN_BASE_URL": "https://api.mailgun.net/v3"
+  },
+
+  // NOTE: set secrets (MAILGUN_API_KEY, MAILING_LIST_ADDRESS) via wrangler secret put
+  // or bind them in your CI when publishing. Do NOT commit API keys here.
+
+  // route(s) to bind the worker to your domain (replace placeholders)
+  "routes": [
+    {
+      "pattern": "https://test2doc.com/api/*",
+      "zone_id": "YOUR_ZONE_ID"
+    }
+  ],
+
+  // simple build instruction (adjust to your repo's build setup)
+  "build": {
+    // run this in CI prior to publish or let wrangler run it; adjust commands as needed
+    "command": "pnpm --filter ./apps/test2doc-docs install && pnpm --filter ./apps/test2doc-docs run build:worker || true"
+  }
+}

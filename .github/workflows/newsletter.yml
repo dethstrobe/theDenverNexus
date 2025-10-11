@@ -1,0 +1,51 @@
+name: Send Newsletter
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'apps/test2doc-docs/blog/**/*.md'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for newly added markdown files
+        if: github.event_name == 'push'
+        run: |
+          # ensure we have the refs to diff against
+          git fetch --no-tags --prune --unshallow || true
+
+          echo "Checking for newly added markdown files between ${{ github.event.before }} and ${{ github.sha }}..."
+          ADDED=$(git diff --name-status "${{ github.event.before }}" "${{ github.sha }}" | awk '/^A/ {print $2}' | grep -E '^apps/test2doc-docs/blog/.*\.md$' || true)
+
+          if [ -z "$ADDED" ]; then
+            echo "No newly added markdown files under apps/test2doc-docs/blog — exiting."
+            exit 1
+          fi
+
+          echo "Found added files:"
+          echo "$ADDED"
+
+      - name: Setup Node & pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        working-directory: apps/test2doc-docs
+        run: pnpm install --frozen-lockfile
+
+      - name: Send newsletter
+        working-directory: apps/test2doc-docs
+        env:
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+        run: pnpm newsletter

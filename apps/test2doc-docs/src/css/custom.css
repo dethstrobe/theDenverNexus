@@ -46,3 +46,7 @@
 [data-theme="dark"] {
   --ifm-background-color: var(--ifm-color-black);
 }
+
+.hide {
+  display: none;
+}
