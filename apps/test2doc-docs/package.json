@@ -1,5 +1,5 @@
 {
-  "name": "test-2-doc-marketing-2",
+  "name": "test-2-doc-docs",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "wrangler pages deploy ./build --project-name test2doc --branch=preview",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
