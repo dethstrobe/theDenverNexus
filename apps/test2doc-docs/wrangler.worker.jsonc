@@ -11,8 +11,6 @@
   // entry file (relative path from repo root). Use the TS file if you want Wrangler to build it.
   "main": "workers/newsletter.ts",
 
-  "pages_build_output_dir": "apps/test2doc-docs/build",
-
   // optional base URL override (useful for tests / local mocks)
   "vars": {
     "MAILGUN_BASE_URL": "https://api.mailgun.net/v3"
