@@ -75,4 +75,4 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         working-directory: ./apps/test2doc-docs
         run: |
-          pnpm run deploy:worker
+          pnpm worker:publish
