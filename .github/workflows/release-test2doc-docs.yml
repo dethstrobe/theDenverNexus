@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -43,7 +45,7 @@ jobs:
           NEW_VERSION=$(node -p "require('./apps/test2doc-docs/package.json').version")
           TAG="test2doc-docs-v${NEW_VERSION}"
           # commit version bump and create custom annotated tag
-          git add package.json package-lock.json 2>/dev/null || true
+          git add .
           git commit -m "chore(test2doc-docs): Release v${NEW_VERSION} [skip ci]"
           git tag -a "${TAG}" -m "Release ${TAG}"
           git push origin HEAD --follow-tags
