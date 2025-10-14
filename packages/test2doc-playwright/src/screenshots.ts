@@ -36,11 +36,27 @@ interface MultiLocatorScreenshot {
   options?: ScreenshotOptions
 }
 
+/**
+ * Takes a screenshot of the specified target element(s) and attaches it to the test report.
+ * @param testInfo [The TestInfo object](https://playwright.dev/docs/api/class-testinfo) supplied from the test block, it is the second argument to the test function.
+ * @param target A [Page](https://playwright.dev/docs/api/class-page), [Locator](https://playwright.dev/docs/locators), or [Array of MultiLocatorScreenshot](https://github.com/dethstrobe/theDenverNexus/blob/main/packages/test2doc-playwright/README.md#highlight-multiple-elements) options
+ * @param screenshotOptions Screenshot options using [Playwright's PageScreenshotOptions](https://playwright.dev/docs/api/class-page#page-screenshot) and/or [Test2Doc's AnnotationOptions](https://github.com/dethstrobe/theDenverNexus/blob/main/packages/test2doc-playwright/README.md#annotation-object-properties) for annotation highlighting.
+ * @returns {Promise<void>} A Promise that resolves when the screenshot is taken and attached to the test report.
+ * @example
+ * // Single element with annotation
+ * screenshot(testInfo, page.getByRole("button", { name: "CTA" }), { annotation: { text: "Call to action" } });
+ * @example
+ * // Multiple elements with individual annotations
+ * screenshot(testInfo, [
+ *   { target: page.getByRole("button", { name: "CTA" }), options: { annotation: { text: "Call to action" } } },
+ *   { target: page.getByRole("heading", { name: "Welcome" }), options: { annotation: { text: "Main heading", position: "above" } } }
+ * ]);
+ */
 export const screenshot = async (
   testInfo: TestInfo,
   target: Page | Locator | MultiLocatorScreenshot[],
   { annotation: overrideAnnotations, ...options }: ScreenshotOptions = {},
-) => {
+): Promise<void> => {
   const annotation: AnnotationOptions = {
     ...(testInfo.project?.use?.test2doc?.annotationDefaults ?? {}),
     ...overrideAnnotations,

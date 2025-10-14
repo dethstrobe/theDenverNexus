@@ -116,7 +116,7 @@ class Test2DocReporter implements Reporter {
     const title =
       filename.match(/^(.*?)\.(test|spec)\.(ts|js)$/)?.[1] ?? filename
     const docNode: DocNode = {
-      title: title,
+      title,
       children: [],
       tests: this.buildDocTests(tests),
     }
