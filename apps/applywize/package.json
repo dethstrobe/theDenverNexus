@@ -27,7 +27,7 @@
     "prepare": "vibe-rules install cursor"
   },
   "dependencies": {
-    "@prisma/adapter-d1": "~6.16.1",
+    "@prisma/adapter-d1": "~6.17.1",
     "@prisma/client": "~6.17.0",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
