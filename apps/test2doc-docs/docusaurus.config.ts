@@ -76,7 +76,7 @@ const config: Config = {
       title: "Test2Doc",
       logo: {
         alt: "Test2Doc Logo",
-        src: "img/logo.svg",
+        src: "img/t2d-logo-color.svg",
       },
       items: [
         {
