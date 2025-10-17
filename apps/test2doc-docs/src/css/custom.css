@@ -49,15 +49,30 @@
 }
 
 .hero--primary {
-  --hero-primary: light-dark(var(--ifm-color-secondary), var(--ifm-color-black));
+  --hero-primary: light-dark(var(--ifm-color-white), var(--ifm-color-black));
   --hero-secondary: light-dark(var(--ifm-color-info), var(--ifm-color-primary));
-  --hero-tertiary: light-dark(var(--ifm-color-black), var(--ifm-color-secondary));
+  --hero-tertiary: light-dark(var(--ifm-color-secondary), var(--ifm-color-secondary));
   background: linear-gradient(var(--hero-tertiary), var(--hero-secondary), var(--hero-primary));
-  color: var(--hero-tertiary);
-
+  color: var(--hero-black);
   .hero__title {
-    color: var(--hero-primary);
-    text-shadow: var(--ifm-color-white) 1px 1px 2px, var(--hero-tertiary) 0 0 25px, var(--hero-tertiary) 0 0 5px;
+  perspective: 300px;
+  svg {
+    transform: rotate3d(1,0,0,30deg);
+    width: 350px;
+    overflow: visible;
+    stroke: var(--hero-tertiary);
+    stroke-width: 6px;
+    paint-order: stroke;
+  }
+}
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% 0%; /* Start at the top-left */
+  }
+  100% {
+    background-position: 0% 100%; /* Move down to the bottom-left */
   }
 }
 
