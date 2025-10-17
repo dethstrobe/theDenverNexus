@@ -69,8 +69,8 @@ export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext()
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title={`${siteConfig.title}: Never Update Docs Again`}
+      description="A reporter for Playwright that generates Docusaurus documentation from your tests."
     >
       <HomepageHeader />
       <main className="home-main">

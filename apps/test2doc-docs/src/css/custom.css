@@ -60,7 +60,7 @@
     transform: rotate3d(1,0,0,30deg);
     width: 350px;
     overflow: visible;
-    stroke: var(--hero-tertiary);
+    stroke: light-dark(var(--ifm-color-black), var(--hero-tertiary));
     stroke-width: 6px;
     paint-order: stroke;
   }
