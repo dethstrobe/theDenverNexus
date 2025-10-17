@@ -16,7 +16,7 @@
     "reporter",
     "automation"
   ],
-  "homepage": "https://github.com/dethstrobe/theDenverNexus/tree/main/packages/test2doc-playwright",
+  "homepage": "https://test2doc.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dethstrobe/theDenverNexus.git",
