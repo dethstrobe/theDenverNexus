@@ -1,4 +1,4 @@
-name: Release
+name: Release - test2doc-playwright
 on:
   push:
     branches: [main]
@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "latest"
+          node-version: "24"
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
