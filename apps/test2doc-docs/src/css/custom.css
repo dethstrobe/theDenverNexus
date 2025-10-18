@@ -41,8 +41,8 @@
 
   h2 {
     background-color: light-dark(
-      var(--ifm-color-secondary),
-      var(--ifm-color-primary)
+      hsl(from var(--ifm-color-secondary) h 90 l / 0.5),
+      hsl(from var(--ifm-color-primary) h 50 50 / 0.75)
     );
     padding-left: var(--ifm-spacing-horizontal);
     padding-right: var(--ifm-spacing-horizontal);
