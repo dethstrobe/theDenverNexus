@@ -9,7 +9,11 @@
 /* You can override the default Infima variables here. */
 :root {
   /* typography */
-  font: 16px/1.5 Futura, Helvetica, Arial, sans-serif;
+  font:
+    16px / 1.5 Futura,
+    Helvetica,
+    Arial,
+    sans-serif;
   --ifm-font-family-base: var(--ifm-font-family-monospace);
   --ifm-link-decoration: underline;
 
@@ -25,14 +29,27 @@
   --ifm-color-danger: #ff3131;
 
   /* theme */
-  --ifm-background-color: light-dark(var(--ifm-color-white), var(--ifm-color-black));
+  --ifm-background-color: light-dark(
+    var(--ifm-color-white),
+    var(--ifm-color-black)
+  );
   --ifm-link-color: var(--ifm-color-primary);
-  --ifm-navbar-background-color: light-dark(var(--ifm-color-secondary), var(--ifm-color-black));
+  --ifm-navbar-background-color: light-dark(
+    var(--ifm-color-secondary),
+    var(--ifm-color-black)
+  );
 
   h2 {
-    background-color: light-dark(var(--ifm-color-secondary), var(--ifm-color-primary));
+    background-color: light-dark(
+      var(--ifm-color-secondary),
+      var(--ifm-color-primary)
+    );
     padding-left: var(--ifm-spacing-horizontal);
     padding-right: var(--ifm-spacing-horizontal);
+
+    a {
+      color: light-dark(var(--ifm-link-color), var(--ifm-color-black));
+    }
   }
 
   .footer {
@@ -51,20 +68,27 @@
 .hero--primary {
   --hero-primary: light-dark(var(--ifm-color-white), var(--ifm-color-black));
   --hero-secondary: light-dark(var(--ifm-color-info), var(--ifm-color-primary));
-  --hero-tertiary: light-dark(var(--ifm-color-secondary), var(--ifm-color-secondary));
-  background: linear-gradient(var(--hero-tertiary), var(--hero-secondary), var(--hero-primary));
+  --hero-tertiary: light-dark(
+    var(--ifm-color-secondary),
+    var(--ifm-color-secondary)
+  );
+  background: linear-gradient(
+    var(--hero-tertiary),
+    var(--hero-secondary),
+    var(--hero-primary)
+  );
   color: var(--hero-black);
   .hero__title {
-  perspective: 300px;
-  svg {
-    transform: rotate3d(1,0,0,30deg);
-    width: 350px;
-    overflow: visible;
-    stroke: light-dark(var(--ifm-color-black), var(--hero-tertiary));
-    stroke-width: 6px;
-    paint-order: stroke;
+    perspective: 300px;
+    svg {
+      transform: rotate3d(1, 0, 0, 30deg);
+      width: 350px;
+      overflow: visible;
+      stroke: light-dark(var(--ifm-color-black), var(--hero-tertiary));
+      stroke-width: 6px;
+      paint-order: stroke;
+    }
   }
-}
 }
 
 @keyframes moveGradient {
@@ -80,69 +104,71 @@
   --plane-color: light-dark(var(--ifm-color-white), #333);
   --shadow-color: light-dark(#ddd, var(--ifm-color-info));
   --ground-color: light-dark(#efefef, var(--ifm-color-black));
-  background: linear-gradient(180deg,
-      var(--ground-color) 0%,
-      var(--ground-color) 0.45%,
-      var(--plane-color) 0.45%,
-      var(--plane-color) 0.95%,
-      var(--shadow-color) 0.95%,
-      var(--shadow-color) 1%,
-      var(--ground-color) 1%,
-      var(--ground-color) 1.5%,
-      var(--plane-color) 1.5%,
-      var(--plane-color) 2.25%,
-      var(--shadow-color) 2.25%,
-      var(--shadow-color) 2.4%,
-      var(--ground-color) 2.4%,
-      var(--ground-color) 3.3%,
-      var(--plane-color) 3.3%,
-      var(--plane-color) 4.6%,
-      var(--shadow-color) 4.6%,
-      var(--shadow-color) 4.8%,
-      var(--ground-color) 4%,
-      var(--ground-color) 6.8%,
-      var(--plane-color) 6.8%,
-      var(--plane-color) 9.3%,
-      var(--shadow-color) 9.3%,
-      var(--shadow-color) 10%,
-      var(--ground-color) 10%,
-      var(--ground-color) 13.6%,
-      var(--plane-color) 13.6%,
-      var(--plane-color) 17%,
-      var(--shadow-color) 17%,
-      var(--shadow-color) 18%,
-      var(--ground-color) 18%,
-      var(--ground-color) 22.6%,
-      var(--plane-color) 22.6%,
-      var(--plane-color) 26.8%,
-      var(--shadow-color) 26.8%,
-      var(--shadow-color) 28%,
-      var(--ground-color) 28%,
-      var(--ground-color) 33.6%,
-      var(--plane-color) 33.6%,
-      var(--plane-color) 38.5%,
-      var(--shadow-color) 38.5%,
-      var(--shadow-color) 40%,
-      var(--ground-color) 40%,
-      var(--ground-color) 46.6%,
-      var(--plane-color) 46.6%,
-      var(--plane-color) 52.2%,
-      var(--shadow-color) 52.2%,
-      var(--shadow-color) 54%,
-      var(--ground-color) 54%,
-      var(--ground-color) 61.6%,
-      var(--plane-color) 61.6%,
-      var(--plane-color) 68.2%,
-      var(--shadow-color) 68.2%,
-      var(--shadow-color) 70%,
-      var(--ground-color) 70%,
-      var(--ground-color) 78.6%,
-      var(--plane-color) 78.6%,
-      var(--plane-color) 86.2%,
-      var(--shadow-color) 86.2%,
-      var(--shadow-color) 88%,
-      var(--ground-color) 88%,
-      var(--ground-color) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--ground-color) 0%,
+    var(--ground-color) 0.45%,
+    var(--plane-color) 0.45%,
+    var(--plane-color) 0.95%,
+    var(--shadow-color) 0.95%,
+    var(--shadow-color) 1%,
+    var(--ground-color) 1%,
+    var(--ground-color) 1.5%,
+    var(--plane-color) 1.5%,
+    var(--plane-color) 2.25%,
+    var(--shadow-color) 2.25%,
+    var(--shadow-color) 2.4%,
+    var(--ground-color) 2.4%,
+    var(--ground-color) 3.3%,
+    var(--plane-color) 3.3%,
+    var(--plane-color) 4.6%,
+    var(--shadow-color) 4.6%,
+    var(--shadow-color) 4.8%,
+    var(--ground-color) 4%,
+    var(--ground-color) 6.8%,
+    var(--plane-color) 6.8%,
+    var(--plane-color) 9.3%,
+    var(--shadow-color) 9.3%,
+    var(--shadow-color) 10%,
+    var(--ground-color) 10%,
+    var(--ground-color) 13.6%,
+    var(--plane-color) 13.6%,
+    var(--plane-color) 17%,
+    var(--shadow-color) 17%,
+    var(--shadow-color) 18%,
+    var(--ground-color) 18%,
+    var(--ground-color) 22.6%,
+    var(--plane-color) 22.6%,
+    var(--plane-color) 26.8%,
+    var(--shadow-color) 26.8%,
+    var(--shadow-color) 28%,
+    var(--ground-color) 28%,
+    var(--ground-color) 33.6%,
+    var(--plane-color) 33.6%,
+    var(--plane-color) 38.5%,
+    var(--shadow-color) 38.5%,
+    var(--shadow-color) 40%,
+    var(--ground-color) 40%,
+    var(--ground-color) 46.6%,
+    var(--plane-color) 46.6%,
+    var(--plane-color) 52.2%,
+    var(--shadow-color) 52.2%,
+    var(--shadow-color) 54%,
+    var(--ground-color) 54%,
+    var(--ground-color) 61.6%,
+    var(--plane-color) 61.6%,
+    var(--plane-color) 68.2%,
+    var(--shadow-color) 68.2%,
+    var(--shadow-color) 70%,
+    var(--ground-color) 70%,
+    var(--ground-color) 78.6%,
+    var(--plane-color) 78.6%,
+    var(--plane-color) 86.2%,
+    var(--shadow-color) 86.2%,
+    var(--shadow-color) 88%,
+    var(--ground-color) 88%,
+    var(--ground-color) 100%
+  );
 
   .feature-item {
     background-color: rgb(from var(--ifm-background-color) r g b / 0.75);
