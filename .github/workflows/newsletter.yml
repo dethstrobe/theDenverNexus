@@ -18,7 +18,14 @@ jobs:
           git fetch --no-tags --prune --unshallow || true
 
           echo "Checking for newly added markdown files between ${{ github.event.before }} and ${{ github.sha }}..."
-          ADDED=$(git diff --name-status "${{ github.event.before }}" "${{ github.sha }}" | awk '/^A/ {print $2}' | grep -E '^apps/test2doc-docs/blog/.*\.md$' || true)
+          
+          # Skip diff if before is invalid (all zeros, meaning no previous commit)
+          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            echo "No previous commit (first push?) — assuming new files added."
+            ADDED=$(git ls-files 'apps/test2doc-docs/blog/*.md' | head -5 || true)  # List recent blog files as fallback
+          else
+            ADDED=$(git diff --name-status "${{ github.event.before }}" "${{ github.sha }}" | awk '/^A/ {print $2}' | grep -E '^apps/test2doc-docs/blog/.*\.md$' || true)
+          fi
 
           if [ -z "$ADDED" ]; then
             echo "No newly added markdown files under apps/test2doc-docs/blog — exiting."
