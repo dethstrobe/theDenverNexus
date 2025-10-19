@@ -1,6 +1,6 @@
-import { getLatestBlogPost } from "./latestBlogPost"
-import { sentNewsletter } from "./sentEmail"
-import { emailTemplate } from "./template"
+import { getLatestBlogPost } from "./latestBlogPost.js"
+import { sentNewsletter } from "./sentEmail.js"
+import { emailTemplate } from "./template.js"
 
 export async function newsletterWorkflow() {
   const template = await getLatestBlogPost()
