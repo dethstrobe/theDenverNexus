@@ -58,7 +58,7 @@ describe("newsletter workflow", () => {
     })
 
     test("sending newsletter from latest blog post markdown using mailgun", async () => {
-      const { newsletterWorkflow } = await import("./workflow")
+      const { newsletterWorkflow } = await import("./workflow.mjs")
       await newsletterWorkflow()
 
       const [domain, payload] = mockCreate.mock.calls[0]
@@ -85,7 +85,7 @@ describe("newsletter workflow", () => {
     })
 
     test("sending newsletter from latest blog post index.md using mailgun", async () => {
-      const { newsletterWorkflow } = await import("./workflow")
+      const { newsletterWorkflow } = await import("./workflow.mjs")
       await newsletterWorkflow()
 
       const [domain, payload] = mockCreate.mock.calls[0]

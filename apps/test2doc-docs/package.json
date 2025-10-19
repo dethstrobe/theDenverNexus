@@ -15,7 +15,7 @@
     "typecheck": "tsc",
     "newsletter": "tsx email/index.mts",
     "test:e2e": "playwright test",
-    "test:mail": "vitest run -c vitest.email.config.ts email/workflow.test.ts",
+    "test:mail": "npx vitest run -c vitest.email.config.ts email/workflow.test.ts",
     "test:worker": "vitest run -c vitest.worker.config.ts workers-test/integration.test.ts",
     "build:worker": "tsc -p workers/tsconfig.json",
     "worker:publish": "wrangler deploy --config wrangler.worker.jsonc",

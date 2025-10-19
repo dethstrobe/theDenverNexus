@@ -1,3 +1,3 @@
-import { newsletterWorkflow } from "./workflow.js"
+import { newsletterWorkflow } from "./workflow.mjs"
 
 await newsletterWorkflow()
