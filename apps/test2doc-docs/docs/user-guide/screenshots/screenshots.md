@@ -5,7 +5,7 @@ sidebar_position: 1
 # Screenshots
 Test2Doc has a helper function to take screenshots of the page or selectively highlight elements to point out what you are documenting.
 
-Screenshots will be added after the [Step](https://playwright.dev/docs/api/class-test#test-step) block's title and in the order they're generated.
+Screenshots will be added to the markdown files after the [Step](https://playwright.dev/docs/api/class-test#test-step) block's title and in the order they're generated.
 
 Screenshot names are prefixed with `test2doc-`, a timestamp of when they were taken, and an incrementing id. E.g. `test2doc-[timestamp]-1.png`
 
