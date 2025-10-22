@@ -153,7 +153,7 @@ If you want to set default values for the annotation object you can do so in you
 
 ```ts
 import { defineConfig, ... } from "@playwright/test"
-import "@test2doc/types" // Add this import to add test2doc to the global options
+import "@test2doc/playwright/types"" // Add this import to add test2doc to the global options
 
 export default defineConfig({
   ...
