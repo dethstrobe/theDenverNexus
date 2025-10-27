@@ -1,6 +1,6 @@
 ---
 title: Setup
-sidebar_position: 3
+sidebar_position: 1
 slug: /tutorial-1
 ---
 ## Intro
@@ -106,3 +106,5 @@ In the next lesson, we'll start the actual development work. You'll learn how to
 - Understand the project structure and key files.
 - Set up styling tools like TailwindCSS and shadcn/ui.
 - Get your development server running and see your first working page.
+- Have e2e testing with playwright
+- Document functionality of the web app for Docusaurus
