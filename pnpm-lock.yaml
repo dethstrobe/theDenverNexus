@@ -206,7 +206,7 @@ importers:
         version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.1)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.1)(msw@2.11.5(@types/node@24.9.1)(typescript@5.9.3))(terser@5.44.0)(tsx@4.20.6))
       fake-indexeddb:
         specifier: ^6.0.1
-        version: 6.2.2
+        version: 6.2.4
       jsdom:
         specifier: ^27.0.0
         version: 27.0.0(postcss@8.5.6)
@@ -5021,8 +5021,8 @@ packages:
     engines: {node: '>= 10.17.0'}
     hasBin: true
 
-  fake-indexeddb@6.2.2:
-    resolution: {integrity: sha512-SGbf7fzjeHz3+12NO1dYigcYn4ivviaeULV5yY5rdGihBvvgwMds4r4UBbNIUMwkze57KTDm32rq3j1Az8mzEw==}
+  fake-indexeddb@6.2.4:
+    resolution: {integrity: sha512-INKeIKEtSViN4yVtEWEUqbsqmaIy7Ls+MfU0yxQVXg67pOJ/sH1ZxcVrP8XrKULUFohcPD9gnmym+qBfEybACw==}
     engines: {node: '>=18'}
 
   fast-check@3.23.2:
@@ -15996,7 +15996,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  fake-indexeddb@6.2.2: {}
+  fake-indexeddb@6.2.4: {}
 
   fast-check@3.23.2:
     dependencies:
