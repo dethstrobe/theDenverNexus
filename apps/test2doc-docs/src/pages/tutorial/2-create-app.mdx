@@ -71,7 +71,7 @@ For this project we're going to use a few tools to make our lives a bit easier.
 ### .gitignore
 For this tutorial, we'll have some files get generated that we won't want to track in git. So we'll generate a .gitignore file to not track these.
 ```sh
-node --eval 'require("fs").writeFileSync(".gitignore", `# Node modules\nnode_modules\n\n# Logs\nlogs\n*.log\n\n# Vite build output\ndist\n\n# MacOS\n.DS_Store\n\n# pnpm store directory\n.pnpm-store\n\n# Vite cache\n.vite\n\n# Coverage directory used by tools like istanbul\ncoverage\n\n# Temporary files\n*.tmp\n*.temp\n.wrangler/\n\n# Playwright\n/test-results/\n/playwright-report/\n/blob-report/\n/playwright/.cache/\nplaywright/.auth\n`)'
+node --eval 'require("fs").writeFileSync(".gitignore", `# Node modules\nnode_modules\n\n# Logs\nlogs\n*.log\n\n# Vite build output\ndist\n\n# MacOS\n.DS_Store\n\n# pnpm store directory\n.pnpm-store\n\n# Vite cache\n.vite\n\n# Coverage directory used by tools like istanbul\ncoverage\n\n# Temporary files\n*.tmp\n*.temp\n.wrangler/\nworker-configuration.d.ts\n\n# Playwright\n/test-results/\n/playwright-report/\n/blob-report/\n/playwright/.cache/\nplaywright/.auth\n`)'
 ```
 
 ### Prettier
@@ -546,6 +546,9 @@ We also need to update the `package.json` so we can run Playwright tests and gen
 We'll run Playwright with the UI enabled, so we can run tests in watch mode. This way tests can rerun when we make changes.
 
 If you run `pnpm test` you should see the example tests will run. And if you run `pnpm doc` it should output so markdown files for those tests in `doc/docs/test2doc-example.md`.
+
+## Code on GitHub
+You can find the code for this section on [GitHub](https://github.com/dethstrobe/applywize2/tree/tutorial-2).
 
 ## Further reading
 

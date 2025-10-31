@@ -91,7 +91,7 @@ Before we start, you'll need:
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 ## Code on GitHub
-You can find the final code on [GitHub](https://github.com/dethstrobe/applywize).
+You can find the final code on [GitHub](https://github.com/dethstrobe/applywize2).
 
 ## Further Reading
 
