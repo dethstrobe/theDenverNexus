@@ -12,7 +12,7 @@ By the end of this lesson, you'll have:
 - Knowledge of how to make changes to your database structure safely using migrations
 
 ## Why Do We Need a Database?
-Right now our app can't remember anything. When you refresh the page, everything is gone. A database lets our app store and remember information permanently, like your job applications.
+Right now our app can't remember anything. When you refresh the page, everything is gone. A database lets our app store and remember information permanently, like our job applications.
 
 ## Setting up our Database with Durable Objects
 
@@ -39,7 +39,7 @@ Think of a migration like a recipe for changing your database. When you need to 
 Why are migrations important? Imagine you're working with a team - when someone adds a new feature that needs a database change, they create a migration file. Now everyone on the team can run that same migration to update their local database to match. Without migrations, you'd have to manually tell everyone "hey, go add this new table with these exact columns" - and that gets messy fast.
 
 #### Now you're thinking with models.
-Let's to start by going through the [application design files](https://www.figma.com/design/nqBPIIfe0MO4W8zOfW4oae/Redwood-Reloaded-Tutorial?node-id=1-3&t=9gzbWUrBb2G3qdoa-1) and making a list of all the tables (models) and fields we need.
+Let's start by going through the [application design files](https://www.figma.com/design/nqBPIIfe0MO4W8zOfW4oae/Redwood-Reloaded-Tutorial?node-id=1-3&t=9gzbWUrBb2G3qdoa-1) and making a list of all the tables (models) and fields we need.
 
 Each model represents the type of data that will be stored in the database.
 
@@ -85,7 +85,6 @@ In the future, if you're going to "soft delete" a record, you'll probably want a
 
 "Soft deleting" a record means that instead of removing the record from the database, we'll set a column (i.e. `deleted`) to `true` to indicate that the record has been deleted. The entry won't be shown to the user, but it gives you a way to recover the data. This is also useful for auditing purposes.
 
-
 ### Data Types
 As you're making a list of all the data we need to store, you'll also need to think about the **data type** of each column.
 
@@ -128,7 +127,7 @@ Which is better? It depends. A rule of thumb is if the user is going to see the 
 For our use case, we'll be giving most models a UUID.
 
 ## Application Model
-Let's start with the `application` model.
+Let's start with the `Application` model.
 
 We'll need the following data:
 
@@ -165,7 +164,7 @@ export const migrations = {
     async up(db) {
       return [
         await db.schema
-          .createTable("application")
+          .createTable("applications")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("salaryMin", "text")
           .addColumn("salaryMax", "text")
@@ -174,8 +173,10 @@ export const migrations = {
           .addColumn("jobDescription", "text")
           .addColumn("postingUrl", "text")
           .addColumn("archived", "integer", (col) => col.notNull().defaultTo(0))
-          .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
-          .addColumn("updatedAt", "integer")
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
+          )
+          .addColumn("updatedAt", "text")
           .execute()
       ]
     },
@@ -202,40 +203,46 @@ export const migrations = {
     async up(db) {
       return [
         await db.schema
-          .createTable("applicationStatus")
+          .createTable("applicationStatuses")
           .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
           .addColumn("status", "text", (col) => col.notNull()) 
           .execute();
 
         await db.schema
-          .createTable("company")
+          .createTable("companies")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("name", "text", (col) => col.notNull())
-          .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
-          .addColumn("updatedAt", "integer")
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
+          )
+          .addColumn("updatedAt", "text")
           .execute();
 
         await db.schema
-          .createTable("contact")
+          .createTable("contacts")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("firstName", "text", (col) => col.notNull())
           .addColumn("lastName", "text", (col) => col.notNull())
           .addColumn("email", "text")
           .addColumn("role", "text")
-          .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
-          .addColumn("updatedAt", "integer")
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
+          )
+          .addColumn("updatedAt", "text")
           .execute();
 
         await db.schema
-          .createTable("user")
+          .createTable("users")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("username", "text", (col) => col.notNull().unique())
-          .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
-          .addColumn("updatedAt", "integer")
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
+          )
+          .addColumn("updatedAt", "text")
           .execute();
 
         await db.schema
-          .createTable("credential")
+          .createTable("credentials")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("userId", "text", (col) => col.notNull().unique().references("user.id")) 
           .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
@@ -245,7 +252,7 @@ export const migrations = {
           .execute();
 
         await db.schema
-          .createTable("application")
+          .createTable("applications")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("salaryMin", "text")
           .addColumn("salaryMax", "text")
@@ -254,8 +261,10 @@ export const migrations = {
           .addColumn("jobDescription", "text")
           .addColumn("postingUrl", "text")
           .addColumn("archived", "integer", (col) => col.notNull().defaultTo(0))
-          .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
-          .addColumn("updatedAt", "integer")
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
+          )
+          .addColumn("updatedAt", "text")
           .execute();
 
         
@@ -287,7 +296,7 @@ export const migrations = {
 ```
 
 #### Index
-You may have noticed that we call the `createIndex` method on the `Credential` table. An **index** is like a catalog for your database - it helps SQLite find records much faster.
+You may have noticed that we call the `createIndex` method on the `credential` table. An **index** is like a catalog for your database - it helps SQLite find records much faster.
 
 Without an index, SQLite has to scan through every single row in a table to find what you're looking for (called a "table scan"). With an index, it can jump directly to the right rows.
 
@@ -307,10 +316,11 @@ We're going to follow some Javascript naming conventions, since SQLite isn't opi
 
 **Note** Normal database naming conventions recommend using *snake_case*.
 
-- We'll be using singular names for our models. For example, `application` not `applications`.
-- The field and model/table names should start with a lowercase letter, in *camelCase*.
-  - For example:  ✅ `applicationStatus` not ❌ `applicationStatus` or ❌ `Application_Status`.
-  - For example, ✅ `jobTitle` not ❌ `JobTitle` or ❌ `job_title`.
+- We'll be using plural names for our tables. For example, `applications` not `application`.
+- The field/column and table names should start with a lowercase letter, in *camelCase*.
+  - For example of table:  ✅ `applicationStatuses` not ❌ `ApplicationStatuses` or ❌ `application_status`.
+  - For example of column, ✅ `jobTitle` not ❌ `JobTitle` or ❌ `job_title`.
+- Models on the other hand are singular, as they represented a single row of data from the table. And also use *PascalCase*. For example, `Application` not `application`.
 - The `createIndex` method needs a name, in case we want to later remove it or debug. We're following the naming convention `{TableName}_{columnName}_idx` to help show what table it is for, what field is being indexed, and add `index` suffix just to make note this name is for indexing.
 
 ## What are Database Relationships?
@@ -352,7 +362,7 @@ Coincidentally, all the relationships in our project are one-to-one or one-to-ma
 
 ### Credential Table
 
-Most of the tables in our database are self explanatory. However, the `credential` table might not be as obvious. This model is included within the standard starter kit and will hold all the details for our passkeys.
+Most of the tables in our database are self explanatory. However, the `credentials` table might not be as obvious. This model is included within the standard starter kit and will hold all the details for our passkeys.
 
 ### Database Diagram
 It is helpful to have a visual representation of the database.
@@ -375,39 +385,39 @@ Within the database, the only column that you'll be able to see if the foreign k
 
 By creating a join table, we can access both sets a data in one query.
 
-Let's look at this on the `company` and `contact` models:
+Let's look at this on the migration schema for the `companies` and `contacts` tables:
 
 ```ts {4,19-21}
       ...
       await db.schema
-        .createTable("company")
-        .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+        .createTable("companies")
+        .addColumn("id", "text", (col) => col.primaryKey())
         .addColumn("name", "text", (col) => col.notNull())
-        .addColumn("createdAt", "integer", (col) =>
-          col.notNull().defaultTo("(strftime('%s', 'now'))"),
+        .addColumn("createdAt", "text", (col) =>
+          col.notNull().defaultTo("(datetime('now'))"),
         )
-        .addColumn("updatedAt", "integer")
+        .addColumn("updatedAt", "text")
         .execute()
 
       await db.schema
-        .createTable("contact")
-        .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+        .createTable("contacts")
+        .addColumn("id", "text", (col) => col.primaryKey())
         .addColumn("firstName", "text", (col) => col.notNull())
         .addColumn("lastName", "text", (col) => col.notNull())
         .addColumn("email", "text")
         .addColumn("role", "text")
         .addColumn("companyId", "integer", (col) =>
-          col.notNull().references("company.id"),
+          col.notNull().references("companies.id"),
         )
-        .addColumn("createdAt", "integer", (col) =>
-          col.notNull().defaultTo("(strftime('%s', 'now'))"),
+        .addColumn("createdAt", "text", (col) =>
+          col.notNull().defaultTo("(datetime('now'))"),
         )
-        .addColumn("updatedAt", "integer")
+        .addColumn("updatedAt", "text")
         .execute()
       ...
 ```
 
-On the contact table's schema we add a reference to `"company.id"` which adds a foreign key to the table that is associated with the company table's id field.
+On the contact table's schema we add a reference to `"companies.id"` which adds a foreign key to the table that is associated with the `companies` table's `id` field.
 
 So in order to create multiple contacts per company, we'll need to do a left join table, and insert a row for each contact. We'll go over on how to do that later.
 
@@ -417,83 +427,79 @@ Now, we need to create the remaining relationships. Here's my final `migration.t
 import { type Migrations } from "rwsdk/db"
 
 export const migrations = {
-  // Use a clear name indicating this is the full initial setup
   "001_initial_schema_setup": {
     async up(db) {
       return [
-        // 1. ApplicationStatus
         await db.schema
-          .createTable("applicationStatus")
+          .createTable("applicationStatuses")
           .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
           .addColumn("status", "text", (col) => col.notNull())
           .execute(),
 
-        // 2. Company
         await db.schema
-          .createTable("company")
+          .createTable("companies")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("name", "text", (col) => col.notNull())
-          .addColumn("createdAt", "integer", (col) =>
-            col.notNull().defaultTo("(strftime('%s', 'now'))"),
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
           )
-          .addColumn("updatedAt", "integer")
+          .addColumn("updatedAt", "text")
           .execute(),
 
-        // 3. Contact
         await db.schema
-          .createTable("contact")
+          .createTable("contacts")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("firstName", "text", (col) => col.notNull())
           .addColumn("lastName", "text", (col) => col.notNull())
           .addColumn("email", "text")
           .addColumn("role", "text")
           .addColumn("companyId", "integer", (col) =>
-            col.notNull().references("company.id"),
+            col.notNull().references("companies.id"),
           )
-          .addColumn("createdAt", "integer", (col) =>
-            col.notNull().defaultTo("(strftime('%s', 'now'))"),
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
           )
-          .addColumn("updatedAt", "integer")
+          .addColumn("updatedAt", "text")
           .execute(),
 
-        // 4. User (Credential depends on this)
+        // Users (Credentials depends on this)
         await db.schema
-          .createTable("user")
+          .createTable("users")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("username", "text", (col) => col.notNull().unique())
-          .addColumn("createdAt", "integer", (col) =>
-            col.notNull().defaultTo("(strftime('%s', 'now'))"),
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
           )
-          .addColumn("updatedAt", "integer")
+          .addColumn("updatedAt", "text")
           .execute(),
 
-        // 5. Credential (Depends on User)
+        // Credentials (Depends on Users)
         await db.schema
-          .createTable("credential")
+          .createTable("credentials")
           .addColumn("id", "text", (col) => col.primaryKey())
-          .addColumn("userId", "integer", (col) =>
-            col.notNull().unique().references("user.id"),
+          .addColumn("userId", "text", (col) =>
+            col.notNull().unique().references("users.id"),
           )
-          .addColumn("createdAt", "integer", (col) =>
-            col.notNull().defaultTo("(strftime('%s', 'now'))"),
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
           )
           .addColumn("credentialId", "text", (col) => col.notNull().unique())
           .addColumn("publicKey", "blob", (col) => col.notNull())
           .addColumn("counter", "integer", (col) => col.notNull().defaultTo(0))
           .execute(),
 
-        // 6. Application (Depends on User, Company, applicationStatus)
+        // Applications (Depends on Users, Companies, and ApplicationStatuses)
         await db.schema
-          .createTable("application")
+          .createTable("applications")
           .addColumn("id", "text", (col) => col.primaryKey())
-          .addColumn("userId", "integer", (col) =>
-            col.notNull().references("user.id"),
+          .addColumn("userId", "text", (col) =>
+            col.notNull().references("users.id"),
           )
           .addColumn("statusId", "integer", (col) =>
-            col.notNull().defaultTo("1").references("applicationStatus.id"),
+            col.notNull().defaultTo("1").references("applicationStatuses.id"),
           )
           .addColumn("companyId", "integer", (col) =>
-            col.notNull().references("company.id"),
+            col.notNull().references("companies.id"),
           )
           .addColumn("salaryMin", "text")
           .addColumn("salaryMax", "text")
@@ -501,22 +507,22 @@ export const migrations = {
           .addColumn("jobTitle", "text")
           .addColumn("jobDescription", "text")
           .addColumn("postingUrl", "text")
-          .addColumn("createdAt", "integer", (col) =>
-            col.notNull().defaultTo("(strftime('%s', 'now'))"),
+          .addColumn("createdAt", "text", (col) =>
+            col.notNull().defaultTo("(datetime('now'))"),
           )
-          .addColumn("updatedAt", "integer")
+          .addColumn("updatedAt", "text")
           .addColumn("archived", "integer", (col) => col.notNull().defaultTo(0))
           .execute(),
 
-        // Ensure indexes are created
+        // Create Indexes
         await db.schema
-          .createIndex("credential_credentialId_idx")
-          .on("credential")
+          .createIndex("credentials_credentialId_idx")
+          .on("credentials")
           .column("credentialId")
           .execute(),
         await db.schema
-          .createIndex("credential_userId_idx")
-          .on("credential")
+          .createIndex("credentials_userId_idx")
+          .on("credentials")
           .column("userId")
           .execute(),
       ]
@@ -524,12 +530,12 @@ export const migrations = {
 
     async down(db) {
       // Drop tables in reverse order to respect foreign key constraints
-      await db.schema.dropTable("application").ifExists().execute()
-      await db.schema.dropTable("credential").ifExists().execute()
-      await db.schema.dropTable("user").ifExists().execute()
-      await db.schema.dropTable("contact").ifExists().execute()
-      await db.schema.dropTable("company").ifExists().execute()
-      await db.schema.dropTable("applicationStatus").ifExists().execute()
+      await db.schema.dropTable("applications").ifExists().execute()
+      await db.schema.dropTable("credentials").ifExists().execute()
+      await db.schema.dropTable("users").ifExists().execute()
+      await db.schema.dropTable("contacts").ifExists().execute()
+      await db.schema.dropTable("companies").ifExists().execute()
+      await db.schema.dropTable("applicationStatuses").ifExists().execute()
     },
   },
 } satisfies Migrations
@@ -552,12 +558,12 @@ import { type Database, createDb } from "rwsdk/db"
 import { type migrations } from "@/db/migrations"
 
 export type AppDatabase = Database<typeof migrations>
-export type Application = AppDatabase["application"]
-export type ApplicationStatus = AppDatabase["applicationStatus"]
-export type Company = AppDatabase["company"]
-export type Contact = AppDatabase["contact"]
-export type User = AppDatabase["user"]
-export type Credential = AppDatabase["credential"]
+export type Application = AppDatabase["applications"]
+export type ApplicationStatus = AppDatabase["applicationStatuses"]
+export type Company = AppDatabase["companies"]
+export type Contact = AppDatabase["contacts"]
+export type User = AppDatabase["users"]
+export type Credential = AppDatabase["credentials"]
 
 export const db = createDb<AppDatabase>(
   env.APP_DURABLE_OBJECT,
@@ -619,10 +625,10 @@ import { db } from "@/db/db"
 
 export default async () => {
   console.log("… Seeding Applywize DB")
-  await db.deleteFrom("applicationStatus").execute()
+  await db.deleteFrom("applicationStatuses").execute()
 
   await db
-    .insertInto("applicationStatus")
+    .insertInto("applicationStatuses")
     .values([
       { id: 1, status: "New" },
       { id: 2, status: "Applied" },
@@ -636,7 +642,7 @@ export default async () => {
 }
 ```
 
-This will seed the `applicationStatus` Table with all the statuses we'll be expecting. We can also add new migrations or more seed files later to populate the DB with more data, like for testing.
+This will seed the `applicationStatuses` Table with all the statuses we'll be expecting. We can also add new migrations or more seed files later to populate the DB with more data, like for testing.
 
 ## Run Migrations and Seeds
 If you want to manually run the seed add this to your `package.json`
@@ -650,7 +656,7 @@ If you want to manually run the seed add this to your `package.json`
 }
 ```
 
-Then you can run `pnpm seed` which you'll see a in your root a new directory `.wrangler/state/v3/do/__change_me__-AppDurableObject/{randomNumbers}.sqlite`
+Then you can run `pnpm seed`. Afterwards you'll see a new file and directory at `.wrangler/state/v3/do/__change_me__-AppDurableObject/{randomNumbers}.sqlite`
 
 It should be something similar to that. The `__change_me__` and `AppDurableObject` is coming from your `wrangler.jsonc`. If you like, you can always change those names.
 
@@ -714,7 +720,7 @@ You can find the code for this section on [GitHub](https://github.com/dethstrobe
 
 ## What's Coming Next?
 
-We should have a working database with relationships setup for when we need to use them next. Seeded the `applicationStatus` table, which will be used soon to show what state an Application is in.
+We should have a working database with relationships setup for when we need to use them next. Seeded the `applicationStatuses` table, which will be used soon to show what state an Application is in.
 
 Next Lesson we'll:
 
