@@ -46,15 +46,5 @@
     "vibe-rules": "^0.3.50",
     "vite": "^7.1.5",
     "wrangler": "^4.20.5"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
-      "esbuild",
-      "prisma",
-      "sharp",
-      "workerd"
-    ]
   }
 }
