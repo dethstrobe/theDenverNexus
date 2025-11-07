@@ -32,13 +32,13 @@
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "@tailwindcss/vite": "^4.1.11",
-    "rwsdk": "0.3.11",
+    "rwsdk": "0.3.12",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.13.6",
     "@cloudflare/workers-types": "^4.20250407.0",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.10.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "prisma": "~6.17.0",
