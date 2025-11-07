@@ -39,7 +39,7 @@
     "@docusaurus/tsconfig": "3.9.2",
     "@docusaurus/types": "3.9.2",
     "@playwright/test": "^1.56.0",
-    "@types/node": "^24.7.0",
+    "@types/node": "^24.10.0",
     "gray-matter": "^4.0.3",
     "juice": "^11.0.3",
     "mailgun.js": "^12.1.0",
