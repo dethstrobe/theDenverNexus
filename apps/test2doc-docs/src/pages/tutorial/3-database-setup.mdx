@@ -244,7 +244,7 @@ export const migrations = {
         await db.schema
           .createTable("credentials")
           .addColumn("id", "text", (col) => col.primaryKey())
-          .addColumn("userId", "text", (col) => col.notNull().unique().references("user.id")) 
+          .addColumn("userId", "text", (col) => col.notNull().unique().references("user.id").onDelete("cascade"))
           .addColumn("createdAt", "integer", (col) => col.notNull().defaultTo(sql`strftime("%s", "now")`))
           .addColumn("credentialId", "text", (col) => col.notNull().unique())
           .addColumn("publicKey", "blob", (col) => col.notNull())
@@ -478,7 +478,7 @@ export const migrations = {
           .createTable("credentials")
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("userId", "text", (col) =>
-            col.notNull().unique().references("users.id"),
+            col.notNull().unique().references("users.id").onDelete("cascade"),
           )
           .addColumn("createdAt", "text", (col) =>
             col.notNull().defaultTo("(datetime('now'))"),

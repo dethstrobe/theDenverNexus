@@ -117,17 +117,17 @@ ESLint is a tool for identifying and reporting on patterns found in Typescript/J
 <Tabs groupId="package-managers">
   <TabItem value="npm" label="npm" default>
 ```sh
-npm install --save-dev eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-playwright eslint-config-prettier
+npm install --save-dev eslint @eslint/js @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-playwright eslint-config-prettier typescript-eslint
 ```
   </TabItem>
   <TabItem value="yarn" label="yarn">
 ```sh
-yarn add --dev eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-playwright eslint-config-prettier
+yarn add --dev eslint @eslint/js @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-playwright eslint-config-prettier typescript-eslint
 ```
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 ```sh
-pnpm add --save-dev eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-playwright eslint-config-prettier
+pnpm add --save-dev eslint @eslint/js @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-playwright eslint-config-prettier typescript-eslint
 ```
   </TabItem>
 </Tabs>
@@ -135,7 +135,7 @@ pnpm add --save-dev eslint @typescript-eslint/eslint-plugin @typescript-eslint/p
 Now, create an `eslint.config.js` file in the root of your project:
 
 ```sh
-node --eval 'require("fs").writeFileSync("eslint.config.js", `import tsPlugin from "@typescript-eslint/eslint-plugin"\nimport tsParser from "@typescript-eslint/parser"\nimport reactPlugin from "eslint-plugin-react"\nimport reactHooksPlugin from "eslint-plugin-react-hooks"\nimport playwrightPlugin from "eslint-plugin-playwright"\nimport eslintConfigPrettier from "eslint-config-prettier/flat"\n\nexport default [\n  {\n    languageOptions: {\n      parser: tsParser,\n      parserOptions: {\n        ecmaVersion: "latest",\n        sourceType: "module",\n        ecmaFeatures: { jsx: true },\n      },\n      globals: {\n        // browser globals\n        window: "readonly",\n        document: "readonly",\n        navigator: "readonly",\n        // node globals\n        process: "readonly",\n        __dirname: "readonly",\n        __filename: "readonly",\n        module: "readonly",\n        require: "readonly",\n      },\n    },\n\n    plugins: {\n      "@typescript-eslint": tsPlugin,\n      react: reactPlugin,\n      "react-hooks": reactHooksPlugin,\n      playwright: playwrightPlugin,\n    },\n\n    settings: {\n      react: { version: "detect" },\n    },\n  },\n\n  // Ignore patterns\n  {\n    ignores: [\n      "node_modules/**",\n      "dist/**",\n      "build/**",\n      "generated/**",\n      ".generated/**",\n      ".vite/**",\n      ".vscode/**",\n      ".wrangler/**",\n      "playwright-report/**",\n      "test-results/**",\n      "*.config.{js,ts,mjs}",\n      "doc/.docusaurus/**",\n      "worker-configuration.d.ts",\n    ],\n  },\n  eslintConfigPrettier,\n]\n`)'
+node --eval 'require("fs").writeFileSync("eslint.config.js", `import tsPlugin from "@typescript-eslint/eslint-plugin"\nimport tsParser from "@typescript-eslint/parser"\nimport reactPlugin from "eslint-plugin-react"\nimport reactHooksPlugin from "eslint-plugin-react-hooks"\nimport playwrightPlugin from "eslint-plugin-playwright"\nimport eslintConfigPrettier from "eslint-config-prettier"\nimport tseslint from "typescript-eslint"\nimport eslint from "@eslint/js"\n\nexport default [\n  {\n    ignores: [\n      "**/node_modules/**",\n      "**/dist/**",\n      "**/build/**",\n      "**/.generated/**",\n      "**/.vite/**",\n      "**/.wrangler/**",\n      "**/playwright-report/**",\n      "**/test-results/**",\n      "**/*.config.js",\n      "**/*.config.ts",\n      "**/*.config.mjs",\n      "**/doc/**",\n      "**/worker-configuration.d.ts",\n    ],\n  },\n\n  eslint.configs.recommended,\n\n  {\n    files: ["src/**/*.{ts,tsx}", "tests/**/*.ts"],\n\n    languageOptions: {\n      parser: tsParser,\n      parserOptions: {\n        project: "./tsconfig.json",\n        tsconfigRootDir: import.meta.dirname,\n      },\n    },\n\n    plugins: {\n      "@typescript-eslint": tsPlugin,\n      react: reactPlugin,\n      "react-hooks": reactHooksPlugin,\n      playwright: playwrightPlugin,\n    },\n\n    rules: {\n      ...tseslint.configs.recommendedTypeChecked[0].rules,\n      "@typescript-eslint/no-floating-promises": "error",\n      "@typescript-eslint/await-thenable": "error",\n      "@typescript-eslint/no-misused-promises": "error",\n      "@typescript-eslint/no-unused-vars": [\n        "warn",\n        { argsIgnorePattern: "^_" },\n      ],\n      "no-empty-pattern": "off",\n      ...reactPlugin.configs.recommended.rules,\n      ...reactHooksPlugin.configs.recommended.rules,\n      "react/react-in-jsx-scope": "off",\n    },\n\n    settings: {\n      react: { version: "detect" },\n    },\n  },\n\n  eslintConfigPrettier,\n]` )'```
 ```
 
 This sets up ESLint with TypeScript, React, React Hooks, and Playwright support, while disabling rules that conflict with Prettier.
