@@ -10,6 +10,7 @@ import {
   mkdirSync,
   readdirSync,
   rmdirSync,
+  rmSync,
   statSync,
   unlinkSync,
   writeFileSync,
@@ -279,7 +280,7 @@ class Test2DocReporter implements Reporter {
           filesInDir.length === 1 &&
           filesInDir.at(0) === "_category_.json"
         ) {
-          rmdirSync(filePath, { recursive: true })
+          rmSync(filePath, { recursive: true, force: true })
         }
       } else if (stat.isFile() && file.startsWith("test2doc-")) {
         unlinkSync(filePath)
