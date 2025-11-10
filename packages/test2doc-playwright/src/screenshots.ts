@@ -25,6 +25,7 @@ export interface AnnotationOptions {
   showArrow?: boolean // Whether to show an arrow pointing to the element
   arrowStrokeStyle?: string // Color of the arrow
   arrowLineWidth?: number // Width of the arrow line
+  altText?: string // Alt text for the screenshot image
 }
 
 interface ScreenshotOptions extends PageScreenshotOptions {
@@ -62,7 +63,7 @@ export const screenshot = async (
     ...overrideAnnotations,
   }
 
-  const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png`
+  const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png${annotation.altText ? `:${annotation.altText}` : ""}`
 
   const screenshotBuffer: Buffer =
     "highlight" in target || Array.isArray(target)

@@ -217,7 +217,7 @@ class Test2DocReporter implements Reporter {
   onEnd() {
     writeLine("\n")
 
-    writeLine("Cleaning up old screenshots...")
+    writeLine("Cleaning up old generated files...")
     this.cleanupTest2DocFiles(this.outputDir)
 
     writeLine("Generating documentation files...")
@@ -353,7 +353,8 @@ class Test2DocReporter implements Reporter {
             }
             if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
-              markdown += `![screenshot](./${step.screenshot.name})\n`
+              const [filename, altText] = step.screenshot.name.split(":") ?? []
+              markdown += `![${altText ?? "screenshot"}](./${filename ?? step.screenshot.name})\n`
             }
           }
           markdown += "\n"

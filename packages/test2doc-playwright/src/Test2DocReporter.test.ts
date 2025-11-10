@@ -86,6 +86,7 @@ describe("Test2DocReporter", () => {
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2 = `test2doc-${Date.now() + 999}-2.png`
     const mockScreenshotName3 = `test2doc-${Date.now() + 1001}-3.png`
+    const mockScreenshotName3WithAltText = `test2doc-${Date.now() + 1001}-3.png:Alt Text`
     const mockScreenshotName4 = `test2doc-${Date.now() + 1101}-4.png`
     const mockScreenshotName5 = `test2doc-${Date.now() + 1201}-5.png`
     const mockAttachmentSuccess = [
@@ -103,7 +104,7 @@ describe("Test2DocReporter", () => {
         contentType: "image/png",
       },
       {
-        name: mockScreenshotName3,
+        name: mockScreenshotName3WithAltText,
         body: mockScreenshotBuffer,
         contentType: "image/png",
       },
@@ -250,7 +251,7 @@ Given user is on login page
 
 Given user is on login page
 ![screenshot](./${mockScreenshotName2})
-![screenshot](./${mockScreenshotName3})
+![Alt Text](./${mockScreenshotName3})
 
 ## link to privacy policy
 
@@ -306,7 +307,7 @@ sidebar_position: 2
     expect(mockLogging).toHaveBeenCalledWith("[PPPPPPP] 7/7 (100%)")
 
     expect(mockLogging).toHaveBeenCalledWith("\n\n")
-    expect(mockLogging).toHaveBeenCalledWith("Cleaning up old screenshots...\n")
+    expect(mockLogging).toHaveBeenCalledWith("Cleaning up old generated files...\n")
     expect(mockLogging).toHaveBeenCalledWith(
       "Generating documentation files...\n",
     )
