@@ -24,6 +24,11 @@ The text that explains what is being highlighted.
   - **Description**: The text to display for the label. This is the main content that will be rendered on the canvas.
   - **Default**: `""` (empty string)
 
+- **`altText`**:
+  - **Type**: `string`
+  - **Description**: Adds alt text to screenshots.
+  - **Default**: `"screenshot"`
+
 - **`fillStyle`**:
   - **Type**: `string`
   - **Description**: The color of the label text. Accepts any valid CSS color value, including hex codes, RGB, RGBA, HSL, or HSLA.
