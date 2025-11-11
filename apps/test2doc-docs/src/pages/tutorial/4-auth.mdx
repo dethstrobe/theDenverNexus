@@ -33,7 +33,7 @@ Passkey authentication offers several key advantages:
 ## Setup the Passkey
 Since we're using RedwoodSDK it has a Passkey Addon to help with authentication.
 
-So the Redwood team created this interesting package that is designed to give instructions to a coding agent. So if you're using VSCode, you can use [Co-pilot's](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) or [Cursor's](https://cursor.com/docs/agent/modes#agent) Agent mode to handle the installation of the Passkey addon.
+So the Redwood team created a package that is designed to give instructions to a coding agent to install their addon. So if you're using VSCode, you can use [Co-pilot's](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) or [Cursor's](https://cursor.com/docs/agent/modes#agent) Agent mode to handle the installation of the Passkey addon.
 
 All you need to do is tell it to execute `npx rwsdk addon passkey` and follow the `INSTRUCTIONS.md` that's downloaded. Or you can also just run the command and do it yourself.
 ```sh
@@ -41,6 +41,8 @@ npx rwsdk addon passkey
 ```
 
 ### Replace the Passkey DB
+After you install the addon, we can clean it up a bit.
+
 We've already made a DB with `users` and `credentials` tables. So we'll delete the migration file at `src/passkey/db/migrations.ts` and update the `src/passkey/db/db.ts` file to use our current db.
 
 ```ts title="src/passkey/db/db.ts" {1,7,11-12}
@@ -107,14 +109,14 @@ export { SessionDurableObject } from "@/session/durableObject"
 Also delete `src/passkey/durableObject.ts`.
 
 ### Style Login
-If you start up the dev server with `pnpm dev` it should redirect you to `http://localhost:5173/auth/login`.
+If you start up the dev server with `pnpm dev` it should redirect you to http://localhost:5173/auth/login.
 
-It should look unstyled and appear like:
+It should look unstyled and look like:
 ![A screenshot of the unstyled login page](./images/passkey-starter-tailwind-working.png)
 
-We're going to quickly style the login and use our shadcn buttons.
+We're going to add a header, quickly style the login, and use our shadcn buttons.
 
-```ts title="src/passkey/components/Login.tsx"
+```ts title="src/passkey/components/Login.tsx" {2,5,6,13,17,18,22}
 ...
 import { Button } from "@/app/components/ui/button"
 ...
@@ -202,12 +204,12 @@ We'll also want to make a change to the `playwright.config.ts` to startup and po
 Take note that we changed the port for localhost to `5173`, which is the port RedwoodSDK uses by default.
 
 ### TDD Sign up page
-Looking through out designs we see we want a [Registration page](https://www.figma.com/design/nqBPIIfe0MO4W8zOfW4oae/RedwoodSDK---Applywize?node-id=1-4&t=DREvbLB8j6qnAU82-4) and a [Login Page](https://www.figma.com/design/nqBPIIfe0MO4W8zOfW4oae/RedwoodSDK---Applywize?node-id=239-604&t=3oxTIWZn5ymerzQq-4). Currently, they're combined in the Login page.
+Looking through our designs we see we want a [Registration page](https://www.figma.com/design/nqBPIIfe0MO4W8zOfW4oae/RedwoodSDK---Applywize?node-id=1-4&t=DREvbLB8j6qnAU82-4) and a [Login Page](https://www.figma.com/design/nqBPIIfe0MO4W8zOfW4oae/RedwoodSDK---Applywize?node-id=239-604&t=3oxTIWZn5ymerzQq-4).
 
 We're going to get started by just testing that we can even see a **Sign up** page.
 
 #### Testing the Sign up page
-We're going to start with the simplest possible test first.
+We're going to start with the simplest possible test first. Go to the signup page and see if there is a header showing that we are on the signup page.
 
 ```ts title="test/authentication.spec.ts"
 import { test, expect } from "@playwright/test"
@@ -234,12 +236,12 @@ Let's start by taking a look at the `worker.tsx` file. This file sets up our Clo
 Before we look at the code, let's understand what a Cloudflare Worker is. Think of it as a mini-server that runs your application code.
 In traditional web development, you might have a separate server running somewhere (like on AWS or your own computer) that handles requests when someone visits your website. A Cloudflare Worker does the same job, but it runs on Cloudflare's global network instead. The key benefits for our tutorial:
 
-**No server management**: You don't need to set up, configure, or maintain a separate server
-**Automatic scaling**: Cloudflare handles traffic spikes for you
-**Global performance**: Your code runs close to your users worldwide
-**Built-in features**: Things like databases and file storage are integrated
+- **No server management**: You don't need to set up, configure, or maintain a separate server
+- **Automatic scaling**: Cloudflare handles traffic spikes for you
+- **Global performance**: Your code runs close to your users worldwide
+- **Built-in features**: Things like databases and file storage are integrated
 
-In our RedwoodSDK application, the worker.tsx file is where we define how our application responds to different requests - like when someone visits /login or /signup. It's essentially the "brain" that decides what to show users based on what page they're trying to access.
+In our RedwoodSDK application, the worker.tsx file is where we define how our application responds to different requests - like when someone visits `/login` or `/signup`. It's essentially the "brain" that decides what to show users based on what page they're trying to access.
 
 ```ts title="src/worker.tsx"
 import { render, route, index, prefix } from "rwsdk/router"
@@ -298,9 +300,9 @@ setCommonHeaders(),
 ```tsx title="src/worker.tsx"
 setupPasskeyAuth(),
 ```
-- On **line 20**, the auth addon setting up our middleware for us. This will run between every request and response cycle.
+- On **line 20**, the Auth addon setting up our middleware for us. This will run between every request and response cycle.
   - The middle were checks if there is a current session.
-  - If there is not a current session it redirects to the login page.
+  - If the current session is unauthorized it redirects to the login page.
 
 ```tsx title="src/worker.tsx"
 render(Document, [
@@ -353,7 +355,7 @@ In our code, we're using middleware to attach the user session to our context ob
 ```tsx title="src/worker.tsx"
 prefix("/auth", authRoutes()),
 ```
-- On **line 33**, we're prefixing all of our auth routes with `/auth`. Meaning, our `login` route will be `/auth/login`. Which means we'll expect out `signup` page to be at `auth/signup`.
+- On **line 33**, we're prefixing all of our auth routes with `/auth`. Meaning, our `login` route will be `/auth/login`. Which means we'll expect our `signup` page to be at `auth/signup`.
   - `login` is defined within the `authRoutes` function which is defined in `src/passkey/routes.ts`, imported on line 7. One of the cool things about the RedwoodSDK router is that the response parameter can be an array. This means we can define our route information in a separate file and then import it into our `worker.tsx` file.
 
 The auth addon co-located the file that defines our auth routes with our auth pages.
@@ -380,7 +382,7 @@ We also have our `/login` defined here using the `route` function.
 This is where we'll want to make our change to get our first test to pass.
 
 ##### Creating a sign up route
-We'll be adding the bare minimum to make this test pass, then we'll extend it to add more functionality. We'll keep _ping ponging_ like this between broken tests, making tests pass, and taking time to look at the implantation to make refactors to make the code cleaner and more reuseable.
+We'll be adding the bare minimum to make this test pass, then we'll extend it to add more functionality. We'll keep _ping ponging_ like this between broken tests, making tests pass, and taking time to look at the implementation to make refactors to make the code cleaner and more reuseable.
 
 Let's add a new route for `auth/signup` and return a response with a h1.
 
@@ -430,7 +432,7 @@ export function authRoutes() {
 }
 ```
 
-With using out new React component, the test should still pass. Meaning our refactor was successful.
+With using our new React component, the test should still pass. Meaning our refactor was successful.
 
 **Note:** Prettier decided to make the routes fit on one line. And I'm not going to fight the code formatter. As the whole point of it is to **not** need to think too hard about formatting and worry about more important things.
 
@@ -439,13 +441,14 @@ Now that we have a sign up page, let's expect it to register a new passkey.
 
 #### Adding a sign up form test
 
-We're going to document each step of the test, this will help later when we run it through test2doc to generate documentation for our application.
+We're going to use `step`s to break up each part of our test, this will help later when we run it through the **Test2Doc Reporter** to generate documentation for our application.
 
-```ts title="tests/authentication.spec.ts" {4,6,10,12-14}
+```ts title="tests/authentication.spec.ts" {2,5,7,11,13-15}
 import { test, expect } from "@playwright/test"
+import { randomUUID } from "crypto"
 
 test.describe("Authentication Flow", () => {
-  const username = `testuser-${Date.now()}`
+  const username = `testuser-${crypto.randomUUID()}`
   test("Register a new user", async ({ page }) => {
     await test.step("On the sign up page at `/auth/signup`.", async () => {
       await page.goto("auth/signup")
@@ -460,9 +463,11 @@ test.describe("Authentication Flow", () => {
 })
 ```
 
-You'll see we're creating a variable called `username` which is a string with a timestamp. Because we'll be running this tests over and over again, we can't register the same user name (we set up a unique constraints in our DB earlier on usernames), so we'll need a way to insure we won't get any name collisions.
+You'll see we're creating a variable called `username` which is a string with a **random UUID**. Because we'll be running these tests over and over again, we can't register the same username because we set up a unique constraint in our DB earlier on usernames. Each username in the DB must be unique. So we'll need a way to insure we won't get any name collisions.
 
-Naturally, you might think random number would be a sufficient solution for generating unique names, but because of the [birthday paradox](https://en.wikipedia.org/wiki/Birthday_problem), the odds of having a name collision increases quadratically, meaning we'll run into collisions extremely quickly when using purely random numbers the more time we run tests and register new users. Because of that, time is a better way to create unique names, as it is impossible for time to repeat itself.
+Naturally, you might think `Math.random()` would be a sufficient solution for generating unique names, but because of the [birthday paradox](https://en.wikipedia.org/wiki/Birthday_problem), the odds of having a name collision increases quadratically, meaning we'll run into collisions extremely quickly when using 53 bits random number (that `Math.random` provides) the more time we run tests and register new users. UUIDs are technically susceptible to this problem too, however because the number space is so astronomically larger (122 bits) it is highly improbable we'll run into a collision.
+
+Timestamps are also not a bad solution, however if tests run in parallel there is a small possibility that 2 tests may start at the same time creating a name collision. So we'll just go with UUIDs to follow best practice.
 
 #### Implement sign up form
 Now we just need to make the form in our page. Let's copy it from the `login` page.
@@ -571,6 +576,7 @@ You'll see the error is "Registration error: No available authenticator supporte
 Often times relying on dependencies makes testing hard, so many times the easiest solution is to simply mock out the WebAuthn API. Which is not a _bad_ solution. However, to have more confidence in our tests and implementation, we should attempt to avoid mocks if possible.
 
 **Helper Utility**
+
 There are a few challenges for using Passkeys in Playwright. The first one is we need to prompt the WebAuthn when a Passkey is requested. Luckily [Corbado has already figured out](https://www.corbado.com/blog/passkeys-e2e-playwright-testing-webauthn-virtual-authenticator#612-approach-2-manual-simulation-with-automaticpresencesimulation-set-to-false) a way to do so. So we'll copy their code.
 
 ```ts title="tests/util.ts"
@@ -616,13 +622,16 @@ export async function simulateSuccessfulPasskeyInput(
 ```
 
 **Enable WebAuthn virtual authenticator**
+
 Next we'll need to enable the `WebAuthn` in our test.
-```ts title="tests/authentication.spec.ts"
+
+```ts title="tests/authentication.spec.ts" {3,8-26,33-36,44-51,57-60}
 import { test, expect, CDPSession } from "@playwright/test"
+import { randomUUID } from "crypto"
 import { simulateSuccessfulPasskeyInput } from "./util"
 
 test.describe("Authentication Flow", () => {
-  const username = `testuser-${Date.now()}`
+  const username = `testuser-${crypto.randomUUID()}`
   test("Register a new user", async ({ page }) => {
     let client: CDPSession
     let authenticatorId: string
@@ -717,7 +726,7 @@ What might cause this? The dreaded _race condition_. If you take a look at when 
 
 Turns out Playwright will run faster then the server can send the JS and the browser will load it in to working memory.
 
-There are a few ways to solve this. We can do some state tracking and figure out when the JS loads, or can tell Playwright to wait for the network to stop having inflight requests, but I'm going to opt for a lower JS solution and we're instead of needing to have JS manage the input field, we're going to let browser handle it and we're only going to refer to the input by reference in our component.
+There are a few ways to solve this. We can do some state tracking and figure out when the JS loads, or can tell Playwright to wait for the network to stop having inflight requests, but I'm going to opt for lighter JS solution. We're instead of needing to have React manage the state of the input field, we're going to let browser handle it. We'll only refer to the input by reference in our component.
 
 ```ts {4,14,17,24,30,56}
 "use client"
@@ -832,7 +841,7 @@ Now let's use this link in our `Signup` component to redirect to login on succes
 ### Test to Docs
 One of the beautiful things about TDD is that tests act as living documentation. What we mean by _living_ is that it is continuously updated and integrated in to the process.
 
-Tests are great if you're a developer, however not as great if you need to share with non-technical stakeholders. Which is why I created test2doc.
+Tests are great as documentation if you're a developer, however not as great if you need to share with non-technical stakeholders. Which is why I created test2doc.
 
 Before we can run the command that will run playwright with test2doc, we need to update the config to start the server and point default url to localhost.
 
@@ -905,8 +914,9 @@ We'll add:
 - Screenshots
 - Front matter metadata to render in the sidebar
 
-```ts {6,9,15,40,54-72,86-88}
+```ts {7,10,16,41,55-73,87-89}
 import { test, expect, CDPSession } from "@playwright/test"
+import { randomUUID } from "crypto"
 import { simulateSuccessfulPasskeyInput } from "./util"
 import { withDocMeta } from "@test2doc/playwright/DocMeta"
 import { screenshot } from "@test2doc/playwright/screenshots"
@@ -916,7 +926,7 @@ const clip = { x: 0, y: 0, width: 550, height: 200 }
 test.describe(
   withDocMeta("Authentication Flow", { sidebar_position: 1 }),
   () => {
-    const username = `testuser-${Date.now()}`
+  const username = `testuser-${crypto.randomUUID()}`
     test("Register a new user", async ({ page }, testInfo) => {
       let client: CDPSession
       let authenticatorId: string
@@ -1131,7 +1141,7 @@ test("Login with existing user", async ({ page }, testInfo) => {
 
 Now, if you run the test, you'll notice it fails. Because each test runs in isolation we don't have access to the previous Passkey. We'll need to come up with a way to share the passkey between tests. We can do this by sharing the browser context between runs, and we'll need to make sure that the tests run in order.
 
-```ts title="tests/authentication.spec.ts" {18-32,36,54,57,60,69,80,84,99,107,110,123,126,129,135,145,152,154}
+```ts title="tests/authentication.spec.ts" {15,19-33,37,55,58,61,70,81,85,100,108,111,124,127,130,136,146,153,155}
 import {
   test,
   expect,
@@ -1139,6 +1149,7 @@ import {
   Page,
   BrowserContext,
 } from "@playwright/test"
+import { randomUUID } from "crypto"
 import { simulateSuccessfulPasskeyInput } from "./util"
 import { withDocMeta } from "@test2doc/playwright/DocMeta"
 import { screenshot } from "@test2doc/playwright/screenshots"
@@ -1148,7 +1159,7 @@ const clip = { x: 0, y: 0, width: 550, height: 200 }
 test.describe.serial(
   withDocMeta("Authentication Flow", { sidebar_position: 1 }),
   () => {
-    const username = `testuser-${Date.now()}`
+  const username = `testuser-${crypto.randomUUID()}`
     let client: CDPSession
     let authenticatorId: string
     let sharedContext: BrowserContext
@@ -1476,7 +1487,8 @@ When we installed shadcn/ui, it added a lot of variables to the bottom of our `s
 
 ![screenshot showing the start of the `@layer base` in `styles.css`](./images/to-above-layer-base.png)
 
-#### Updated `styles.css` file
+<details>
+<summary>Updated `styles.css` file</summary>
 
 ```css title="src/app/styles.css"
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
@@ -1626,15 +1638,17 @@ body {
   }
 }
 ```
+</details>
 
 If you take a look in the browser, by changing the position of the `@theme` block, it also changed the button's background color to yellow, our primary color. Perfect.
 
 ![Screenshot of login page with a yellow login button.](./images/button-primary-color.png)
 
 #### Building a Layout
+
 RedwoodSDK supports layouts. This is perfect for creating shared UI layouts across multiple routes, allowing you to maintain consistent page structures and avoid code duplication.
 
-Inside our `app` directory, create a new folder called `layouts`. Then, a new file called `AuthLayout.tsx`:
+Inside our `app` directory, let's create a new directory called `layouts`. Then, a new file called `AuthLayout.tsx`.
 
 Let's start by stubbing out our component:
 
@@ -1645,14 +1659,14 @@ export const AuthLayout = ({ children }: LayoutProps) => {
   return <div className="bg-bg min-h-screen min-w-screen p-12">{children}</div>
 }
 ```
----
+<details>
 Our layout component types are imported from `rwsdk/router`. This includes an object containing `children` and `requestInfo`. It's worth noting that the `requestInfo` object is only passed to server components ([additional documentation](https://docs.rwsdk.com/guides/frontend/layouts/#layout-props)).
 
 On our wrapping `div`, I've added a few Tailwind styles.
 - `bg-bg` uses the custom background color we set up previously.
 - `min-h-screen` and `min-w-screen` ensures that the background color will take up the full screen.
 - `p-12` adds `48px` of padding around the entire screen.
----
+</details>
 As we continue to make adjustments, we want to be able to see the changes we're making within the browser.
 
 To wrap all our `/auth` pages with the new `AuthLayout` component, let's go back to our `worker.tsx` file.
@@ -1681,8 +1695,13 @@ The first parameter is the layout component we want to wrap our routes with. The
 If we head over to the browser, we should see something like this:
 
 ![A screenshot of the login page with the layout wrapper applied.](./images/after-layout-component.png)
-For reference, this was before our `AuthLayout` component:
+
+<details>
+<summary>For reference, this was before our `AuthLayout` component:</summary>
+
 ![A screenshot of how the login page looked before applying the layout component](./images/before-layout-component.png)
+
+</details>
 
 Sweet! Let's keep going.
 
@@ -1700,12 +1719,12 @@ return (
   );
 ```
 
----
+<details>
 - `grid` sets the display to `grid`, then we can specify that there are two columns with `grid-cols-2`
 - We want the grid to take up the full height of the screen. If we use `min-h-screen`, it will set the minimum height to `100vh`, but it will also introduce a scrollbar because we gave the wrapping `div` padding of `p-12`. There's no way to know exactly what the height of the screen is, but we can have the browser calculate it for us with `calc(100vh-96px)`. `p-12` puts `48px` of padding on the top and bottom or `96px` total. You could also use `6rem` if you want to avoid using `px` units.
 - `rounded-xl` adds rounded corners
 - `border-2 border-[#D6D5C5]` adds a `2px` solid border to our container. The border color we're using is darker than the content border color we established in the `styles.css` file earlier. Since we're only using this color once, it's not worth creating a CSS property for it. We can set it as an arbitrary value with `[]`.
----
+</details>
 
 Inside our `grid`, we need two `div`s for our two columns. Our `{children}` will go in the second column, on the right side.
 
@@ -1743,12 +1762,12 @@ For our left column `div`:
   </div>
 </div>
 ```
----
+<details>
 - This is the only place we're using our background image, so let's reach for an another arbitrary Tailwind class, using `[]`. Since we've put our images inside the `public/images` directory, this will be available from the root and we can access it with an absolute path: `/images/bg.png`.
 - We want the background to repeat in the x and y directions with `bg-repeat`.
 - `rounded-l-xl` adds rounded corners to the left side.
 - I also used a standard `img` tag to display the logo and added the `Apply Wize` text with a wrapping `div`
----
+</details>
 
 Let's check our progress in the browser:
 
@@ -1765,11 +1784,9 @@ Inside our `styles.css` file, let's add a new utility function. Below our `@them
 }
 ```
 
----
-
+<details>
 Within Tailwind v4, you can add custom utility functions with the `@utility` directive. _NOTE:_ `center` does not have a `.` in front, like a class would.
-
----
+</details>
 
 Now, we can use this on both of our columns:
 
@@ -1786,8 +1803,9 @@ Now, we can use this on both of our columns:
     </div>
   );
 ```
-
+<figure>
 ![A screenshot of the login page with elements centered](./images/center-column-content-with-utility-class.png)
+</figure>
 
 It's centering our content, but it's also horizontally aligning everything. Let's wrap our column content with another `div`.
 
@@ -1809,7 +1827,9 @@ return (
 );
 ```
 
+<figure>
 ![A screenshot of the login with elements centered better.](./images/wrap-column-content-with-div.png)
+</figure>
 
 To center the owl, we can use the `mx-auto` class. This will set the left and right margins to `auto`.
 
@@ -1822,18 +1842,18 @@ Now, let's style the Apply Wize text.
 ```tsx title="src/app/layouts/AuthLayout.tsx"
 <div className="text-5xl text-white font-bold">Apply Wize</div>
 ```
----
+<details>
 - We'll set the font size `48px` with `text-5xl`
 - The color to white with `text-white`
 - The font weight to bold with `font-bold`
----
+</details>
 
 In our mock-up, we also had a quote in the bottom left corner:
 
 > "Transform the job hunt from a maze into a map."
 
 <figure>
-  ![](./images/figma-login.png)
+  ![Final login page mock-up](./images/figma-login.png)
   <figcaption>Final login page mock-up</figcaption>
 </figure>
 
@@ -1851,6 +1871,11 @@ We want this to be fixed to the bottom of the left column. So, this needs to be 
   </div>
 </div>
 ```
+<details>
+To make sure the quotes render properly we use the **HTML character entities**.
+
+HTML entities are special codes used to display reserved characters or symbols that might otherwise be interpreted as HTML syntax or cause rendering issues.
+</details>
 
 To style the text:
 
@@ -1859,15 +1884,15 @@ To style the text:
   &ldquo;Transform the job hunt from a maze into a map.&rdquo;
 </div>
 ```
----
+<details>
 - We want to it to be white, `text-white` and small (`14px`) `text-sm`
 - Then, we can position it absolutely to the bottom left corner with `absolute bottom-0 left-0`
 - We want to add a little bit of spacing from the edge with `p-10` which is `40px` of padding
----
+</details>
 
 ![Screenshot of the text "Transform the job hunt from a maze into a map." rendering at the bottom of the screen.](./images/preview-quote-on-auth.png)
 
-This looks good-ish. The text is styled correctly, but the placement is off. We could adjust our our `top` and `left` values, but that's not the real problem. In CSS, positioning is relative. Meaning, it takes the parent container and it's positioning into consideration.
+This looks closer. The text is styled correctly, but the placement is off. We could adjust our our `top` and `left` values, but that's not the real problem. In CSS, positioning is relative. Meaning, it takes the parent container and it's positioning into consideration.
 
 Our parent `div` doesn't have any positioning applied (by default it's `static`). Therefore, it looks to the page. And, yes, our quote is positioned to the bottom left corner of the page, with `40px` of padding.
 
@@ -1895,10 +1920,10 @@ It's tempting to call the styling for the left side done, but with the quote it 
   </div>
 </div>
 ```
----
+<details>
 - We moved the logo up `100px` with `-top-[100px]`
 - In order for `top` to work, we need also need to add a position of `relative`, so that the browser knows we're moving it _relative_ to it's current position.
----
+</details>
 
 If we take a look in the browser:
 
@@ -1915,13 +1940,13 @@ Now, let's style the right side. This is easy!
   <div className="w-full">{children}</div>
 </div>
 ```
----
+<details>
 - The background should be white: `bg-white`
 - And the corners on the right should be rounded, `rounded-r-xl`
 - For the `div` that wraps `{children}`, we want it to take the full width of it's container with `w-full`
----
+</details>
 
-![](./images/authlayout-styling-complete.png)
+![a screenshot of the AuthLayout component rendering like in the figma mocks.](./images/authlayout-styling-complete.png)
 
 The styling for `AuthLayout` component is complete 🎉.
 
@@ -2006,7 +2031,7 @@ Now, let's just work from top to bottom.
 
 In the top, right corner, we have a link to the signup page. This is similar to how we styled the quote in our layout component, except this time we want it positioned to the top, right corner.
 
-We'll write some tests for this in a bit when we want to more navigation implemented.
+We'll write some tests for this in a bit.
 
 ```tsx title="src/app/pages/user/Login.tsx"
 return (
@@ -2021,15 +2046,15 @@ return (
     </div>
     ...
 ```
----
+<details>
 - We're positioning the link with `absolute` to the top right, `top-0 right-0` and adding `p-10` or `40px` of padding
 - For the Register link, we want to use the font Poppins or `font-display`, make it bold `font-bold`, black `text-black`, and small `text-sm`
 - I want to make sure this looks like a link. Let's add a class of `underline` and offset with `underline-offset-8` to give it some space from the text. Then, when we hover, let's just change the underline color with `hover:decoration-primary`
----
+</details>
 
 Now, we have the same positioning "problem" that we had with our quote. We need the link to be positioned relative to the container. Let's go back to the `AuthLayout` component and add a class of `relative`:
 
-```tsx title="src/app/layouts/AuthLayout.tsx"
+```tsx title="src/app/layouts/AuthLayout.tsx" {1}
 <div className="center bg-white rounded-r-xl relative">
   <div className="w-full">{children}</div>
 </div>
@@ -2051,17 +2076,17 @@ Next up, let's wrap all of our form content with a `div` and add the text at the
   {result && <div>{result}</div>}
 </div>
 ```
----
-- On our wrapping `div` I don't want the content to be more than `400px` wide with `max-w-[400px]`. But, I want it to take up as much space as possible with `w-full`.
-- I want it to be centered with `mx-auto`.
-- On smaller screens, I want to ensure there's some horizontal padding with `px-10`
+<details>
+- On our wrapping `div` We don't want the content to be more than `400px` wide with `max-w-[400px]`. But, We want it to take up as much space as possible with `w-full`.
+- We want it to be centered with `mx-auto`.
+- On smaller screens, We want to ensure there's some horizontal padding with `px-10`
 - Our `h1` should be centered with `text-center`
-- I also want to add some vertical spacing with `py-6`
----
+- We also want to add some vertical spacing with `py-6`
+</details>
 
 Let's also add some text below our form, and give some space for it away from the button:
 
-```tsx title="src/app/pages/user/Login.tsx" {3,11-14}
+```tsx title="src/app/pages/user/Login.tsx" {4,11-14}
 <Button
   onClick={handlePerformPasskeyLogin}
   disabled={isPending}
@@ -2134,9 +2159,9 @@ Then, let's also add some more specific styles for our `h1` since it's a page ti
   }
 }
 ```
----
+<details>
 - We're setting the font size to `30px` with `text-3xl`
----
+</details>
 
 Back in our `Login` component, let's add the class of `page-title` to our `h1`:
 
@@ -2166,13 +2191,13 @@ In our `styles.css` file, let's target the `auth-form` class:
   }
 }
 ```
----
+<details>
 - You'll notice I'm using CSS nesting to target the `p` and `a` tags inside the `auth-form` class. This gets rendered as `.auth-form p` and `.auth-form p a`.
 - For the paragraph, I want the text to be small `text-sm`, gray `text-zinc-500` (this is a Tailwind color), and centered `text-center`.
 - For a link inside our paragraph, the color should be gray `text-zinc-500`, but when we hover over it, it should be black `hover:text-black`.
 - Let's `underline` the link so that we it's obvious it's a link.
 - I'm also going to add a class of `whitespace-nowrap` to prevent the link from wrapping to a new line. Meaning, "Terms of Service" or "Privacy Policy" will fit on a single line.
----
+</details>
 
 ![Screenshot of the Login page with the auth-form and other styles applied.](./images/login-page-text-styled.png)
 
@@ -2185,7 +2210,7 @@ If we take a look in the browser, this looks great. The only thing we lack is th
   }
 }
 ```
----
+<details>
 - Let's target an `input` with a `type` of `text` with `input[type="text"]`. Since, we're styling a base tag, we can stick this in the `base` layer.
 - We want to add a border with a color of border `border-border` and a width of `1px` with `border-1`.
 - Let's round the corners with `rounded-md`
@@ -2195,7 +2220,7 @@ If we take a look in the browser, this looks great. The only thing we lack is th
 - It should span the entire width of its container `w-full`.
 - Let's add some spacing to the bottom with `mb-2` (`8px`)
 - Set the font size to `16px` with `text-base`
----
+</details>
 
 For the button, we're using the shadcn/ui button component. Let's crack it open:
 ```tsx title="src/components/ui/button.tsx"
@@ -2208,11 +2233,11 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground hover:bg-primary/90",
         ...
 ```
----
+<details>
 - Near the top of the file, there's a variable called `buttonVariants` that contains all the Tailwind styling.
 - Let's make the button text bold by adding a class of `font-bold` within the first list of classes. This ensures that all button variants will be bold. You'll also need to remove `font-medium` from the list. Otherwise, the two classes will conflict.
 - The first variant is the `default` variant and has a class of `bg-primary`. This is why our button is using our yellow, primary color. We've already set `--color-primary` within our `styles.css` file.
----
+</details>
 
 The button text is appearing white because of the `text-primary-foreground` class. Lets' remove this class and add a `text-black` class:
 
@@ -2268,11 +2293,11 @@ import { AlertCircle } from "lucide-react";
   </Alert>
 )}
 ```
----
+<details>
 - `Alert`, `AlertCircle`, and `AlertTitle` are all from the shadcn/ui `Alert` component. [You can find the full documentation here.](https://ui.shadcn.com/docs/components/alert)
 - Let's set the `variant` to `destructive`
 - and add some margin to the bottom with `mb-5`
----
+</details>
 
 You'll need to login unsuccessfully to see the alert (or comment out the redirect).
 
@@ -2342,12 +2367,14 @@ import "@test2doc/playwright/types"
 ...
 ```
 
+<details>
 - We import `import "@test2doc/playwright/types"` at the top to get the test2doc options added to the `PlaywrightTestOptions`.
 - We add set `use.test2doc.annotationDefaults.showArrow` to true. If you like, you can change any of the [annotations](https://test2doc.com/docs/user-guide/screenshots/annotation#annotation-object-properties) to have a default property.
-- No we can go back and remove the `showArrow: true` option in our `screenshot` calls in our test file.
+- Now we can go back and remove the `showArrow: true` option in our `screenshot` calls.
+</details>
 
 ### Implement redirect
-To make this test pass is pretty simple, we just update the href on our link using out `link` function.
+To make this test pass is pretty simple, we just update the `href` attribute on our anchor tags using out `link` function.
 
 ```ts title="src/passkey/components/Login.tsx" {2}
 <a
@@ -2359,11 +2386,13 @@ To make this test pass is pretty simple, we just update the href on our link usi
 ```
 
 ## Linking to Privacy Policy and Terms of Service
-We won't be building full Privacy Policy or Terms of Service pages. We'll just be stubbing them out for later implementation when or if this becomes a real app.
+Let's also look at making the **Privacy Policy** and **Terms of Service** link to a page. 
 
-But since we do want this functionliaty we'll make some tests for this at the least.
+We won't be building full Privacy Policy or Terms of Service pages. We'll just be stubbing them out for now.
 
-We're going to do something a bit different for this describe block and use the `withDocCategory` function to group the generated docs under a Docusaurus Category.
+But since we do want this functionality and want to be confident we don't break it later, we'll make some tests to capture their behavior.
+
+We're going to do something a bit different for this describe block and use the `withDocCategory` function to group the generated docs together in Docusauru's sidebar.
 
 ```ts title="tests/authentication.spec.ts"
 test.describe(
@@ -2404,7 +2433,7 @@ test.describe(
 ### Test for the Legal Pages
 Now that we got our boilerplate setup, let's write our tests for the Privacy Policy and Terms of Service.
 
-```ts title="tests/authentication.spec.ts" {7-20}
+```ts title="tests/authentication.spec.ts" {7-20,29-44}
 ...
 test.describe(
   withDocMeta("Privacy Policy", {
@@ -2544,9 +2573,9 @@ return (
     </div>
     ...
 ```
----
+<details>
 - Our Login link is using the exact same styles as the Register link on the Login page. The only difference is we changed the link to point to our `/auth/login` route and the label is `Login`.
----
+</details>
 
 
 Next, let's wrap the rest of our content with a `div` with the `.auth-form` class:
@@ -2566,13 +2595,13 @@ Next, let's wrap the rest of our content with a `div` with the `.auth-form` clas
 </main>
 ...
 ```
----
+<details>
 - We're using the same styles as our login page.
 - We have a class `auth-form` that will style our `p` and `a` tags.
 - We've set the maximum width of our form to `400px`, but we want it to take up as much space as possible `min-w-full`.
 - Center it on the page `mx-auto`.
 - Added `40px` padding to the left and right with `px-10`.
----
+</details>
 
 We'll update our heading and add a paragraph:
 
@@ -2589,13 +2618,13 @@ Because we just updated the copy of the text we'll also need to go and update th
 
 ### Refactor the Tests to be more DRY
 
-This is the second time we've had to change a selector for a test. The problem is as our tests grow, if we ever need to update copy on the page, we might end up breaking multipe tests. This is obviously brittle and not ideal.
+This is the second time we've had to change a selector for a test. The problem is as our tests grow, if we ever need to update copy on the page, we might end up breaking multiple tests. This is obviously brittle and not ideal.
 
 There are a few options we can use to solve this problem. [Page object models](https://playwright.dev/docs/pom) (POM) are a very popular way to abstract away selectors. I however, do not like them because I find their boilerplate to be a bit verbose. (The irony of the writer making you write a bunch of test boilerplate to generate docs; does not escape me.) I also find the POMs sometimes abstract away too much details making it slightly harder to understand tests.
 
 So I'm going to recommend a medium level of abstraction in creating a `Selector Tuple` object. Which will, simply put, be an object with tuple selectors values that we can pass to a locator to select an element on the DOM.
 
-```ts title="tests/util.ts" {3-14}
+```ts title="tests/util.ts" {3-16}
 import type { CDPSession, Page } from "@playwright/test"
 ...
 export const selectors = {
@@ -2627,7 +2656,7 @@ await expect(
 <details>
 <summary>Updated `tests/authentication.spec.ts` code</summary>
 
-```ts title="tests/authentication.spec.ts" {8,57,69,78,82,94,100,119,128,138,144,167,178,188,199,219,226,241,248}
+```ts title="tests/authentication.spec.ts" {9,58,70,79,83,95,101,120,129,139,145,168,179,189,200,220,227,242,249}
 import {
   test,
   expect,
@@ -2635,6 +2664,7 @@ import {
   Page,
   BrowserContext,
 } from "@playwright/test"
+import { randomUUID } from "crypto"
 import { selectors, simulateSuccessfulPasskeyInput } from "./util"
 import { withDocCategory, withDocMeta } from "@test2doc/playwright/DocMeta"
 import { screenshot } from "@test2doc/playwright/screenshots"
@@ -2644,7 +2674,7 @@ const clip = { x: 0, y: 0, width: 550, height: 200 }
 test.describe.serial(
   withDocMeta("Authentication Flow", { sidebar_position: 1 }),
   () => {
-    const username = `testuser-${Date.now()}`
+  const username = `testuser-${crypto.randomUUID()}`
     let client: CDPSession
     let authenticatorId: string
     let sharedContext: BrowserContext
@@ -2944,11 +2974,11 @@ Jumping down a little bit, on our `Button` component, let's add a few classes to
   </Button>
 </div>
 ```
----
+<details>
 - We want to use the font Poppins, `font-display`.
 - Make the button span the entire width of the container, `w-full`.
 - Add some spacing to the bottom, `mb-6`.
----
+</details>
 
 Lastly we we'll add the legal statement just under the buttons. So let's write our 2 last tests before we implemnet those links.
 ```ts title="tests/authentication.spec.ts"
@@ -2999,7 +3029,7 @@ test.describe(
     ...
 ```
 
-These tests are almost identical to the Login page equivolaents.
+These tests are almost identical to the Login page equivalents.
 
 Now to implement the links:
 
@@ -3033,6 +3063,7 @@ import {
   Page,
   BrowserContext,
 } from "@playwright/test"
+import { randomUUID } from "crypto"
 import { selectors, simulateSuccessfulPasskeyInput } from "./util"
 import { withDocCategory, withDocMeta } from "@test2doc/playwright/DocMeta"
 import { screenshot } from "@test2doc/playwright/screenshots"
@@ -3040,7 +3071,7 @@ import { screenshot } from "@test2doc/playwright/screenshots"
 test.describe.serial(
   withDocMeta("Authentication Flow", { sidebar_position: 1 }),
   () => {
-    const username = `testuser-${Date.now()}`
+  const username = `testuser-${crypto.randomUUID()}`
     let client: CDPSession
     let authenticatorId: string
     let sharedContext: BrowserContext
