@@ -35,7 +35,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@prisma/adapter-d1": "~6.17.1",
+    "@prisma/adapter-d1": "~6.19.0",
     "@prisma/client": "~6.18.0",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
