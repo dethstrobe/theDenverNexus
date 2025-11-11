@@ -1,6 +1,6 @@
 ---
 title: FAQs
-sidebar_position: 4
+sidebar_position: 5
 ---
 # Frequently Asked Questions
 Here are a few common questions that get asked about Test2Doc.
