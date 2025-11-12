@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
     "documentation",
