@@ -293,8 +293,8 @@ importers:
         specifier: ^12.1.0
         version: 12.1.1
       marked:
-        specifier: ^16.3.0
-        version: 16.4.0
+        specifier: ^17.0.0
+        version: 17.0.0
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
@@ -6085,13 +6085,13 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  marked@16.4.0:
-    resolution: {integrity: sha512-CTPAcRBq57cn3R8n3hwc2REddc28hjR7RzDXQ+lXLmMJYqn20BaI2cGw6QjgZGIgVfp2Wdfw4aMzgNteQ6qJgQ==}
+  marked@16.4.2:
+    resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
     engines: {node: '>= 20'}
     hasBin: true
 
-  marked@16.4.2:
-    resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
+  marked@17.0.0:
+    resolution: {integrity: sha512-KkDYEWEEiYJw/KC+DVm1zzlpMQSMIu6YRltkcCvwheCp8HWPXCk9JwOmHJKBlGfzcpzcIt6x3sMnTsRm/51oDg==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -15699,9 +15699,9 @@ snapshots:
 
   marked@15.0.12: {}
 
-  marked@16.4.0: {}
-
   marked@16.4.2: {}
+
+  marked@17.0.0: {}
 
   math-intrinsics@1.1.0: {}
 
