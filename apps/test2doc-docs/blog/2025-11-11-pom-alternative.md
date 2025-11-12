@@ -1,6 +1,6 @@
 ---
 slug: pom-alternative
-title: Selector Tuple: An alternative to Page Object Model
+title: "Selector Tuple: An alternative to Page Object Model"
 authors: [dethstrobe]
 tags: [testing]
 ---
