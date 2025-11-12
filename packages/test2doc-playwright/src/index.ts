@@ -193,7 +193,10 @@ class Test2DocReporter implements Reporter {
       writeLine(
         `Documentation generation aborted due to test failure: ${test.title}`,
       )
-      process.exit(1)
+
+      if (!process.env['IGNORE_TEST_FAILURES']) {
+        process.exit(1)
+      }
     } else if (result.status === "skipped") {
       this.testResults[this.completedTests] = "S"
     }

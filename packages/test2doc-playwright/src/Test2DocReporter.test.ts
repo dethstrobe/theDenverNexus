@@ -468,6 +468,26 @@ Given user is on login page
       expect(mockExit).toHaveBeenCalledWith(1)
       expect(mockExit).toHaveBeenCalledTimes(1)
     })
+
+    it("when there are failed tests but the command flag to ignore is set, we run tests anyway.", () => {
+      process.env.IGNORE_TEST_FAILURES = "true"
+      const reporter = setup()
+
+      const mockFailedResult: TestResult = {
+        status: "failed",
+      } as TestResult
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockFailedResult),
+      ).not.toThrow("process.exit called")
+
+      expect(mockLogging).toHaveBeenCalledWith(
+        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
+      )
+
+      expect(mockExit).toHaveBeenCalledTimes(0)
+      delete process.env.IGNORE_TEST_FAILURES
+    })
   })
 
   it("should generate documentation for each project (expect for .setup.ts files)", () => {
