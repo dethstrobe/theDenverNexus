@@ -5,6 +5,7 @@ authors: [dethstrobe]
 tags: [testing]
 ---
 A common problem in automated tests is that selectors, the way in which you select an element on a page, can change over time as development implements new features or requirements.
+<!-- truncate -->
 
 ## Example
 So let's say we have a test like this:
