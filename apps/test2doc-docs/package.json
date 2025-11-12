@@ -43,7 +43,7 @@
     "gray-matter": "^4.0.3",
     "juice": "^11.0.3",
     "mailgun.js": "^12.1.0",
-    "marked": "^16.3.0",
+    "marked": "^17.0.0",
     "tsx": "^4.20.6",
     "typescript": "~5.9.3"
   },
