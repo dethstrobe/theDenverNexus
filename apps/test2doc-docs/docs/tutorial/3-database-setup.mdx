@@ -406,7 +406,7 @@ Let's look at this on the migration schema for the `companies` and `contacts` ta
         .addColumn("lastName", "text", (col) => col.notNull())
         .addColumn("email", "text")
         .addColumn("role", "text")
-        .addColumn("companyId", "integer", (col) =>
+        .addColumn("companyId", "text", (col) =>
           col.notNull().references("companies.id"),
         )
         .addColumn("createdAt", "text", (col) =>
@@ -453,7 +453,7 @@ export const migrations = {
           .addColumn("lastName", "text", (col) => col.notNull())
           .addColumn("email", "text")
           .addColumn("role", "text")
-          .addColumn("companyId", "integer", (col) =>
+          .addColumn("companyId", "text", (col) =>
             col.notNull().references("companies.id"),
           )
           .addColumn("createdAt", "text", (col) =>
@@ -498,7 +498,7 @@ export const migrations = {
           .addColumn("statusId", "integer", (col) =>
             col.notNull().defaultTo("1").references("applicationStatuses.id"),
           )
-          .addColumn("companyId", "integer", (col) =>
+          .addColumn("companyId", "text", (col) =>
             col.notNull().references("companies.id"),
           )
           .addColumn("salaryMin", "text")
