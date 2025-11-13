@@ -106,7 +106,7 @@ We'll be mapping data types we need to these SQLite types. We'll need to do some
 | `Int` | `INTEGER` |
 | `Boolean` | `INTEGER` (0 or 1) |
 | `Float` | `REAL` |
-| `DateTime` | `INTEGER` (Unix timestamp) |
+| `DateTime` | `TEXT` ([ISO 8601 standard](https://www.iso.org/iso-8601-date-and-time-format.html)) |
 | `JSON` | `TEXT` |
 
 ### IDs
@@ -168,7 +168,7 @@ export const migrations = {
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("salaryMin", "text")
           .addColumn("salaryMax", "text")
-          .addColumn("dateApplied", "integer")
+          .addColumn("dateApplied", "text")
           .addColumn("jobTitle", "text")
           .addColumn("jobDescription", "text")
           .addColumn("postingUrl", "text")
@@ -256,7 +256,7 @@ export const migrations = {
           .addColumn("id", "text", (col) => col.primaryKey())
           .addColumn("salaryMin", "text")
           .addColumn("salaryMax", "text")
-          .addColumn("dateApplied", "integer")
+          .addColumn("dateApplied", "text")
           .addColumn("jobTitle", "text")
           .addColumn("jobDescription", "text")
           .addColumn("postingUrl", "text")
