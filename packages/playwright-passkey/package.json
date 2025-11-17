@@ -1,0 +1,47 @@
+{
+  "name": "@test2doc/playwright-passkey",
+  "version": "0.0.0",
+  "description": "A utility to test and generate passkeys using Playwright",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node --watch ./dist/scripts/server.js",
+    "test": "playwright test",
+    "build": "tsc --project tsconfig.json",
+    "build:watch": "tsc --project tsconfig.json --watch",
+    "clean": "rm -rf dist && rm -rf tsconfig.tsbuildinfo",
+    "format": "biome format --write .",
+    "postinstall": "pnpm playwright install --with-deps chromium",
+    "lint": "biome lint . --fix",
+    "passkey-gen": "node ./src/generate-passkey.ts"
+  },
+  "bin": {
+    "playwright-passkey": "./bin/generate-passkey"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "keywords": [
+    "passkey",
+    "playwright",
+    "utility",
+    "WebAuthn",
+    "generator"
+  ],
+  "author": "@dethstrobe",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.17.1",
+  "peerDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@simplewebauthn/server": "^13.2.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@simplewebauthn/server": "^13.2.2",
+    "@types/node": "^24.10.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
