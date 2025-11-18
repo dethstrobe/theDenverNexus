@@ -177,10 +177,12 @@ async function generateTestPasskey(
 
 interface Options extends OptionValues {
   output: string
+  type: "json" | "ts" | "js" | "javascript" | "typescript"
 }
 
 export async function main({
   output = "test-passkey.ts",
+  type = "ts",
 }: Partial<Options> = {}) {
   const username = "testuser"
   const userId = crypto.randomUUID()
@@ -191,14 +193,28 @@ export async function main({
 
   const passkey = await generateTestPasskey(username, userId)
 
+  // Map type to file extension
+  const extensionMap: Record<string, string> = {
+    json: ".json",
+    js: ".js",
+    javascript: ".js",
+    ts: ".ts",
+    typescript: ".ts",
+  }
+  const ext = extensionMap[type] || ".ts"
+  output = output.replace(/\.\w+$/, "") + ext
+
   const outputPath = join(process.cwd(), output)
-  const content = `export const TESTPASSKEY = ${JSON.stringify(passkey, null, 2)}
-`
+  const stringifyPasskey = JSON.stringify(passkey, null, 2)
+  const content =
+    type === "json"
+      ? stringifyPasskey
+      : `export const TESTPASSKEY = ${stringifyPasskey}`
 
   writeFileSync(outputPath, content)
   console.log(`✓ Test passkey generated and saved to ${outputPath}`)
   console.log("\nGenerated passkey:")
-  console.log(JSON.stringify(passkey, null, 2))
+  console.log(stringifyPasskey)
 }
 
 if (fileURLToPath(import.meta.url) === process.argv[1]) {

@@ -68,8 +68,6 @@ const server = createServer(async (req, res) => {
 
   const body = await parseBody(req)
 
-  console.log(`Received ${req.method} request for ${req.url} with body:`, body)
-
   // Serve HTML client
   if (req.url === "/" && req.method === "GET") {
     const html = `<!DOCTYPE html>
@@ -200,8 +198,6 @@ ${clientScript}
     isAuthenticateFinishBody(body)
   ) {
     const { credentialId, clientDataJSON, authenticatorData, signature } = body
-
-    console.log("body:", body)
 
     // const storedCredential = credentials.get(credentialId)
     // if (!storedCredential) {

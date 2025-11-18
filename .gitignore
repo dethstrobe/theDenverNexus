@@ -13,6 +13,9 @@
 **/.dev.vars
 **/.wrangler
 
+# Test Mock Data
+**/test-passkey.*
+
 # Logs
 **/logs
 **/*.log
