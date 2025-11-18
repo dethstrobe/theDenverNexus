@@ -1,19 +1,33 @@
 import { spawn } from "child_process"
 
-const server = spawn("pnpm", ["start"], { shell: true })
+const server = spawn("pnpm", ["start"], { stdio: "inherit" })
 
-process.on("exit", () => server.kill())
-process.on("SIGINT", () => {
-  server.kill()
-  process.exit()
+const killServer = () => {
+  try {
+    if (server && !server.killed) server.kill()
+  } catch {
+    /* ignore */
+  }
+}
+
+;["exit", "SIGINT", "SIGTERM", "uncaughtException"].forEach((ev) => {
+  process.on(ev, () => {
+    killServer()
+    if (ev !== "exit") process.exit(1)
+  })
 })
 
-const generator = spawn("node", ["./src/generate-passkey/index.ts"], {
-  shell: true,
+// Run the built generator (make sure pnpm build has run first)
+const generator = spawn("node", ["./dist/src/generate-passkey.js"], {
   stdio: "inherit",
 })
 
 generator.on("close", (code) => {
-  server.kill()
-  process.exit(code)
+  killServer()
+  process.exit(code ?? 0)
+})
+generator.on("error", (err) => {
+  killServer()
+  console.error(err)
+  process.exit(1)
 })
