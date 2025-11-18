@@ -119,6 +119,31 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
+  packages/playwright-passkey:
+    dependencies:
+      commander:
+        specifier: ^14.0.2
+        version: 14.0.2
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
+      '@simplewebauthn/server':
+        specifier: ^13.2.2
+        version: 13.2.2
+      '@types/node':
+        specifier: ^24.10.0
+        version: 24.10.0
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.8
+        version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(jiti@2.6.1)(jsdom@27.1.0)(lightningcss@1.30.2)(msw@2.12.0(@types/node@24.10.0)(typescript@5.9.3))(terser@5.44.0)(tsx@4.20.6)
+
   packages/playwright-passkey-gen:
     devDependencies:
       '@playwright/test':
@@ -3202,6 +3227,10 @@ packages:
   commander@12.1.0:
     resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
     engines: {node: '>=18'}
+
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+    engines: {node: '>=20'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -11374,6 +11403,8 @@ snapshots:
   commander@10.0.1: {}
 
   commander@12.1.0: {}
+
+  commander@14.0.2: {}
 
   commander@2.20.3: {}
 

@@ -1,5 +1,5 @@
 import type { CDPSession, Page } from "@playwright/test"
-import type { TestPasskey } from "./generate-passkey.js"
+import type { TestPasskey } from "./generate-passkey/index.js"
 
 interface PasskeyAuthenticator {
   client: CDPSession

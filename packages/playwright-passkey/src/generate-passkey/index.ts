@@ -2,6 +2,8 @@ import { chromium } from "@playwright/test"
 import { writeFileSync } from "fs"
 import { join } from "path"
 import { verifyRegistrationResponse } from "@simplewebauthn/server"
+import { Command, type OptionValues } from "commander"
+import { fileURLToPath } from "url"
 
 export interface TestPasskey {
   username: string
@@ -173,7 +175,13 @@ async function generateTestPasskey(
   throw new Error("Failed to verify registration response")
 }
 
-async function main() {
+interface Options extends OptionValues {
+  output: string
+}
+
+export async function main({
+  output = "test-passkey.ts",
+}: Partial<Options> = {}) {
   const username = "testuser"
   const userId = crypto.randomUUID()
 
@@ -183,7 +191,7 @@ async function main() {
 
   const passkey = await generateTestPasskey(username, userId)
 
-  const outputPath = join(process.cwd(), "test-passkey.ts")
+  const outputPath = join(process.cwd(), output)
   const content = `export const TESTPASSKEY = ${JSON.stringify(passkey, null, 2)}
 `
 
@@ -193,4 +201,16 @@ async function main() {
   console.log(JSON.stringify(passkey, null, 2))
 }
 
-main().catch(console.error)
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
+  const program = new Command()
+  program
+    .option(
+      "-o, --output <path>",
+      "output path for generated passkey",
+      "test-passkey.ts",
+    )
+    .parse()
+
+  const opts = program.opts()
+  main(opts).catch(console.error)
+}

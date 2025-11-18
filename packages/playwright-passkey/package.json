@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node --watch ./dist/scripts/server.js",
     "test": "playwright test",
+    "unit": "vitest",
     "build": "tsc --project tsconfig.json",
     "build:watch": "tsc --project tsconfig.json --watch",
     "clean": "rm -rf dist && rm -rf tsconfig.tsbuildinfo",
@@ -42,6 +43,10 @@
     "@simplewebauthn/server": "^13.2.2",
     "@types/node": "^24.10.0",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.8"
+  },
+  "dependencies": {
+    "commander": "^14.0.2"
   }
 }
