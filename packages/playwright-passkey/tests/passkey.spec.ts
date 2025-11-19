@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test"
-import { TESTPASSKEY } from "../scripts/test-passkey.js"
+import { TESTPASSKEY } from "../src/scripts/testpasskey.js"
 import {
   enablePasskey,
   addPasskeyCredential,

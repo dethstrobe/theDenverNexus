@@ -7,7 +7,6 @@
       "DOM"
     ] /* Specify a list of library files to be included in the compilation. */,
     "types": ["node"],
-    "rootDir": "." /* Specify the root directory of input files (src and scripts). */,
     "sourceMap": true /* Generates corresponding .map file. */,
 
     /* Strictness & Type Checking Options */
@@ -45,9 +44,10 @@
     "declarationMap": true, // Still generate declaration maps
     "composite": true // Keep composite if you use project references
   },
-  "include": ["src/**/*", "scripts/**/*", "playwright.config.ts"],
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "dist",
+    "**/*.test.ts",
   ]
 }

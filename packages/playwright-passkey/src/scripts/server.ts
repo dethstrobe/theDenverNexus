@@ -5,7 +5,7 @@ import {
   verifyAuthenticationResponse,
 } from "@simplewebauthn/server"
 import { clientScript } from "./client.js"
-import { TESTPASSKEY } from "./test-passkey.js"
+import { TESTPASSKEY } from "./testpasskey.js"
 
 interface StoredCredential {
   id: string

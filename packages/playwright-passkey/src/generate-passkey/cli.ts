@@ -18,7 +18,7 @@ const killServer = () => {
 })
 
 // Run the built generator (make sure pnpm build has run first)
-const generator = spawn("node", ["./dist/src/generate-passkey.js"], {
+const generator = spawn("node", ["./dist/src/generate-passkey/index.js"], {
   stdio: "inherit",
 })
 
