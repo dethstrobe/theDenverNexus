@@ -4,16 +4,7 @@ import { join } from "path"
 import { verifyRegistrationResponse } from "@simplewebauthn/server"
 import { Command, type OptionValues } from "commander"
 import { fileURLToPath } from "url"
-
-export interface TestPasskey {
-  username: string
-  userId: string
-  credentialId: string
-  publicKey: number[]
-  privateKey: string
-  credentialDbId: string
-  signCount: number
-}
+import type { TestPasskey } from "@test2doc/playwright-passkey"
 
 interface VirtualAuthenticatorCredential {
   credentialId: string
@@ -35,7 +26,7 @@ function isVirtualAuthenticatorCredential(
   )
 }
 
-async function generateTestPasskey(
+export async function generateTestPasskey(
   username: string,
   userId: string,
 ): Promise<TestPasskey> {

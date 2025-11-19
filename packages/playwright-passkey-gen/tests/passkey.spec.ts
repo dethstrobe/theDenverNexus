@@ -1,15 +1,15 @@
 import { test, expect } from "@playwright/test"
 import { TESTPASSKEY } from "../src/scripts/testpasskey.js"
 import {
-  enablePasskey,
+  enableVirtualAuthenticator,
   addPasskeyCredential,
   simulateSuccessfulPasskeyInput,
-} from "../src/passkey-util.js"
+} from "@test2doc/playwright-passkey"
 
 test.describe("Passkey Authentication", () => {
   test("should authenticate using passkey", async ({ page }) => {
     await page.goto("http://localhost:5173/")
-    const passkeyAuthenticator = await enablePasskey(page)
+    const passkeyAuthenticator = await enableVirtualAuthenticator(page)
     await addPasskeyCredential(passkeyAuthenticator, TESTPASSKEY)
 
     await expect(page.getByRole("status")).toHaveText("")

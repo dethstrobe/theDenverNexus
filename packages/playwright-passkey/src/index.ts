@@ -1,10 +1,20 @@
 import type { CDPSession, Page } from "@playwright/test"
-import type { TestPasskey } from "./generate-passkey/index.js"
 
-interface PasskeyAuthenticator {
+export interface TestPasskey {
+  username: string
+  userId: string
+  credentialId: string
+  publicKey: number[]
+  privateKey: string
+  credentialDbId: string
+  signCount: number
+}
+
+interface AuthenticatorSession {
   client: CDPSession
   authenticatorId: string
 }
+
 interface VirtualAuthenticatorOptions {
   protocol: "ctap2" | "u2f"
   transport: "usb" | "nfc" | "ble" | "cable" | "internal"
@@ -14,7 +24,14 @@ interface VirtualAuthenticatorOptions {
   automaticPresenceSimulation?: boolean
 }
 
-export async function enablePasskey(
+/**
+ * Enable a virtual WebAuthn authenticator for a Playwright page.
+ *
+ * @param {Page} page - Playwright Page instance to attach the virtual authenticator to.
+ * @param {VirtualAuthenticatorOptions} [options] - Options for the virtual authenticator (protocol, transport, etc.).
+ * @returns {Promise<AuthenticatorSession>} Resolves with the CDP session and the created authenticator ID.
+ */
+export async function enableVirtualAuthenticator(
   page: Page,
   options: VirtualAuthenticatorOptions = {
     protocol: "ctap2",
@@ -24,7 +41,7 @@ export async function enablePasskey(
     isUserVerified: true,
     automaticPresenceSimulation: true,
   },
-): Promise<PasskeyAuthenticator> {
+): Promise<AuthenticatorSession> {
   const client: CDPSession = await page.context().newCDPSession(page)
   await client.send("WebAuthn.enable")
 
@@ -36,8 +53,14 @@ export async function enablePasskey(
   return { client, authenticatorId }
 }
 
+/**
+ * Add a Passkey credential to the virtual authenticator.
+ *
+ * @param {AuthenticatorSession} authenticatorSession CDP session and Authenticator Id to add the Passkey Credentials to the Virtual Authenticator.
+ * @param {TestPasskey} testPasskey The Passkey credential to add.
+ */
 export async function addPasskeyCredential(
-  { client, authenticatorId }: PasskeyAuthenticator,
+  { client, authenticatorId }: AuthenticatorSession,
   testPasskey: TestPasskey,
 ): Promise<void> {
   await client.send("WebAuthn.addCredential", {
@@ -55,8 +78,14 @@ export async function addPasskeyCredential(
   })
 }
 
+/**
+ * Simulate a successful passkey input event.
+ *
+ * @param {AuthenticatorSession} authenticatorSession CDP session and Authenticator Id to add the Passkey Credentials to the Virtual Authenticator.
+ * @param {() => Promise<void>} operationTrigger Function to trigger the operation that requires passkey input.
+ */
 export async function simulateSuccessfulPasskeyInput(
-  { client, authenticatorId }: PasskeyAuthenticator,
+  { client, authenticatorId }: AuthenticatorSession,
   operationTrigger: () => Promise<void>,
 ) {
   // initialize event listeners to wait for a successful passkey input event

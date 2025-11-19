@@ -2,9 +2,9 @@
   "name": "@test2doc/playwright-passkey-gen",
   "version": "0.0.0",
   "description": "A utility to generate passkeys using Playwright",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/generate-passkey/index.js",
+  "module": "dist/src/generate-passkey/index.js",
+  "types": "dist/src/generate-passkey/index.d.ts",
   "scripts": {
     "start": "node ./dist/src/scripts/server.js",
     "dev": "pnpm build:watch & node --watch ./dist/src/scripts/server.js",
@@ -34,12 +34,12 @@
     "WebAuthn",
     "generator"
   ],
-  "author": "@dethstrobe",
+  "author": "Null Sweat, LLC",
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.17.1",
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "tsx": "^4.20.6",
+    "@test2doc/playwright-passkey": "workspace:*",
     "typescript": "^5.9.3",
     "vitest": "^4.0.8"
   },

@@ -1,13 +1,27 @@
 {
-  "name": "playwright-passkey",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@test2doc/playwright-passkey",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Playwright utilities for testing passkeys (WebAuthn)",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --project tsconfig.json"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.17.1"
+  "keywords": [
+    "playwright",
+    "passkey",
+    "webauthn",
+    "testing"
+  ],
+  "author": "Null Sweat, LLC",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.1",
+  "peerDependencies": {
+    "@playwright/test": "^1.56.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  }
 }

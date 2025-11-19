@@ -119,7 +119,15 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
-  packages/playwright-passkey: {}
+  packages/playwright-passkey:
+    dependencies:
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
 
   packages/playwright-passkey-gen:
     dependencies:
@@ -133,12 +141,12 @@ importers:
         specifier: ^14.0.2
         version: 14.0.2
     devDependencies:
+      '@test2doc/playwright-passkey':
+        specifier: workspace:*
+        version: link:../playwright-passkey
       '@types/node':
         specifier: ^24.10.0
         version: 24.10.1
-      tsx:
-        specifier: ^4.20.6
-        version: 4.20.6
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
