@@ -5,11 +5,13 @@ on:
     branches: [main]
     paths:
       - 'packages/playwright-passkey/**'
+      - 'packages/playwright-passkey-gen/**'
       - '.github/workflows/playwright-passkey-tests.yml'
   pull_request:
     branches: [main]
     paths:
       - 'packages/playwright-passkey/**'
+      - 'packages/playwright-passkey-gen/**'
       - '.github/workflows/playwright-passkey-tests.yml'
 
 jobs:
@@ -17,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: packages/playwright-passkey
+        working-directory: packages/playwright-passkey-gen
 
     steps:
       - name: Checkout code
@@ -55,5 +57,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: packages/playwright-passkey/playwright-report/
+          path: packages/playwright-passkey-gen/playwright-report/
           retention-days: 30
