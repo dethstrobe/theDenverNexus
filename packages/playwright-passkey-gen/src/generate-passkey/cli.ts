@@ -1,6 +1,13 @@
 import { spawn } from "child_process"
+import { fileURLToPath } from "node:url"
+import { dirname, join } from "node:path"
 
-const server = spawn("pnpm", ["start"], { stdio: "inherit" })
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+// When installed via npm, the server will be in a different location
+const serverPath = join(__dirname, "../scripts/server.js")
+
+const server = spawn("node", [serverPath], { stdio: "inherit" })
 
 const killServer = () => {
   try {
@@ -17,8 +24,9 @@ const killServer = () => {
   })
 })
 
-// Run the built generator (make sure pnpm build has run first)
-const generator = spawn("node", ["./dist/src/generate-passkey/index.js"], {
+// Run the generator from the same directory
+const generatorPath = join(__dirname, "index.js")
+const generator = spawn("node", [generatorPath], {
   stdio: "inherit",
 })
 

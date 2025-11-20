@@ -1,2 +1,5 @@
-#!/usr/bin/env tsx
-import "../src/generate-passkey.ts"
+#!/usr/bin/env node
+import('../dist/src/generate-passkey/cli.js').catch(err => {
+  console.error(err);
+  process.exit(1);
+});

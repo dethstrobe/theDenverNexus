@@ -8,16 +8,16 @@ Generate a test passkey file from the command line:
 
 ```bash
 # Generate a TypeScript file (default)
-npx playwright-passkey
+npx @test2doc/playwright-passkey-gen
 
 # Generate with custom output path
-npx playwright-passkey --output path/to/my-passkey.ts
+npx @test2doc/playwright-passkey-gen --output path/to/my-passkey.ts
 
 # Generate JSON file
-npx playwright-passkey --type json
+npx @test2doc/playwright-passkey-gen --type json
 
 # Generate JavaScript file
-npx playwright-passkey --type js
+npx @test2doc/playwright-passkey-gen --type js
 ```
 
 **CLI Options:**
