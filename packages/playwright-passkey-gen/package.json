@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright-passkey-gen",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A utility to generate passkeys using Playwright",
   "main": "dist/src/generate-passkey/index.js",
   "module": "dist/src/generate-passkey/index.js",
@@ -21,7 +21,7 @@
     "passkey-gen": "pnpm build && node ./src/generate-passkey/cli.ts"
   },
   "bin": {
-    "playwright-passkey": "./bin/generate-passkey"
+    "playwright-passkey-gen": "./bin/generate-passkey"
   },
   "publishConfig": {
     "access": "public"
