@@ -134,4 +134,4 @@ This allows you to test passkey flows without requiring physical authenticators 
 
 ## License
 
-MIT
+Apache-2.0
