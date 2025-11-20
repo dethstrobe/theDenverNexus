@@ -216,6 +216,11 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
       "output path for generated passkey",
       "test-passkey.ts",
     )
+    .option(
+      "-t, --type <type>",
+      "output file type (json, ts, js, typescript, javascript)",
+      "ts",
+    )
     .parse()
 
   const opts = program.opts()
