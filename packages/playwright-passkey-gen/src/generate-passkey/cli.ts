@@ -4,8 +4,14 @@ import { dirname, join } from "node:path"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-// When installed via npm, the server will be in a different location
-const serverPath = join(__dirname, "../scripts/server.js")
+// When running from src/, go up to find dist/
+// When installed via npm, we're already in dist/
+const isInDist = __dirname.includes("/dist/")
+const distRoot = isInDist
+  ? join(__dirname, "../..")
+  : join(__dirname, "../../dist")
+
+const serverPath = join(distRoot, "src/scripts/server.js")
 
 const server = spawn("node", [serverPath], { stdio: "inherit" })
 
@@ -24,8 +30,11 @@ const killServer = () => {
   })
 })
 
-// Run the generator from the same directory
-const generatorPath = join(__dirname, "index.js")
+// Run the generator - same logic
+const generatorPath = isInDist
+  ? join(__dirname, "index.js")
+  : join(distRoot, "src/generate-passkey/index.js")
+
 const generator = spawn("node", [generatorPath], {
   stdio: "inherit",
 })
