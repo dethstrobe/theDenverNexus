@@ -54,6 +54,9 @@ jobs:
           git push origin HEAD --follow-tags
 
       - name: Build Docusaurus site
+        env:
+          VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
+          VITE_PUBLIC_POSTHOG_HOST: ${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
         working-directory: ./apps/test2doc-docs
         run: |
           pnpm install --frozen-lockfile
@@ -62,8 +65,6 @@ jobs:
       - name: Publish to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
-          VITE_PUBLIC_POSTHOG_HOST: ${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
         working-directory: ./apps/test2doc-docs
         run: |
           pnpm run deploy
