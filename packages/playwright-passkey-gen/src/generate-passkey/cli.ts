@@ -35,7 +35,10 @@ const generatorPath = isInDist
   ? join(__dirname, "index.js")
   : join(distRoot, "src/generate-passkey/index.js")
 
-const generator = spawn("node", [generatorPath], {
+// Forward all CLI arguments (skip first 2: node path and script path)
+const args = process.argv.slice(2)
+
+const generator = spawn("node", [generatorPath, ...args], {
   stdio: "inherit",
 })
 
