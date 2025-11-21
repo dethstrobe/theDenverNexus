@@ -1,11 +1,15 @@
+import "dotenv/config"
 import { themes as prismThemes } from "prism-react-renderer"
 import type { Config } from "@docusaurus/types"
 import type * as Preset from "@docusaurus/preset-classic"
-import { Icon } from "@iconify/react";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
+  customFields: {
+    posthogKey: process.env.VITE_PUBLIC_POSTHOG_KEY,
+    posthogHost: process.env.VITE_PUBLIC_POSTHOG_HOST,
+  },
   title: "Test2Doc",
   tagline: "Turn your tests into documentation.",
   favicon: "img/favicon.ico",
@@ -173,7 +177,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-      additionalLanguages: ['diff'],
+      additionalLanguages: ["diff"],
     },
   } satisfies Preset.ThemeConfig,
 }
