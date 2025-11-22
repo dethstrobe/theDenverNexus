@@ -199,9 +199,17 @@ ${clientScript}
   ) {
     const { credentialId, clientDataJSON, authenticatorData, signature } = body
 
-    // const storedCredential = credentials.get(credentialId)
+    // let storedCredential = credentials.get(credentialId)
     // if (!storedCredential) {
-    //   return sendJson(res, { error: "Credential not found" }, 400)
+    //   // return sendJson(res, { error: "Credential not found" }, 400)
+    //   const testCred = {
+    //     id: TESTPASSKEY.credentialId,
+    //     publicKey: Uint8Array.from(TESTPASSKEY.publicKey),
+    //     counter: TESTPASSKEY.signCount,
+    //     userId: TESTPASSKEY.userId,
+    //   }
+    //   credentials.set(TESTPASSKEY.credentialId, testCred)
+    //   storedCredential = testCred
     // }
 
     const storedChallenge = challenges.get("auth")
@@ -226,15 +234,21 @@ ${clientScript}
         expectedOrigin: origin,
         expectedRPID: rpID,
         credential: {
-          id: TESTPASSKEY.credentialId,
-          publicKey: Uint8Array.from(TESTPASSKEY.publicKey),
-          counter: 0,
+          id: TESTPASSKEY.credentialId, // storedCredential.id,
+          publicKey: Uint8Array.from(TESTPASSKEY.publicKey), // storedCredential.publicKey),
+          counter: 0, // storedCredential.counter,
         },
       })
 
       if (!verification.verified) {
         return sendJson(res, { error: "Authentication failed" }, 400)
       }
+
+      // Update counter
+      // credentials.set(credentialId, {
+      //   ...storedCredential,
+      //   counter: verification.authenticationInfo.newCounter,
+      // })
 
       challenges.delete("auth")
 
@@ -288,7 +302,6 @@ function isAuthenticateFinishBody(body: UnknownJson): body is {
   clientDataJSON: string
   authenticatorData: string
   signature: string
-  signCount: number
 } {
   return (
     typeof body === "object" &&

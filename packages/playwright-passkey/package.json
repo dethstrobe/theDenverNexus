@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright-passkey",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "description": "Playwright utilities for testing passkeys (WebAuthn)",
   "main": "dist/index.js",
