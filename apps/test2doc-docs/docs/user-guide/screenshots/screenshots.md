@@ -113,26 +113,10 @@ test.describe(withDocMeta("describe block"), async () => {
 
       await screenshot(
         testInfo,
-        page.getByRole("img", { name: "Browsers (Chromium, Firefox, WebKit)" }),
-        {
-          annotation: {
-            text: "Supported Browsers",
-            fillStyle: "rgba(255, 255, 255, 1)",
-            font: "bold 16px Helvetica",
-            strokeStyle: "rgba(0, 0, 0, 0.5)",
-            lineWidth: 4,
-            labelBoxFillStyle: "rgba(0, 120, 120, 0.3)",
-            labelBoxStrokeStyle: "rgba(0, 255, 0, 1)",
-            labelBoxLineWidth: 2,
-            highlightFillStyle: "rgba(255, 165, 0, 0.3)",
-            highlightStrokeStyle: "#FFA500",
-            highlightLineWidth: 2,
-            position: "above",
-            showArrow: true,
-            arrowStrokeStyle: "rgba(255, 0, 0, 0.8)",
-            arrowLineWidth: 3
-          }
-        }
+        [
+          page.getByRole("link", { name: "Star microsoft/playwright on GitHub", position: "right" }),
+          page.getByRole("link", { name: "GitHub repository" })
+        ],
       )
     })
   })
