@@ -942,6 +942,12 @@ We want to add an id to the `h1` and change the text to `All Applications`. With
 
 You might think that changing the text of the `h1` would break some of our test, but `getByRole` while selecting by `name` does some fuzzy matching. So we don't necessarily need to change our assertions for the tests that are looking for the header of `Applications`.
 
+But, we should update it. As many headings in this app will have the word "Applications." So we might as well take the time to quickly update the locator.
+
+```ts title="tests/util.ts"
+headingApplications: ["heading", { name: "All Applications" }],
+```
+
 Next we setup the normal table boilerplate. Setup the table head (`thead`) with table headers (`th`) and importantly for accessibility we'll need to add the `scope` attribute to the `th` elements. This indicates to the accessibility tree that this is the column of the header. Which allows us to use to get these elements by the role of `columnheader`.
 
 Without the `scope` attribute, when a screenreader reads one of the cells in this column, it will simply read the content of the cell. But with the `scope="col"` to indicate the header, a screenreader will also announce the header of the column. It's good accessibility to add this scope because it reduces mental overhead of needing to constantly remember what each column is for or needing to refer back to the column header if you forget.
