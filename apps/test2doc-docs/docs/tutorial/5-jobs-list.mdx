@@ -2234,7 +2234,7 @@ Looking at the next element in the header, we see a **Dashboard** link that poin
 First we'll add a selector for the Dashboard link.
 
 ```ts title="tests/util.ts"
-headerDashboard: ["link", { name: "Dashboard" }],
+linkDashboard: ["link", { name: "Dashboard" }],
 ```
 
 Then a simple test.
@@ -2246,7 +2246,7 @@ test("Dashboard link", async ({ page }, testInfo) => {
     await page.goto("/applications")
   })
 
-  const dashboardLink = page.getByRole(...selectors.headerDashboard)
+  const dashboardLink = page.getByRole(...selectors.linkDashboard)
 
   await test.step("the Dashboard link is visible in the header.", async () => {
     await screenshot(testInfo, dashboardLink, {
