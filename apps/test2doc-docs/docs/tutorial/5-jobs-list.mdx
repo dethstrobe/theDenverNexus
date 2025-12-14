@@ -1228,7 +1228,7 @@ export const List = async () => {
 }
 ```
 
-If you check your tests, everything should still be passing. But let's do one last refactor. We'll swap out our html table with the shadui table.
+If you check your tests, everything should still be passing. But let's do one last refactor. We'll swap out our html table with the shadcn/ui table.
 
 ```tsx title="src/app/components/ApplicationsTable.tsx" {2-9}
 import { ApplicationsWithRelations } from "@/app/pages/applications/List"
@@ -1287,7 +1287,7 @@ export const ApplicationsTable = ({ applications }: Props) => {
 }
 ```
 <details>
-We swap out the table elements with the shadui components
+We swap out the table elements with the shadcn/ui components
 
 - `table` to `Table`
 - `theader` to `TableHeader`
@@ -1528,7 +1528,7 @@ await expect(
 
 #### Implementing hard coded Contact
 
-We'll implement contacts using our shadui Avatar component.
+We'll implement contacts using our shadcn/ui Avatar component.
 
 ```tsx title="src/app/components/ApplicationsTable.tsx"
 import { Avatar, AvatarFallback } from './ui/avatar'
