@@ -7,7 +7,7 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "wrangler pages deploy ./build --project-name test2doc",
+    "deploy": "wrangler pages deploy ./build --project-name test2doc --account-id=8b50e58b6ba6cfe92b00446d6bfc252a",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
