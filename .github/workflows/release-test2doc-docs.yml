@@ -65,6 +65,7 @@ jobs:
       - name: Publish to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 8b50e58b6ba6cfe92b00446d6bfc252a
         working-directory: ./apps/test2doc-docs
         run: |
           pnpm run deploy
