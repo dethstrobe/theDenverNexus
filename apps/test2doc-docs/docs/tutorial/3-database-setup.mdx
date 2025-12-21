@@ -214,7 +214,7 @@ export const migrations = {
         await db.schema
           .createTable("companies")
           .addColumn("id", "text", (col) => col.primaryKey())
-          .addColumn("name", "text", (col) => col.notNull())
+          .addColumn("name", "text", (col) => col.notNull().unique())
           .addColumn("createdAt", "text", (col) =>
             col.notNull().defaultTo(defaultTime),
           )
@@ -395,7 +395,7 @@ Let's look at this on the migration schema for the `companies` and `contacts` ta
       await db.schema
         .createTable("companies")
         .addColumn("id", "text", (col) => col.primaryKey())
-        .addColumn("name", "text", (col) => col.notNull())
+        .addColumn("name", "text", (col) => col.notNull().unique())
         .addColumn("createdAt", "text", (col) =>
           col.notNull().defaultTo(defaultTime),
         )
@@ -443,7 +443,7 @@ export const migrations = {
         await db.schema
           .createTable("companies")
           .addColumn("id", "text", (col) => col.primaryKey())
-          .addColumn("name", "text", (col) => col.notNull())
+          .addColumn("name", "text", (col) => col.notNull().unique())
           .addColumn("createdAt", "text", (col) =>
             col.notNull().defaultTo(defaultTime),
           )
