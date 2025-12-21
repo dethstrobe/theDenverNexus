@@ -1644,11 +1644,21 @@ const applicationsQuery = db
     "applications.salaryMax",
     "companies.name as companyName",
     "applicationStatuses.status as status",
-    db.fn
-      .agg<
-        { firstName: string; lastName: string; id: string }[]
-      >("json_group_array", [sql`json_object('firstName', ${sql.ref("contacts.firstName")},'lastName', ${sql.ref("contacts.lastName")}), 'id', ${sql.ref("contacts.id")})`])
-      .as("contacts"),
+    sql<{ firstName: string; lastName: string; id: string }[]>`
+      COALESCE(
+        json_group_array(
+          CASE 
+            WHEN ${sql.ref("contacts.id")} IS NOT NULL 
+            THEN json_object(
+              'firstName', ${sql.ref("contacts.firstName")},
+              'lastName', ${sql.ref("contacts.lastName")}, 
+              'id', ${sql.ref("contacts.id")}
+            )
+          END
+        ) FILTER (WHERE ${sql.ref("contacts.id")} IS NOT NULL),
+        '[]'
+      )
+    `.as("contacts"),
   ])
   .groupBy([
     "applications.id",
@@ -1667,16 +1677,17 @@ const applicationsQuery = db
 - We want to add another join table but this time its a left join.
   - Left join tables mean that the data is optional.
   - Inner join tables mean in order to display the data at all, we need to find a matching data in that table.
-- We use a database function to build an array from the `Contacts` table.
-  - `.agg<{ firstName: string; lastName: string; id: string }[]>` is telling Kysely what kind of data structure we're expecting the DB function should return.
-    - In this case, we're expecting an array of object with 3 keys, `firstName`, `lastName`, and a unique `id`.
-  - `"json_group_array"` is a [function within SQLite](https://sqlite.org/json1.html#jgrouparray).
-    - The `json_group_array` function will aggregate the rows into a JSON array.
-  - ```sql`json_object('firstName', ${sql.ref("contacts.firstName")},'lastName', ${sql.ref("contacts.lastName")}), 'id', ${sql.ref("contacts.id")})` ```
-    - using the [`json_object`](https://sqlite.org/json1.html#jobj) function we're turning the data from the row into a JSON object.
-    - **Note:** We use `sql.ref` to safely reference column names. While we're not accepting user input here, it's good practice to use Kysely's built-in methods rather than string interpolation for column references.
-  - `.as("contacts")` maps the output of the DB function to this key, in our case, it maps it to `contacts`
-- Lastly we add a `groupBy` since left joins are usually a bit too aggressive, and might produce empty rows.
+- We are using a more advance SQL query to build the contacts.
+  - We type the return value with `<{ firstName: string; lastName: string; id: string }[]>` so that typescript knows what the data will look like.
+  - `COALESCE` is a sql function that returns the first non-null value
+    - In our case, if `json_group_array` returns null, then we use `[]` which creates an empty array.
+  - The `json_group_array` function will aggregate the rows into a JSON array.
+  - The `CASE` statement is similar to an `if..else` statement in JS.
+    - `WHEN` acts like our JS `if`, if this expression is true, then do this operation.
+    - The `THEN` called the `json_object` to build our contact object.
+  - The `FILTER` clause further ensures only non-null contact rows are included in the aggregation.
+  - We check for null contacts in both the `CASE` statement and `FILTER` clause to ensure robustness—the `CASE` prevents creating objects with null values, while `FILTER` prevents empty objects from being added to the array.
+- Lastly we add a `groupBy` since left joins can produce duplicate rows when there are multiple contacts per application. Grouping by the application fields ensures each application appears only once, with all its contacts aggregated into the array.
 
 </details>
 
