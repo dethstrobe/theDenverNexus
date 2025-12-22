@@ -74,7 +74,7 @@ importers:
         version: 2.1.1
       posthog-js:
         specifier: ^1.297.2
-        version: 1.306.1
+        version: 1.309.1
       prism-react-renderer:
         specifier: ^2.3.0
         version: 2.4.1(react@19.2.3)
@@ -90,7 +90,7 @@ importers:
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.10.5
-        version: 0.10.15(@cloudflare/workers-types@4.20251216.0)(@vitest/runner@4.0.15)(@vitest/snapshot@4.0.15)(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(jiti@2.6.1)(jsdom@27.1.0)(lightningcss@1.30.2)(msw@2.12.0(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.0)(tsx@4.21.0))
+        version: 0.10.15(@cloudflare/workers-types@4.20251216.0)(@vitest/runner@4.0.16)(@vitest/snapshot@4.0.16)(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(jiti@2.6.1)(jsdom@27.1.0)(lightningcss@1.30.2)(msw@2.12.0(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.0)(tsx@4.21.0))
       '@cloudflare/workers-types':
         specifier: ^4.20251003.0
         version: 4.20251216.0
@@ -2413,8 +2413,8 @@ packages:
   '@poppinss/exception@1.2.3':
     resolution: {integrity: sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==}
 
-  '@posthog/core@1.7.1':
-    resolution: {integrity: sha512-kjK0eFMIpKo9GXIbts8VtAknsoZ18oZorANdtuTj1CbgS28t4ZVq//HAWhnxEuXRTrtkd+SUJ6Ux3j2Af8NCuA==}
+  '@posthog/core@1.8.1':
+    resolution: {integrity: sha512-jfzBtQIk9auRi/biO+G/gumK5KxqsD5wOr7XpYMROE/I3pazjP4zIziinp21iQuIQJMXrDvwt9Af3njgOGwtew==}
 
   '@rollup/rollup-android-arm-eabi@4.53.3':
     resolution: {integrity: sha512-mRSi+4cBjrRLoaal2PnqH82Wqyb+d3HsPUN/W+WslCXsZsyHa9ZeQQX/pQsZaVIWDkPcpV6jJ+3KLbTbgnwv8w==}
@@ -6519,8 +6519,8 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.306.1:
-    resolution: {integrity: sha512-wO7bliv/5tlAlfoKCUzwkGXZVNexk0dHigMf9tNp0q1rzs62wThogREY7Tz7h/iWKYiuXy1RumtVlTmHuBXa1w==}
+  posthog-js@1.309.1:
+    resolution: {integrity: sha512-JUJcQhYzNNKO0cgnSbowCsVi2RTu75XGZ2EmnTQti4tMGRCTOv/HCnZasdFniBGZ0rLugQkaScYca/84Ta2u5Q==}
 
   preact@10.28.0:
     resolution: {integrity: sha512-rytDAoiXr3+t6OIP3WGlDd0ouCUG1iCWzkcY3++Nreuoi17y6T5i/zRhe6uYfoVcxq6YU+sBtJouuRDsq8vvqA==}
@@ -9003,10 +9003,10 @@ snapshots:
     optionalDependencies:
       workerd: 1.20251210.0
 
-  '@cloudflare/vitest-pool-workers@0.10.15(@cloudflare/workers-types@4.20251216.0)(@vitest/runner@4.0.15)(@vitest/snapshot@4.0.15)(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(jiti@2.6.1)(jsdom@27.1.0)(lightningcss@1.30.2)(msw@2.12.0(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.0)(tsx@4.21.0))':
+  '@cloudflare/vitest-pool-workers@0.10.15(@cloudflare/workers-types@4.20251216.0)(@vitest/runner@4.0.16)(@vitest/snapshot@4.0.16)(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(jiti@2.6.1)(jsdom@27.1.0)(lightningcss@1.30.2)(msw@2.12.0(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.0)(tsx@4.21.0))':
     dependencies:
-      '@vitest/runner': 4.0.15
-      '@vitest/snapshot': 4.0.15
+      '@vitest/runner': 4.0.16
+      '@vitest/snapshot': 4.0.16
       birpc: 0.2.14
       cjs-module-lexer: 1.4.3
       devalue: 5.6.1
@@ -10924,7 +10924,7 @@ snapshots:
 
   '@poppinss/exception@1.2.3': {}
 
-  '@posthog/core@1.7.1':
+  '@posthog/core@1.8.1':
     dependencies:
       cross-spawn: 7.0.6
 
@@ -15498,9 +15498,9 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.306.1:
+  posthog-js@1.309.1:
     dependencies:
-      '@posthog/core': 1.7.1
+      '@posthog/core': 1.8.1
       core-js: 3.47.0
       fflate: 0.4.8
       preact: 10.28.0
