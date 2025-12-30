@@ -2158,12 +2158,11 @@ const applicationFormSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
   jobTitle: z.string().min(1, "Job title is required"),
   jobDescription: z.string().optional().default(""),
-  applicationStatusId: z.string().transform((val) => {
-    const num = parseInt(val)
-    if (isNaN(num)) throw new Error("Invalid status ID")
-    return num
-  }),
-  applicationDate: z.string().min(1, "Application date is required"),
+  applicationStatusId: z.coerce
+    .number()
+    .min(1, "No Application Status selected")
+    .max(5, "Invalid Application Status selected"),
+  applicationDate: z.iso.datetime("Invalid date selected"),
   minSalary: z.string().optional().default(""),
   maxSalary: z.string().optional().default(""),
   applicationUrl: z.string().optional().default(""),
