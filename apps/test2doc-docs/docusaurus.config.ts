@@ -153,24 +153,6 @@ const config: Config = {
             },
           ],
         },
-        // {
-        //   title: "Newsletter",
-        //   items: [
-        //     {
-        //       // plain-html form (submits to same-origin /api/newsletter)
-        //       html: `
-        //         <form id="footer-newsletter-form" action="/api/newsletter" method="POST" enctype="multipart/form-data" class="footer__form">
-        //           <label for="address" class="footer__title">Join our newsletter</label>
-        //           <input id="address" name="address" type="email" placeholder="you@example.com" required class="footer__input" style="display: block; width: 100%; margin: 12px 0; padding: 5px;" />
-        //           <input name="name" type="text" placeholder="Your name (optional)" class="footer__input hide" />
-        //           <input name="hp" type="text" class="hide" />
-        //           <button type="submit" class="button button--secondary">Sign up</button>
-        //           <div id="footer-newsletter-msg" aria-live="polite" class="footer__msg"></div>
-        //         </form>
-        //       `,
-        //     },
-        //   ],
-        // },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} TEST2DOCS. Built with Docusaurus.`,
     },

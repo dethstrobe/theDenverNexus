@@ -69,14 +69,3 @@ jobs:
         working-directory: ./apps/test2doc-docs
         run: |
           pnpm run deploy
-
-      # - name: Build worker JS
-      #   working-directory: ./apps/test2doc-docs
-      #   run: pnpm run build:worker
-
-      # - name: Publish Worker
-      #   env:
-      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-      #   working-directory: ./apps/test2doc-docs
-      #   run: |
-      #     pnpm worker:publish

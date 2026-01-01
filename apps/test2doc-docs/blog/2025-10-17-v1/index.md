@@ -108,6 +108,8 @@ I did run into an error, where the gradient I originally added to the sunglasses
 ### Newsletter
 I'm moving the newsletter off Substack and using [Mailgun](https://www.mailgun.com/) to send emails automatically when I publish a new post. You might even be reading this now from your mailbox (though extremely unlikely).
 
+> **Update**: Moved off mailgun as it wasn't providing enough value. Will look into newsletter solutions later.
+
 The whole reason I did this was to automate the newsletter with blog post updates. Which Substack does not currently offer any APIs to handle this kind of automation. And I really don't want to have to manually take the markdown and parse it, and manually add it to Substack. And since Substack isn't really meeting my needs, I figured, how hard could it be to just do it myself?
 
 Moderately complicated.
