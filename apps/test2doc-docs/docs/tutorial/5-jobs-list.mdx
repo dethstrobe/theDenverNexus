@@ -3056,11 +3056,9 @@ import { link } from "@/app/shared/links"
 Now our test should fail at the point where it cannot find the archived row element. To make this pass, we'll need to change how our DB query works.
 
 ```tsx title="src/app/pages/applications/List.tsx"
-interface ListProps {
-  request: Request
-}
+import { RequestInfo } from "rwsdk/worker"
 
-export const List = async ({ request }: ListProps) => {
+export const List = async ({ request }: RequestInfo) => {
   const url = new URL(request.url)
   const status = url.searchParams.get("status")
 
