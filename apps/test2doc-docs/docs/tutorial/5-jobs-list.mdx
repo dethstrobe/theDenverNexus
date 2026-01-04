@@ -1023,7 +1023,7 @@ Now that we have a test with what we're expecting. We'll implement it to make th
     {applications.map((application) => (
       <tr key={application.id}>
         <td>{application.statusId}</td>
-        <td>{new Date(application.dateApplied).toLocaleDateString("en-US", {
+        <td>{new Date(application.dateApplied ?? 0).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -1186,11 +1186,14 @@ export const ApplicationsTable = ({ applications }: Props) => {
           <tr key={application.id}>
             <td>{application.status}</td>
             <td>
-              {new Date(application.dateApplied).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              {new Date(application.dateApplied ?? 0).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
             </td>
             <td>{application.jobTitle}</td>
             <td>{application.companyName}</td>
@@ -1264,11 +1267,14 @@ export const ApplicationsTable = ({ applications }: Props) => {
           <TableRow key={application.id}>
             <TableCell>{application.status}</TableCell>
             <TableCell>
-              {new Date(application.dateApplied).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              {new Date(application.dateApplied ?? 0).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
             </TableCell>
             <TableCell>{application.jobTitle}</TableCell>
             <TableCell>{application.companyName}</TableCell>
@@ -1310,7 +1316,7 @@ import { Badge } from "./ui/badge"
       <Badge>{application.status}</Badge>
     </TableCell>
     <TableCell>
-      {new Date(application.dateApplied).toLocaleDateString("en-US",
+      {new Date(application.dateApplied ?? 0).toLocaleDateString(
       ...
 ```
 <details>
