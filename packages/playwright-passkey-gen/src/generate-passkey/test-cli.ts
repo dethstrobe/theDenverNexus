@@ -6,7 +6,8 @@ const killServer = () => {
   try {
     if (server && !server.killed) server.kill()
   } catch {
-    /* ignore */
+    console.log("*** Failed to kill server ***")
+    process.exit(1)
   }
 }
 
