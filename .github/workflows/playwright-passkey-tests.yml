@@ -48,6 +48,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Build playwright-passkey dependency
+        run: pnpm build
+        working-directory: packages/playwright-passkey
 
       - name: Run tests
         run: pnpm ci:test
