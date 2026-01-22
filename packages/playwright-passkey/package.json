@@ -27,7 +27,7 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.17.1",
   "peerDependencies": {
-    "@playwright/test": "^1.56.1"
+    "@playwright/test": "^1.57.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1"

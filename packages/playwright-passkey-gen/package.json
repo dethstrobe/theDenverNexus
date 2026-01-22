@@ -14,6 +14,7 @@
     "start": "node ./dist/src/scripts/server.js",
     "dev": "pnpm build:watch & node --watch ./dist/src/scripts/server.js",
     "test": "pnpm passkey-gen --output src/scripts/testpasskey.ts && playwright test",
+    "test:ui": "playwright test --ui",
     "unit": "vitest",
     "ci:unit": "node ./src/generate-passkey/test-cli.ts",
     "ci:test": "pnpm build && pnpm ci:unit && pnpm test",
@@ -49,7 +50,7 @@
     "vitest": "^4.0.8"
   },
   "dependencies": {
-    "@playwright/test": "^1.56.1",
+    "@playwright/test": "^1.57.0",
     "@simplewebauthn/server": "^13.2.2",
     "commander": "^14.0.2"
   }
