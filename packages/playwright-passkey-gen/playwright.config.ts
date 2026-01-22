@@ -75,6 +75,6 @@ export default defineConfig({
   webServer: {
     command: "pnpm start",
     url: "http://localhost:5173",
-    reuseExistingServer: !process.env["CI"],
+    reuseExistingServer: false, // Always restart to pick up new test passkey
   },
 })
