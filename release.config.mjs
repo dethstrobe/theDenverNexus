@@ -3,7 +3,7 @@
  */
 export default {
   branches: ["main"],
-  repositoryUrl: "https://github.com/dethstrobe/theDenverNexus",
+  repositoryUrl: "https://github.com/Null-Sweat-LLC/theDenverNexus",
   pkgRoot: "packages/test2doc-playwright",
   plugins: [
     "@semantic-release/commit-analyzer",

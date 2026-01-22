@@ -27,7 +27,7 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "Null Sweat", // Usually your GitHub org/user name.
+  organizationName: "Null Sweat, LLC", // Usually your GitHub org/user name.
   projectName: "test2doc", // Usually your repo name.
 
   onBrokenLinks: "throw",
@@ -50,7 +50,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/dethstrobe/theDenverNexus/tree/main/apps/test2doc-docs/",
+            "https://github.com/Null-Sweat-LLC/theDenverNexus/tree/main/apps/test2doc-docs/",
         },
         blog: {
           showReadingTime: true,
@@ -61,7 +61,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/dethstrobe/theDenverNexus/tree/main/apps/test2doc-docs/",
+            "https://github.com/Null-Sweat-LLC/theDenverNexus/tree/main/apps/test2doc-docs/",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
@@ -96,7 +96,7 @@ const config: Config = {
         },
         { to: "/blog", label: "Blog", position: "left" },
         {
-          href: "https://github.com/dethstrobe/theDenverNexus/tree/main/packages/test2doc-playwright",
+          href: "https://github.com/Null-Sweat-LLC/theDenverNexus/tree/main/packages/test2doc-playwright",
           label: "GitHub",
           position: "right",
         },
@@ -145,7 +145,7 @@ const config: Config = {
             },
             {
               label: "GitHub",
-              href: "https://github.com/dethstrobe/theDenverNexus/tree/main/packages/test2doc-playwright",
+              href: "https://github.com/Null-Sweat-LLC/theDenverNexus/tree/main/packages/test2doc-playwright",
             },
             {
               label: "Discord",
@@ -154,7 +154,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} TEST2DOCS. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Null Sweat, LLC. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

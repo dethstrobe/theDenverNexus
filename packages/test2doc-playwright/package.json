@@ -19,7 +19,7 @@
   "homepage": "https://test2doc.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dethstrobe/theDenverNexus.git",
+    "url": "git+https://github.com/Null-Sweat-LLC/theDenverNexus.git",
     "directory": "packages/test2doc-playwright"
   },
   "license": "Apache-2.0",

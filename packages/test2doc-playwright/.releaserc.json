@@ -1,7 +1,7 @@
 {
   "branches": ["main"],
   "tagFormat": "test2doc-playwright-v${version}",
-  "repositoryUrl": "https://github.com/dethstrobe/theDenverNexus",
+  "repositoryUrl": "https://github.com/Null-Sweat-LLC/theDenverNexus",
   "plugins": [
     [
       "@semantic-release/commit-analyzer",

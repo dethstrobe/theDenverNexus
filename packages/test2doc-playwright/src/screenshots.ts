@@ -40,8 +40,8 @@ interface MultiLocatorScreenshot {
 /**
  * Takes a screenshot of the specified target element(s) and attaches it to the test report.
  * @param testInfo [The TestInfo object](https://playwright.dev/docs/api/class-testinfo) supplied from the test block, it is the second argument to the test function.
- * @param target A [Page](https://playwright.dev/docs/api/class-page), [Locator](https://playwright.dev/docs/locators), or [Array of MultiLocatorScreenshot](https://github.com/dethstrobe/theDenverNexus/blob/main/packages/test2doc-playwright/README.md#highlight-multiple-elements) options
- * @param screenshotOptions Screenshot options using [Playwright's PageScreenshotOptions](https://playwright.dev/docs/api/class-page#page-screenshot) and/or [Test2Doc's AnnotationOptions](https://github.com/dethstrobe/theDenverNexus/blob/main/packages/test2doc-playwright/README.md#annotation-object-properties) for annotation highlighting.
+ * @param target A [Page](https://playwright.dev/docs/api/class-page), [Locator](https://playwright.dev/docs/locators), or [Array of MultiLocatorScreenshot](https://www.test2doc.com/docs/user-guide/screenshots/#highlight-multiple-elements) options.
+ * @param screenshotOptions Screenshot options using [Playwright's PageScreenshotOptions](https://playwright.dev/docs/api/class-page#page-screenshot) and/or [Test2Doc's AnnotationOptions](https://www.test2doc.com/docs/user-guide/screenshots/annotation) for annotation highlighting.
  * @returns {Promise<void>} A Promise that resolves when the screenshot is taken and attached to the test report.
  * @example
  * // Single element with annotation

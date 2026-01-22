@@ -1,7 +1,12 @@
 {
   "name": "@test2doc/playwright-passkey-gen",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A utility to generate passkeys using Playwright",
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Null-Sweat-LLC/theDenverNexus.git",
+    "directory": "packages/playwright-passkey-gen"
+  },
   "main": "dist/src/generate-passkey/index.js",
   "module": "dist/src/generate-passkey/index.js",
   "types": "dist/src/generate-passkey/index.d.ts",

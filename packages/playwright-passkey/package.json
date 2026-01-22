@@ -1,8 +1,13 @@
 {
   "name": "@test2doc/playwright-passkey",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Playwright utilities for testing passkeys (WebAuthn)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Null-Sweat-LLC/theDenverNexus.git",
+    "directory": "packages/playwright-passkey"
+  },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

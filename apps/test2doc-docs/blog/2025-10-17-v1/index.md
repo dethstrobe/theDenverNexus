@@ -114,7 +114,7 @@ The whole reason I did this was to automate the newsletter with blog post update
 
 Moderately complicated.
 
-Still doable, but it did require some setup. But you know what. I'm a goddamn engineer. I'm not trying to send humans to the moon. I'm just sending some emails when I make a post. Anyway, the automation is all set up. There is a bug with [images being broken](https://github.com/dethstrobe/theDenverNexus/issues/253) for the emails...which I'll be looking into *soon*. So next email you get from me, that'll have working images. I swear.
+Still doable, but it did require some setup. But you know what. I'm a goddamn engineer. I'm not trying to send humans to the moon. I'm just sending some emails when I make a post. Anyway, the automation is all set up. There is a bug with [images being broken](https://github.com/Null-Sweat-LLC/theDenverNexus/issues/253) for the emails...which I'll be looking into *soon*. So next email you get from me, that'll have working images. I swear.
 
 Also, in the footer, there is a signup form. If you're not subscribed, please do. That is assuming you want to hear about the latest from test2doc. Don't just pity subscribe to my newsletter; that'd be silly.
 
