@@ -13,7 +13,7 @@
   "scripts": {
     "start": "node ./dist/src/scripts/server.js",
     "dev": "pnpm build:watch & node --watch ./dist/src/scripts/server.js",
-    "test": "pnpm passkey-gen --output src/scripts/testpasskey.ts && pnpm build && playwright test",
+    "test": "playwright test",
     "test:ui": "playwright test --ui",
     "unit": "vitest",
     "ci:unit": "node ./src/generate-passkey/test-cli.ts",
