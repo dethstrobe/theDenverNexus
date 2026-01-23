@@ -12,7 +12,7 @@ This tutorial is based off of Redwood SDK's [Applywize tutorial](https://github.
 2. How to follow Test Driven Development.
 3. How to generate docs using Test2Doc.
 
-The original RWSDK project for this project can be found on [Applywize repo](https://github.com/redwoodjs/applywize?tab=readme-ov-file).
+The original RWSDK code for this project can be found on [Applywize repo](https://github.com/redwoodjs/applywize?tab=readme-ov-file).
 
 In this tutorial, we'll walk through building Applywize from the ground up, covering everything from database design to user authentication to deployment. While experience with React and JavaScript is helpful, we'll explain core concepts along the way to ensure you can follow along successfully.
 
