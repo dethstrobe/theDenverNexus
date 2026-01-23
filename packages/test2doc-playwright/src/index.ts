@@ -94,17 +94,26 @@ class Test2DocReporter implements Reporter {
   onBegin(_config: FullConfig, suite: Suite) {
     this.docs = []
     this.docMap.clear()
+    let setupTestsCount = 0
     this.docs = suite.suites.flatMap(
       (project) =>
         project.suites.flatMap(({ suites, tests, title }) => {
-          if (/\.setup\.[jt]s$/.test(title)) return []
+          // If this is a setup file, we'll only count it for progress but will not generate docs
+          if (/\.setup\.[jt]s$/.test(title)) {
+            const countSuiteTests = (acc: number, suite: Suite): number =>
+              suite.suites.reduce(countSuiteTests, acc + suite.tests.length)
+
+            setupTestsCount += suites.reduce(countSuiteTests, tests.length)
+            return []
+          }
+
           return [
             ...suites.map((s) => this.buildDocTree(s)),
             ...(tests.length > 0 ? [this.buildTestDocTree(title, tests)] : []),
           ]
         }) || [],
     )
-    this.testResults = new Array(this.totalTests).fill(".")
+    this.testResults = new Array(this.totalTests + setupTestsCount).fill(".")
 
     writeLine(
       `Starting documentation generation for ${this.totalTests} tests...`,
@@ -194,7 +203,7 @@ class Test2DocReporter implements Reporter {
         `Documentation generation aborted due to test failure: ${test.title}`,
       )
 
-      if (!process.env['IGNORE_TEST_FAILURES']) {
+      if (!process.env["IGNORE_TEST_FAILURES"]) {
         process.exit(1)
       }
     } else if (result.status === "skipped") {
@@ -211,9 +220,11 @@ class Test2DocReporter implements Reporter {
 
     // Write the progress bar
     const progressBar = `[${this.testResults.join("")}]`
-    const percentage = Math.round((this.completedTests / this.totalTests) * 100)
+    const percentage = Math.round(
+      (this.completedTests / this.testResults.length) * 100,
+    )
     process.stdout.write(
-      `${progressBar} ${this.completedTests}/${this.totalTests} (${percentage}%)`,
+      `${progressBar} ${this.completedTests}/${this.testResults.length} (${percentage}%)`,
     )
   }
 

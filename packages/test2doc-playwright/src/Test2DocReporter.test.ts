@@ -27,6 +27,9 @@ import {
   mockTestNewUserRegistration,
   mockTestLoggedInUser,
   mockTestLoggedOutUser,
+  mockSingleSetupFileSuite,
+  mockSetupTest,
+  mockAuthenticatedTest,
 } from "./testUtils/index.js"
 
 const mockFullConfig: FullConfig = {} as FullConfig
@@ -307,7 +310,9 @@ sidebar_position: 2
     expect(mockLogging).toHaveBeenCalledWith("[PPPPPPP] 7/7 (100%)")
 
     expect(mockLogging).toHaveBeenCalledWith("\n\n")
-    expect(mockLogging).toHaveBeenCalledWith("Cleaning up old generated files...\n")
+    expect(mockLogging).toHaveBeenCalledWith(
+      "Cleaning up old generated files...\n",
+    )
     expect(mockLogging).toHaveBeenCalledWith(
       "Generating documentation files...\n",
     )
@@ -490,7 +495,7 @@ Given user is on login page
     })
   })
 
-  it("should generate documentation for each project (expect for .setup.ts files)", () => {
+  it("should generate documentation for each project (except for .setup.ts files)", () => {
     const reporter = setup()
 
     reporter.onBegin(mockFullConfig, mockSuiteWithMultiProjects)
@@ -517,6 +522,26 @@ Given user is on login page
 ## setting button should set
 
 `)
+
+    // Progress bar should count the setup file
+    expect(mockLogging).toHaveBeenCalledWith("[........] 0/8 (0%)")
+  })
+
+  it("progress bar should count setup files towards total tests", () => {
+    const reporter = setup()
+
+    reporter.onBegin(mockFullConfig, mockSingleSetupFileSuite)
+    reporter.onTestEnd(mockSetupTest, {
+      status: "passed",
+    } as TestResult)
+    reporter.onTestEnd(mockAuthenticatedTest, {
+      status: "passed",
+    } as TestResult)
+    reporter.onEnd()
+
+    expect(mockLogging).toHaveBeenCalledWith("[..] 0/2 (0%)")
+    expect(mockLogging).toHaveBeenCalledWith("[P.] 1/2 (50%)")
+    expect(mockLogging).toHaveBeenCalledWith("[PP] 2/2 (100%)")
   })
 
   it("should not clean up user directories with generated files", () => {

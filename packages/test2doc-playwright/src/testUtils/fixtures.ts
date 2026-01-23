@@ -251,6 +251,52 @@ export const mockSuiteForCategories: Suite = {
   ],
 }
 
+export const mockSetupTest: TestCase = {
+  ...baseTestCase,
+  title: "setup auth",
+  id: `mock-id-${++mockId}`,
+}
+
+export const mockAuthenticatedTest: TestCase = {
+  ...baseTestCase,
+  title: "user name and profile should be visible",
+  id: `mock-id-${++mockId}`,
+}
+
+export const mockSingleSetupFileSuite: Suite = {
+  ...baseSuite,
+  title: "", // Root Suite
+  type: "root",
+  suites: [
+    {
+      ...baseSuite,
+      title: "setup",
+      type: "project",
+      suites: [
+        {
+          ...baseSuite,
+          title: "auth.setup.ts",
+          type: "file",
+          tests: [mockSetupTest],
+        },
+      ],
+    },
+    {
+      ...baseSuite,
+      title: "authenticated",
+      type: "project",
+      suites: [
+        {
+          ...baseSuite,
+          title: "authenticated.spec.ts",
+          type: "file",
+          tests: [mockAuthenticatedTest],
+        },
+      ],
+    },
+  ],
+}
+
 export const mockSuiteWithMultiProjects: Suite = {
   ...baseSuite,
   title: "", // Root Suite
@@ -289,10 +335,39 @@ export const mockSuiteWithMultiProjects: Suite = {
           ...baseSuite,
           title: "auth.setup.ts",
           type: "file",
+          suites: [
+            {
+              ...baseSuite,
+              title: "nested setup describe",
+              type: "describe",
+              suites: [
+                {
+                  ...baseSuite,
+                  title: "deeply nested setup describe",
+                  type: "describe",
+                  tests: [
+                    {
+                      ...baseTestCase,
+                      title: "deeply nested setup test",
+                      id: `mock-id-${++mockId}`,
+                    },
+                  ],
+                },
+              ],
+              tests: [
+                {
+                  ...baseTestCase,
+                  title: "nested setup test",
+                  id: `mock-id-${++mockId}`,
+                },
+              ],
+            },
+          ],
           tests: [
+            mockSetupTest,
             {
               ...baseTestCase,
-              title: "setup auth",
+              title: "setup admin auth",
               id: `mock-id-${++mockId}`,
             },
           ],
@@ -309,11 +384,7 @@ export const mockSuiteWithMultiProjects: Suite = {
           title: "authenticated.spec.ts",
           type: "file",
           tests: [
-            {
-              ...baseTestCase,
-              title: "user name and profile should be visible",
-              id: `mock-id-${++mockId}`,
-            },
+            mockAuthenticatedTest,
             {
               ...baseTestCase,
               title: "setting button should set",
