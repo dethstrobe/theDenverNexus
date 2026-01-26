@@ -2,3 +2,8 @@ development:
   label: Development
   permalink: /development
   description: Talkin' about development
+
+testing:
+  label: Testing
+  permalink: /testing
+  description: All things testing. Best practices, tools, and tips.
