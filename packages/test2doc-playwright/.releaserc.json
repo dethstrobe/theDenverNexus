@@ -19,7 +19,7 @@
       "@semantic-release/exec",
       {
         "prepareCmd": "pnpm build && sed -i.bak 's/\"version\": \"[^\"]*\"/\"version\": \"${nextRelease.version}\"/' package.json && rm package.json.bak",
-        "publishCmd": "npm publish --access public"
+        "publishCmd": "npm publish --provenance --access public"
       }
     ],
     [
