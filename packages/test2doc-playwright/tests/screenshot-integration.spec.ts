@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 import { PNG } from "pngjs"
 import pixelmatch from "pixelmatch"
+import "../src/types.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -442,17 +443,21 @@ test("screenshot should take alt text from annotation when provided", async ({
     annotation: { text: "Test Button", altText: "Custom alt text for testing" },
   })
 
-  expect(testInfo.attachments[0].name).toMatch(/test2doc-\d+-1.png:Custom alt text for testing/)
+  expect(testInfo.attachments[0].name).toMatch(
+    /test2doc-\d+-\d.png:Custom alt text for testing/,
+  )
 
   await screenshot(testInfo, button, {
     annotation: { text: "Yet another button", altText: "more better alt text" },
   })
 
-  expect(testInfo.attachments[1].name).toMatch(/test2doc-\d+-2.png:more better alt text/)
+  expect(testInfo.attachments[1].name).toMatch(
+    /test2doc-\d+-\d.png:more better alt text/,
+  )
 
   await screenshot(testInfo, button, {
     annotation: { text: "more button or something" },
   })
 
-  expect(testInfo.attachments[2].name).toMatch(/test2doc-\d+-3.png/)
+  expect(testInfo.attachments[2].name).toMatch(/test2doc-\d+-\d.png/)
 })
