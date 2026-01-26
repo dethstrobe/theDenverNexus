@@ -223,7 +223,7 @@ sidebar_position: 1
 ### should open privacy policy in new tab
 
 Given user is on login page
-![screenshot](./${mockScreenshotName5})
+![screenshot](./test2doc-5.png)
 
 `,
     )
@@ -246,22 +246,22 @@ parse_number_prefixes: true
 ### should redirect to dashboard on successful login
 
 Given user is on login page
-![screenshot](./${mockScreenshotName1})
+![screenshot](./test2doc-1.png)
 
 ## Failed Login
 
 ### should display error message on failed login
 
 Given user is on login page
-![screenshot](./${mockScreenshotName2})
-![Alt Text](./${mockScreenshotName3})
+![screenshot](./test2doc-2.png)
+![Alt Text](./test2doc-3.png)
 
 ## link to privacy policy
 
 ### should open privacy policy in new tab
 
 Given user is on login page
-![screenshot](./${mockScreenshotName4})
+![screenshot](./test2doc-4.png)
 
 `,
     )
@@ -286,7 +286,7 @@ sidebar_position: 2
 
 `,
     )
-    expect(readFileSync(`${tempDir}/${mockScreenshotName1}`)).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-1.png`)).toEqual(
       mockScreenshotBuffer,
     )
 

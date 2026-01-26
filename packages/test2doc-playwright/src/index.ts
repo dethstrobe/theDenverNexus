@@ -273,9 +273,14 @@ class Test2DocReporter implements Reporter {
     }
   }
 
+  private transformScreenshotFilename(name: string): string {
+    return name.replace(/test2doc-\d+-/, "test2doc-")
+  }
+
   private generateScreenshots(output: string) {
     this.screenshotMoveQueue.forEach(({ name, buffer }) => {
-      const dest = `${output}/${name}`
+      const filename = this.transformScreenshotFilename(name)
+      const dest = `${output}/${filename}`
       writeFileSync(dest, buffer)
     })
     this.screenshotMoveQueue = []
@@ -368,7 +373,10 @@ class Test2DocReporter implements Reporter {
             if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
               const [filename, altText] = step.screenshot.name.split(":") ?? []
-              markdown += `![${altText ?? "screenshot"}](./${filename ?? step.screenshot.name})\n`
+              const transformedFilename = this.transformScreenshotFilename(
+                filename ?? step.screenshot.name,
+              )
+              markdown += `![${altText ?? "screenshot"}](./${transformedFilename})\n`
             }
           }
           markdown += "\n"
