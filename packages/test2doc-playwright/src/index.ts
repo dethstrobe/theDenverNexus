@@ -23,6 +23,7 @@ import type {
 } from "./DocMeta.js"
 import { convertToKebabCase } from "./utils.js"
 import { join } from "node:path"
+import crypto from "node:crypto"
 
 interface DocNode {
   title: string
@@ -273,13 +274,13 @@ class Test2DocReporter implements Reporter {
     }
   }
 
-  private transformScreenshotFilename(name: string): string {
-    return name.replace(/test2doc-\d+-/, "test2doc-")
+  private generateHashedScreenshotFilename(image: Buffer): string {
+    return `test2doc-${crypto.createHash("sha256").update(image).digest("hex").slice(0, 12)}.png`
   }
 
   private generateScreenshots(output: string) {
-    this.screenshotMoveQueue.forEach(({ name, buffer }) => {
-      const filename = this.transformScreenshotFilename(name)
+    this.screenshotMoveQueue.forEach(({ buffer }) => {
+      const filename = this.generateHashedScreenshotFilename(buffer)
       const dest = `${output}/${filename}`
       writeFileSync(dest, buffer)
     })
@@ -372,9 +373,9 @@ class Test2DocReporter implements Reporter {
             }
             if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
-              const [filename, altText] = step.screenshot.name.split(":") ?? []
-              const transformedFilename = this.transformScreenshotFilename(
-                filename ?? step.screenshot.name,
+              const [, altText] = step.screenshot.name.split(":") ?? []
+              const transformedFilename = this.generateHashedScreenshotFilename(
+                step.screenshot.buffer,
               )
               markdown += `![${altText ?? "screenshot"}](./${transformedFilename})\n`
             }

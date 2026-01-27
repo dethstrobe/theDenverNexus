@@ -6,7 +6,6 @@
       "esnext",
       "DOM"
     ] /* Specify a list of library files to be included in the compilation. */,
-    "types": ["node"],
     "rootDir": "./src" /* Specify the root directory of input files. */,
     "sourceMap": true /* Generates corresponding .map file. */,
 
@@ -48,9 +47,6 @@
   "include": ["src/**/*", "bin"],
   "exclude": [
     "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/testUtils/*.ts"
+    "dist"
   ]
 }

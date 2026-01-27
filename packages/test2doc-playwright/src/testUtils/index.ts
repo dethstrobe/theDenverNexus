@@ -7,7 +7,7 @@ import {
 } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
-import Test2DocReporter from ".."
+import Test2DocReporter from "../index.js"
 export * from "./fixtures.js"
 
 export const tempDir = mkdtempSync(join(tmpdir(), "test2doc-"))

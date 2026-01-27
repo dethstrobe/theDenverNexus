@@ -64,10 +64,12 @@ describe("Test2DocReporter", () => {
 
   it("should generate markdown for each root describe block in a file", () => {
     const reporter = setup()
-    const mockScreenshotBuffer = Buffer.from("mock image data")
+    let bufferCounter = 0
+    const createMockScreenshotBuffer = () =>
+      Buffer.from(`mock image data ${bufferCounter++}`)
     writeFileSync(
       join(tempDir, "test2doc-1704067218000-1.png"),
-      mockScreenshotBuffer,
+      createMockScreenshotBuffer(),
     )
     writeFileSync(join(tempDir, "test2doc-old.md"), "# Old Documentation")
     mkdirSync(join(tempDir, "test2doc-old-dir"))
@@ -88,14 +90,18 @@ describe("Test2DocReporter", () => {
     reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2 = `test2doc-${Date.now() + 999}-2.png`
-    const mockScreenshotName3 = `test2doc-${Date.now() + 1001}-3.png`
     const mockScreenshotName3WithAltText = `test2doc-${Date.now() + 1001}-3.png:Alt Text`
     const mockScreenshotName4 = `test2doc-${Date.now() + 1101}-4.png`
     const mockScreenshotName5 = `test2doc-${Date.now() + 1201}-5.png`
+    const buffer1 = createMockScreenshotBuffer()
+    const buffer2 = createMockScreenshotBuffer()
+    const buffer3 = createMockScreenshotBuffer()
+    const buffer4 = createMockScreenshotBuffer()
+    const buffer5 = createMockScreenshotBuffer()
     const mockAttachmentSuccess = [
       {
         name: mockScreenshotName1,
-        body: mockScreenshotBuffer,
+        body: buffer1,
         contentType: "image/png",
       },
     ]
@@ -103,12 +109,12 @@ describe("Test2DocReporter", () => {
       ...mockAttachmentSuccess,
       {
         name: mockScreenshotName2,
-        body: mockScreenshotBuffer,
+        body: buffer2,
         contentType: "image/png",
       },
       {
         name: mockScreenshotName3WithAltText,
-        body: mockScreenshotBuffer,
+        body: buffer3,
         contentType: "image/png",
       },
     ]
@@ -116,7 +122,7 @@ describe("Test2DocReporter", () => {
       ...mockAttachmentFail,
       {
         name: mockScreenshotName4,
-        body: mockScreenshotBuffer,
+        body: buffer4,
         contentType: "image/png",
       },
     ]
@@ -124,7 +130,7 @@ describe("Test2DocReporter", () => {
       ...mockAttachmentPrivacyPolicyLogin,
       {
         name: mockScreenshotName5,
-        body: mockScreenshotBuffer,
+        body: buffer5,
         contentType: "image/png",
       },
     ]
@@ -223,7 +229,7 @@ sidebar_position: 1
 ### should open privacy policy in new tab
 
 Given user is on login page
-![screenshot](./test2doc-5.png)
+![screenshot](./test2doc-0d5626c46ad3.png)
 
 `,
     )
@@ -246,22 +252,22 @@ parse_number_prefixes: true
 ### should redirect to dashboard on successful login
 
 Given user is on login page
-![screenshot](./test2doc-1.png)
+![screenshot](./test2doc-fc6a5aa2918b.png)
 
 ## Failed Login
 
 ### should display error message on failed login
 
 Given user is on login page
-![screenshot](./test2doc-2.png)
-![Alt Text](./test2doc-3.png)
+![screenshot](./test2doc-be826aa977e6.png)
+![Alt Text](./test2doc-df78fdc04e9c.png)
 
 ## link to privacy policy
 
 ### should open privacy policy in new tab
 
 Given user is on login page
-![screenshot](./test2doc-4.png)
+![screenshot](./test2doc-89d4efdc31b3.png)
 
 `,
     )
@@ -286,8 +292,20 @@ sidebar_position: 2
 
 `,
     )
-    expect(readFileSync(`${tempDir}/test2doc-1.png`)).toEqual(
-      mockScreenshotBuffer,
+    expect(readFileSync(`${tempDir}/test2doc-fc6a5aa2918b.png`)).toEqual(
+      buffer1,
+    )
+    expect(readFileSync(`${tempDir}/test2doc-be826aa977e6.png`)).toEqual(
+      buffer2,
+    )
+    expect(readFileSync(`${tempDir}/test2doc-df78fdc04e9c.png`)).toEqual(
+      buffer3,
+    )
+    expect(readFileSync(`${tempDir}/test2doc-89d4efdc31b3.png`)).toEqual(
+      buffer4,
+    )
+    expect(readFileSync(`${tempDir}/test2doc-0d5626c46ad3.png`)).toEqual(
+      buffer5,
     )
 
     // Logging expectations
