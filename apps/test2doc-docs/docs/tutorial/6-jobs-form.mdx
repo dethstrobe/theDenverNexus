@@ -111,7 +111,7 @@ Turns out it's finding 2 link elements with the name of "New Application".
 
 There are 2 ways we can resolve this:
 
-- Just grab the first element. They both elements have the same functionality, so there is no accessibility concerns.
+- Just grab the first element. Both elements have the same functionality, so there is no accessibility concerns.
 - Hide one of the links from the accessibility tree with `aria-hidden` and `tabIndex={-1}`.
 
 Both approaches are valid. Since both links perform the same action, having duplicate accessible elements isn't an accessibility issue.
