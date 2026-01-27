@@ -25,7 +25,7 @@
     "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUncheckedIndexedAccess": true /* Include 'undefined' in the type of indexed access. */,
-    "noPropertyAccessFromIndexSignature": true /* Disallow dot-accessing properties with string index signatures. */,
+    "noPropertyAccessFromIndexSignature": false /* Allow dot-accessing properties with string index signatures (disabled to work with Biome). */,
     "assumeChangesOnlyAffectDirectDependencies": false /* More accurate incremental builds. */,
 
     /* Module Resolution Options */

@@ -35,7 +35,7 @@ import {
 const mockFullConfig: FullConfig = {} as FullConfig
 
 describe("Test2DocReporter", () => {
-  let mockLogging: MockInstance<(...args: any[]) => void>
+  let mockLogging: MockInstance<(...args: unknown[]) => boolean>
   beforeEach(() => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2024-01-01T00:00:00Z"))
