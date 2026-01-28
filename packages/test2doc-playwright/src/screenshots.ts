@@ -26,6 +26,8 @@ export interface AnnotationOptions {
   arrowStrokeStyle?: string // Color of the arrow
   arrowLineWidth?: number // Width of the arrow line
   altText?: string // Alt text for the screenshot image
+  figure?: boolean // Whether to wrap screenshot in a figure element
+  caption?: string // Caption text for figcaption (defaults to annotation text if not provided)
 }
 
 interface ScreenshotOptions extends PageScreenshotOptions {
@@ -35,6 +37,19 @@ interface ScreenshotOptions extends PageScreenshotOptions {
 interface MultiLocatorScreenshot {
   target: Locator
   options?: ScreenshotOptions
+}
+
+const getMetadataSuffix = (annotation: AnnotationOptions): string => {
+  if (annotation.figure) {
+    return `[test2doc_screenshot]:${JSON.stringify({
+      figure: true,
+      ...(annotation.caption && { caption: annotation.caption }),
+    })}`
+  }
+  if (annotation.altText) {
+    return `:${annotation.altText}`
+  }
+  return ""
 }
 
 /**
@@ -63,7 +78,7 @@ export const screenshot = async (
     ...overrideAnnotations,
   }
 
-  const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png${annotation.altText ? `:${annotation.altText}` : ""}`
+  const filename = `test2doc-${Date.now()}-${++screenshotCounter}.png${getMetadataSuffix(annotation)}`
 
   const screenshotBuffer: Buffer =
     "highlight" in target || Array.isArray(target)

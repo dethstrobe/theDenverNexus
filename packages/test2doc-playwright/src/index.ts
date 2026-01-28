@@ -397,20 +397,26 @@ class Test2DocReporter implements Reporter {
               )
 
               // Parse screenshot metadata (supports both legacy :altText and new JSON format)
-              const { caption = "screenshot", figure } =
-                this.parseScreenshotMetadata(step.screenshot.name)
+              const { caption, figure } = this.parseScreenshotMetadata(
+                step.screenshot.name,
+              )
 
               if (figure) {
                 // Generate figure/figcaption format
+                const altText = caption ?? "screenshot"
                 markdown += `<figure>
 
-![${caption}](./${transformedFilename})
-<figcaption>${caption}</figcaption>
+![${altText}](./${transformedFilename})${
+                  caption
+                    ? `
+<figcaption>${caption}</figcaption>`
+                    : ""
+                }
 </figure>
 `
               } else {
                 // Generate standard markdown image
-                markdown += `![${caption}](./${transformedFilename})\n`
+                markdown += `![${caption ?? "screenshot"}](./${transformedFilename})\n`
               }
             }
           }

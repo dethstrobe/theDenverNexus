@@ -626,8 +626,10 @@ Given user is on login page
 
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2WithFigure = `test2doc-${Date.now() + 600}-2.png[test2doc_screenshot]:${JSON.stringify({ figure: true, caption: "User login screen" })}`
+    const mockScreenshotName3FigureNoCaption = `test2doc-${Date.now() + 700}-3.png[test2doc_screenshot]:${JSON.stringify({ figure: true })}`
     const buffer1 = createMockScreenshotBuffer()
     const buffer2 = createMockScreenshotBuffer()
+    const buffer3 = createMockScreenshotBuffer()
 
     const mockAttachmentWithFigure = [
       {
@@ -640,9 +642,14 @@ Given user is on login page
         body: buffer2,
         contentType: "image/png",
       },
+      {
+        name: mockScreenshotName3FigureNoCaption,
+        body: buffer3,
+        contentType: "image/png",
+      },
     ]
 
-    vi.advanceTimersByTime(700)
+    vi.advanceTimersByTime(800)
 
     reporter.onStepEnd(
       mockTestSuccess,
@@ -660,12 +667,20 @@ Given user is on login page
     // Regular screenshot without figure should still work with standard markdown
     expect(content).toContain("![screenshot](./test2doc-b67cfe621cc5.png)")
 
-    // Screenshot with figure metadata should be wrapped in figure/figcaption
+    // Screenshot with figure and caption should include figcaption
     expect(content).toContain(
       `<figure>
 
 ![User login screen](./test2doc-fc6a5aa2918b.png)
 <figcaption>User login screen</figcaption>
+</figure>`,
+    )
+
+    // Screenshot with figure but no caption should not include figcaption
+    expect(content).toContain(
+      `<figure>
+
+![screenshot](./test2doc-be826aa977e6.png)
 </figure>`,
     )
   })

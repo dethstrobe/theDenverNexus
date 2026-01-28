@@ -461,3 +461,48 @@ test("screenshot should take alt text from annotation when provided", async ({
 
   expect(testInfo.attachments[2].name).toMatch(/test2doc-\d+-\d.png/)
 })
+
+test("screenshot should support figure and caption metadata for HTML figure elements", async ({
+  page,
+}, testInfo) => {
+  await setup(page)
+
+  const button = page.getByRole("button", { name: "Click Me" })
+
+  // Screenshot with figure and caption
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Test Button",
+      figure: true,
+      caption: "User login button",
+    },
+  })
+
+  expect(testInfo.attachments[0].name).toMatch(
+    /test2doc-\d+-\d.png\[test2doc_screenshot\]:\{"figure":true,"caption":"User login button"\}/,
+  )
+
+  // Screenshot with figure but no custom caption
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Another button",
+      figure: true,
+    },
+  })
+
+  expect(testInfo.attachments[1].name).toMatch(
+    /test2doc-\d+-\d.png\[test2doc_screenshot\]:\{"figure":true\}/,
+  )
+
+  // Screenshot with figure and caption but no annotation text
+  await screenshot(testInfo, button, {
+    annotation: {
+      figure: true,
+      caption: "Submit button",
+    },
+  })
+
+  expect(testInfo.attachments[2].name).toMatch(
+    /test2doc-\d+-\d.png\[test2doc_screenshot\]:\{"figure":true,"caption":"Submit button"\}/,
+  )
+})
