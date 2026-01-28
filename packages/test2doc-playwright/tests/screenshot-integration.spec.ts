@@ -282,6 +282,42 @@ test("screenshot with arrow pointing to the element", async ({
   await expectScreenshotToMatch(testInfo, "arrow-position-right.png")
 })
 
+test("screenshot with arrow on left/right should have vertically centered text", async ({
+  page,
+}, testInfo) => {
+  await setup(page)
+
+  const button = page.getByRole("button", { name: "Click Me" })
+
+  // Left position with multi-character text to verify vertical centering
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Login Button",
+      position: "left",
+      showArrow: true,
+      labelBoxFillStyle: "rgba(255, 255, 0, 0.8)",
+      labelBoxStrokeStyle: "rgba(0, 0, 0, 1)",
+      labelBoxLineWidth: 2,
+    },
+  })
+
+  await expectScreenshotToMatch(testInfo, "arrow-text-align-left.png")
+
+  // Right position with multi-character text to verify vertical centering
+  await screenshot(testInfo, button, {
+    annotation: {
+      text: "Submit Button",
+      position: "right",
+      showArrow: true,
+      labelBoxFillStyle: "rgba(0, 255, 255, 0.8)",
+      labelBoxStrokeStyle: "rgba(0, 0, 0, 1)",
+      labelBoxLineWidth: 2,
+    },
+  })
+
+  await expectScreenshotToMatch(testInfo, "arrow-text-align-right.png")
+})
+
 test("screenshot multiple targets", async ({ page }, testInfo) => {
   await setupWithRegions(page)
 

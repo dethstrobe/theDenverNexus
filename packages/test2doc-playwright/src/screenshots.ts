@@ -410,11 +410,7 @@ async function generateScreenshotBuffer(
                 ctx.lineWidth = annotation.labelBoxLineWidth ?? 2
                 const paddingBothSides = padding * 2
                 const labelBoxX = labelPosition.x - textWidth / 2 - padding
-                const labelBoxY =
-                  labelPosition.y -
-                  textHeight / 2 +
-                  actualBoundingBoxDescent -
-                  padding
+                const labelBoxY = labelPosition.y - textHeight / 2 - padding
                 const labelBoxWidth = textWidth + paddingBothSides
                 const labelBoxHeight = textHeight + paddingBothSides
                 ctx.fillRect(
@@ -432,7 +428,10 @@ async function generateScreenshotBuffer(
               }
               const labelX = labelPosition.x - textWidth / 2
               const labelY =
-                labelPosition.y + textHeight / 2 + actualBoundingBoxDescent
+                labelPosition.y +
+                actualBoundingBoxAscent -
+                textHeight / 2 +
+                actualBoundingBoxDescent / 2
 
               // Draw label text
               ctx.strokeStyle = annotation?.strokeStyle ?? "rgba(0, 0, 0, 0.1)"
