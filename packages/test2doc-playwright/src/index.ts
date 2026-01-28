@@ -251,7 +251,7 @@ class Test2DocReporter implements Reporter {
       const markdownHeader = this.generateHeader(metadata)
       const markdown =
         markdownHeader + this.generateMarkdown({ ...doc, title }, 1)
-      const filePath = `${outputDir}/test2doc-${convertToKebabCase(title)}.md`
+      const filePath = `${outputDir}/test2doc-${convertToKebabCase(title)}.mdx`
       writeFileSync(filePath, markdown)
       this.generateScreenshots(outputDir)
     } else if (metaType === "category") {
@@ -268,7 +268,7 @@ class Test2DocReporter implements Reporter {
       this.generateScreenshots(filePath)
     } else {
       const markdown = this.generateMarkdown(doc, 1)
-      const filePath = `${outputDir}/test2doc-${convertToKebabCase(doc.title)}.md`
+      const filePath = `${outputDir}/test2doc-${convertToKebabCase(doc.title)}.mdx`
       writeFileSync(filePath, markdown)
       this.generateScreenshots(outputDir)
     }
@@ -360,6 +360,25 @@ class Test2DocReporter implements Reporter {
     return `${titleMarkdown} ${title}\n\n`
   }
 
+  private parseScreenshotMetadata(screenshotName: string): {
+    caption?: string
+    figure?: boolean
+  } {
+    // Check for JSON metadata format: filename.png[test2doc_screenshot]:{"figure":true,"caption":"text"}
+    const jsonMatch = screenshotName.match(/\[test2doc_screenshot\]:(.+)$/)
+    if (jsonMatch?.[1]) {
+      try {
+        return JSON.parse(jsonMatch[1])
+      } catch {
+        // If JSON parsing fails, fall through to legacy format
+      }
+    }
+
+    // Legacy format: filename.png:altText
+    const [, caption] = screenshotName.split(":") ?? []
+    return caption ? { caption } : {}
+  }
+
   private generateMarkdown(docNode: DocNode, depth: number): string {
     let markdown = this.generateTitle(docNode.title, depth)
 
@@ -373,11 +392,26 @@ class Test2DocReporter implements Reporter {
             }
             if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
-              const [, altText] = step.screenshot.name.split(":") ?? []
               const transformedFilename = this.generateHashedScreenshotFilename(
                 step.screenshot.buffer,
               )
-              markdown += `![${altText ?? "screenshot"}](./${transformedFilename})\n`
+
+              // Parse screenshot metadata (supports both legacy :altText and new JSON format)
+              const { caption = "screenshot", figure } =
+                this.parseScreenshotMetadata(step.screenshot.name)
+
+              if (figure) {
+                // Generate figure/figcaption format
+                markdown += `<figure>
+
+![${caption}](./${transformedFilename})
+<figcaption>${caption}</figcaption>
+</figure>
+`
+              } else {
+                // Generate standard markdown image
+                markdown += `![${caption}](./${transformedFilename})\n`
+              }
             }
           }
           markdown += "\n"

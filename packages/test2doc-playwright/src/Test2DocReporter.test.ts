@@ -210,7 +210,7 @@ describe("Test2DocReporter", () => {
 
     expect(readdirSync(tempDir)).toHaveLength(8)
     expect(
-      readFileSync(`${tempDir}/test2doc-registration-page.md`, "utf8"),
+      readFileSync(`${tempDir}/test2doc-registration-page.mdx`, "utf8"),
     ).toEqual(
       `---
 title: Registration Page Documentation
@@ -233,7 +233,7 @@ Given user is on login page
 
 `,
     )
-    expect(readFileSync(`${tempDir}/test2doc-login-page.md`, "utf8")).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-login-page.mdx`, "utf8")).toEqual(
       `---
 title: Login Page Documentation
 keywords:
@@ -272,7 +272,7 @@ Given user is on login page
 `,
     )
     expect(
-      readFileSync(`${tempDir}/test2doc-dashboard-page.md`, "utf8"),
+      readFileSync(`${tempDir}/test2doc-dashboard-page.mdx`, "utf8"),
     ).toEqual(
       `---
 title: Dashboard Documentation
@@ -370,7 +370,7 @@ sidebar_position: 2
     )
     expect(
       readFileSync(
-        `${tempDir}/test2doc-login-page/test2doc-successful-login.md`,
+        `${tempDir}/test2doc-login-page/test2doc-successful-login.mdx`,
         "utf8",
       ),
     ).toEqual(
@@ -389,7 +389,7 @@ Given user is on login page
     expect(readdirSync(`${tempDir}/test2doc-login-page`)).toHaveLength(3)
     expect(
       readFileSync(
-        `${tempDir}/test2doc-login-page/test2doc-failed-login.md`,
+        `${tempDir}/test2doc-login-page/test2doc-failed-login.mdx`,
         "utf8",
       ),
     ).toEqual(
@@ -430,7 +430,7 @@ Given user is on login page
     reporter.onBegin(mockFullConfig, mockSuiteWithoutRootDescribe)
     reporter.onEnd()
 
-    expect(readFileSync(`${tempDir}/test2doc-login.md`, "utf8")).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-login.mdx`, "utf8")).toEqual(
       `# login
 
 ## should redirect to dashboard on successful login
@@ -521,7 +521,7 @@ Given user is on login page
 
     expect(readdirSync(tempDir)).toHaveLength(2)
 
-    expect(readFileSync(`${tempDir}/test2doc-login.md`, "utf8")).toEqual(
+    expect(readFileSync(`${tempDir}/test2doc-login.mdx`, "utf8")).toEqual(
       `# login
 
 ## how to login
@@ -532,7 +532,7 @@ Given user is on login page
     )
 
     expect(
-      readFileSync(`${tempDir}/test2doc-authenticated.md`, "utf8"),
+      readFileSync(`${tempDir}/test2doc-authenticated.mdx`, "utf8"),
     ).toEqual(`# authenticated
 
 ## user name and profile should be visible
@@ -613,5 +613,60 @@ Given user is on login page
         "utf8",
       ),
     ).toBe(anotherHandWrittenContent)
+  })
+
+  it("should generate figure and figcaption HTML for screenshots with figure metadata", () => {
+    const reporter = setup()
+    let bufferCounter = 0
+    const createMockScreenshotBuffer = () =>
+      Buffer.from(`mock image data ${bufferCounter++}`)
+
+    reporter.onBegin(mockFullConfig, mockSuiteForPages)
+    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+
+    const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
+    const mockScreenshotName2WithFigure = `test2doc-${Date.now() + 600}-2.png[test2doc_screenshot]:${JSON.stringify({ figure: true, caption: "User login screen" })}`
+    const buffer1 = createMockScreenshotBuffer()
+    const buffer2 = createMockScreenshotBuffer()
+
+    const mockAttachmentWithFigure = [
+      {
+        name: mockScreenshotName1,
+        body: buffer1,
+        contentType: "image/png",
+      },
+      {
+        name: mockScreenshotName2WithFigure,
+        body: buffer2,
+        contentType: "image/png",
+      },
+    ]
+
+    vi.advanceTimersByTime(700)
+
+    reporter.onStepEnd(
+      mockTestSuccess,
+      {
+        attachments: mockAttachmentWithFigure,
+      } as TestResult,
+      mockStep,
+    )
+
+    reporter.onTestEnd(mockTestSuccess, { status: "passed" } as TestResult)
+    reporter.onEnd()
+
+    const content = readFileSync(`${tempDir}/test2doc-login-page.mdx`, "utf8")
+
+    // Regular screenshot without figure should still work with standard markdown
+    expect(content).toContain("![screenshot](./test2doc-b67cfe621cc5.png)")
+
+    // Screenshot with figure metadata should be wrapped in figure/figcaption
+    expect(content).toContain(
+      `<figure>
+
+![User login screen](./test2doc-fc6a5aa2918b.png)
+<figcaption>User login screen</figcaption>
+</figure>`,
+    )
   })
 })
