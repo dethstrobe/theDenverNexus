@@ -358,11 +358,7 @@ class Test2DocReporter implements Reporter {
   }
 
   private generateTitle(title: string, depth: number): string {
-    let titleMarkdown = ""
-    for (let i = 0; i < depth; ++i) {
-      titleMarkdown += "#"
-    }
-    return `${titleMarkdown} ${title}\n\n`
+    return `${"#".repeat(depth)} ${title}\n\n`
   }
 
   private parseScreenshotMetadata(screenshotName: string): {
