@@ -168,7 +168,12 @@ class Test2DocReporter implements Reporter {
 
   onStepBegin(test: TestCase, _result: TestResult, step: TestStep): void {
     const docSection = this.docMap.get(test.id)
-    if (docSection && step.category === "test.step" && "steps" in docSection) {
+    if (
+      docSection &&
+      step.category === "test.step" &&
+      "steps" in docSection &&
+      !step.title.startsWith("[nodoc]")
+    ) {
       docSection.steps.push({ title: step.title })
     }
   }

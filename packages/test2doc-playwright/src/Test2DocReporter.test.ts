@@ -684,4 +684,38 @@ Given user is on login page
 </figure>`,
     )
   })
+
+  it("should skip steps with [nodoc] prefix from documentation", () => {
+    const reporter = setup()
+
+    reporter.onBegin(mockFullConfig, mockSuiteForPages)
+
+    // Step with [nodoc] prefix
+    const mockStepNodoc = {
+      ...mockStep,
+      title: "[nodoc] Setup test data",
+    }
+    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStepNodoc)
+    reporter.onStepEnd(mockTestSuccess, {} as TestResult, mockStepNodoc)
+
+    // Regular step
+    const mockStepRegular = {
+      ...mockStep,
+      title: "Given user is on login page",
+    }
+    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStepRegular)
+    reporter.onStepEnd(mockTestSuccess, {} as TestResult, mockStepRegular)
+
+    reporter.onTestEnd(mockTestSuccess, { status: "passed" } as TestResult)
+    reporter.onEnd()
+
+    const content = readFileSync(`${tempDir}/test2doc-login-page.mdx`, "utf8")
+
+    // Regular step should be in the output
+    expect(content).toContain("Given user is on login page")
+
+    // [nodoc] step should NOT be in the output
+    expect(content).not.toContain("Setup test data")
+    expect(content).not.toContain("[nodoc]")
+  })
 })
