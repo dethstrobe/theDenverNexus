@@ -74,6 +74,16 @@ const config: Config = {
   ],
 
   themeConfig: {
+    algolia: {
+      appId: "6RT9YP1C0G",
+      apiKey: "cd3fb24640e1276f4826b75fb09de3d1",
+      indexName: "Test2Doc Docs",
+      contextualSearch: true,
+      searchParameters: {},
+      searchPagePath: "search",
+      // Optional: whether you want to use the new Ask AI feature (undefined by default)
+      // askAi: "YOUR_ALGOLIA_ASK_AI_ASSISTANT_ID",
+    },
     colorMode: {
       defaultMode: "dark",
       respectPrefersColorScheme: true,
