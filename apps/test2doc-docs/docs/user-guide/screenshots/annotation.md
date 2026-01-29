@@ -26,8 +26,18 @@ The text that explains what is being highlighted.
 
 - **`altText`**:
   - **Type**: `string`
-  - **Description**: Adds alt text to screenshots.
+  - **Description**: Adds alt text to screenshots. This is ignored if using `figure`.
   - **Default**: `"screenshot"`
+
+- **`figure`**:
+  - **Type**: `boolean`
+  - **Description**: When true, wraps the screenshot in an HTML `<figure>` tag in the generated documentation. Use this when you want semantic figure/figcaption markup instead of plain markdown images.
+  - **Default**: `false`
+
+- **`caption`**:
+  - **Type**: `string`
+  - **Description**: Adds a `<figcaption>` element with the specified text when `figure` is true. Provides additional context or explanation for the screenshot. If not provided but `figure` is true, no caption will be added.
+  - **Default**: `undefined`
 
 - **`fillStyle`**:
   - **Type**: `string`
@@ -148,6 +158,35 @@ test.describe(withDocMeta("describe block"), async () => {
 
 ### Example screenshot
 ![A screenshot showing every annotation option in use](./annotation-usage.png)
+
+### Example with figure and caption
+When you want to provide additional context in the documentation, combine visual annotations with semantic HTML:
+
+```ts
+test.step("Login form validation", async () => {
+  await screenshot(
+    testInfo,
+    page.getByRole("textbox", { name: "Email" }),
+    { annotation: {
+      text: "Email Field",
+      position: "right",
+      showArrow: true,
+      figure: true,
+      caption: "The email input field with real-time validation"
+    }}
+  );
+});
+```
+
+This generates:
+
+```md
+<figure>
+
+![The email input field with real-time validation](./test2doc-abc123.png)
+<figcaption>The email input field with real-time validation</figcaption>
+</figure>
+```
 
 ### Example of `position` by number
 If [`position`](#positioning) is set to a number, it will render is a clockwise rotation around the highlighted element.

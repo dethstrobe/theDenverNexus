@@ -7,9 +7,11 @@ Test2Doc has a helper function to take screenshots of the page or selectively hi
 
 Screenshots will be added to the markdown files after the [Step](https://playwright.dev/docs/api/class-test#test-step) block's title and in the order they're generated.
 
-Screenshot names are prefixed with `test2doc-`, a timestamp of when they were taken, and an incrementing id. E.g. `test2doc-[timestamp]-1.png`
+Screenshot names are prefixed with `test2doc-` and a 12 character hash based off of buffer image data. E.g. `test2doc-[hash].png`
 
 Screenshots need to be associated with a `step`, so be sure to nest the screenshot function call inside of a `step` block.
+
+See the [Test Steps](../test-steps.md) guide for more details on using steps with Test2Doc.
 
 ## Imports
 To add screenshots you'll need to import it in your test file:
@@ -22,8 +24,8 @@ import { screenshot } from "@test2doc/playwright/screenshots";
 - **Page screenshots**: Pass the `page` object for full-page captures
 - **Element highlighting**: Pass a `locator` to highlight specific elements  
 - **Custom options**: Include [Playwright screenshot options](https://playwright.dev/docs/api/class-page#page-screenshot) for clip, format, etc.
-- **Annotations**: Add `annotation` options to customize highlighting
-- **Multiple elements**: Pass an array of `MultiLocatorScreenshot` objects
+- **Annotations**: Add [`annotation`](./annotation.md) options to customize highlighting
+- **Multiple elements**: Pass an array of [`MultiLocatorScreenshot`](#highlight-multiple-elements) objects
 
 ## Adding Screenshot of the page
 The screenshot function requires `testInfo` (in order to pass the screenshot to the reporter).
@@ -52,7 +54,7 @@ test.describe(withDocMeta("describe block"), async () => {
 
 ## test block
 step block
-![screenshot](./test2doc-1759177703278-1.png)
+![screenshot](./test2doc-0d5626c46ad3.png)
 
 ```
 
@@ -87,7 +89,7 @@ test.describe(withDocMeta("describe block"), async () => {
 
 ## test block
 step block
-![screenshot](./test2doc-1759177703278-1.png)
+![screenshot](./test2doc-0d5626c46ad3.png)
 
 ```
 
@@ -95,6 +97,69 @@ step block
 ![screenshot from playwright's site highlighting the "Get started" button](./playwright-highlight.png)
 
 > **Note:** You can customize the highlighting of elements by passing the `annotation` options in the `screenshot` options. Explained more in the [annotation section](./annotation.md).
+
+## Adding captions with figure and figcaption
+
+For screenshots that need additional context or explanation, it is possible to generate images using the `<figure>` tags with a `<figcaption>`. This is useful for providing descriptive text alongside images in your documentation.
+
+To enable figure/figcaption formatting, pass `figure: true` and optionally `caption` in the screenshot options:
+
+### Example test with caption
+```ts
+import { screenshot } from "@test2doc/playwright/screenshots"
+
+test.describe(withDocMeta("describe block"), async () => {
+  test("test block", async ({ page }, testInfo) => {
+    await test.step("Login screen", async () => {
+      await page.goto("https://example.com/login")
+      await screenshot(testInfo, page, {
+        figure: true,
+        caption: "The main login screen showing email and password fields"
+      })
+    })
+  })
+})
+```
+
+### Example markdown with caption
+```md
+# describe block
+
+## test block
+Login screen
+<figure>
+
+![The main login screen showing email and password fields](./test2doc-fc6a5aa2918b.png)
+<figcaption>The main login screen showing email and password fields</figcaption>
+</figure>
+
+```
+
+### Example test without caption
+If you want a figure wrapper without a caption, simply set `figure: true`:
+
+```ts
+await screenshot(testInfo, page, {
+  figure: true
+})
+```
+
+This generates:
+
+```md
+<figure>
+
+![screenshot](./test2doc-fc6a5aa2918b.png)
+</figure>
+```
+
+### When to use figure/figcaption
+
+Use figure and figcaption when:
+- **Detailed context needed**: Screenshots require explanation beyond the step title
+- **Accessibility**: Captions help screen readers understand image context
+- **Professional documentation**: Formal docs benefit from properly captioned figures
+- **Complex visuals**: Diagrams or multi-part screenshots need clarification
 
 ## Highlight multiple elements
 In the event that you need to highlight multiple elements, you can pass in an array with `MultiLocatorScreenshot` objects.
@@ -129,7 +194,7 @@ test.describe(withDocMeta("describe block"), async () => {
 
 ## test block
 links to github
-![screenshot](./test2doc-1759177703278-1.png)
+![screenshot](./test2doc-be826aa977e6.png)
 
 ```
 
