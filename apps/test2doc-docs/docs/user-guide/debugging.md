@@ -1,6 +1,6 @@
 ---
 title: Debugging Failing Doc Generation
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 Sometimes your tests might be passing, but failing when generating documentation. Here are some tips to help debug what is happening.
