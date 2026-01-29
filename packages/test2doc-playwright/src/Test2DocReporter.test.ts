@@ -34,6 +34,24 @@ import {
 
 const mockFullConfig: FullConfig = {} as FullConfig
 
+function createMockTestResult(overrides: Partial<TestResult> = {}): TestResult {
+  return {
+    attachments: [],
+    annotations: [],
+    duration: 0,
+    errors: [],
+    parallelIndex: 0,
+    workerIndex: 0,
+    status: "passed",
+    stdout: [],
+    stderr: [],
+    retry: 0,
+    startTime: new Date(),
+    steps: [],
+    ...overrides,
+  } as TestResult
+}
+
 describe("Test2DocReporter", () => {
   let mockLogging: MockInstance<(...args: unknown[]) => boolean>
   beforeEach(() => {
@@ -87,7 +105,7 @@ describe("Test2DocReporter", () => {
     )
 
     reporter.onBegin(mockFullConfig, mockSuiteForPages)
-    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+    reporter.onStepBegin(mockTestSuccess, createMockTestResult(), mockStep)
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2 = `test2doc-${Date.now() + 999}-2.png`
     const mockScreenshotName3WithAltText = `test2doc-${Date.now() + 1001}-3.png:Alt Text`
@@ -138,72 +156,63 @@ describe("Test2DocReporter", () => {
 
     reporter.onStepEnd(
       mockTestSuccess,
-      {
-        attachments: mockAttachmentSuccess,
-      } as TestResult,
+      createMockTestResult({ attachments: mockAttachmentSuccess }),
       mockStep,
     )
 
-    reporter.onTestEnd(mockTestSuccess, { status: "passed" } as TestResult)
+    reporter.onTestEnd(mockTestSuccess, createMockTestResult())
 
     vi.advanceTimersByTime(400)
 
-    reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
+    reporter.onStepBegin(mockTestFail, createMockTestResult(), mockStep)
     reporter.onStepEnd(
       mockTestFail,
-      {
-        attachments: mockAttachmentSuccess,
-      } as TestResult,
+      createMockTestResult({ attachments: mockAttachmentSuccess }),
       mockStep,
     )
-    reporter.onTestEnd(mockTestFail, { status: "passed" } as TestResult)
+    reporter.onTestEnd(mockTestFail, createMockTestResult())
     vi.advanceTimersByTime(100)
     reporter.onStepEnd(
       mockTestFail,
-      {
-        attachments: mockAttachmentFail,
-      } as TestResult,
+      createMockTestResult({ attachments: mockAttachmentFail }),
       mockStep,
     )
 
-    reporter.onStepBegin(mockTestPrivacyPolicyLogin, {} as TestResult, mockStep)
+    reporter.onStepBegin(
+      mockTestPrivacyPolicyLogin,
+      createMockTestResult(),
+      mockStep,
+    )
     vi.advanceTimersByTime(100)
     reporter.onStepEnd(
       mockTestPrivacyPolicyLogin,
-      {
-        attachments: mockAttachmentPrivacyPolicyLogin,
-      } as TestResult,
+      createMockTestResult({ attachments: mockAttachmentPrivacyPolicyLogin }),
       mockStep,
     )
-    reporter.onTestEnd(mockTestPrivacyPolicyLogin, {
-      status: "passed",
-    } as TestResult)
+    reporter.onTestEnd(mockTestPrivacyPolicyLogin, createMockTestResult())
 
-    reporter.onTestEnd(mockTestNewUserRegistration, {
-      status: "passed",
-    } as TestResult)
+    reporter.onTestEnd(mockTestNewUserRegistration, createMockTestResult())
 
     reporter.onStepBegin(
       mockTestPrivacyPolicyRegistration,
-      {} as TestResult,
+      createMockTestResult(),
       mockStep,
     )
     vi.advanceTimersByTime(100)
     reporter.onStepEnd(
       mockTestPrivacyPolicyRegistration,
-      {
+      createMockTestResult({
         attachments: mockAttachmentPrivacyPolicyRegistration,
-      } as TestResult,
+      }),
       mockStep,
     )
 
-    reporter.onTestEnd(mockTestPrivacyPolicyRegistration, {
-      status: "passed",
-    } as TestResult)
-    reporter.onTestEnd(mockTestLoggedInUser, { status: "passed" } as TestResult)
-    reporter.onTestEnd(mockTestLoggedOutUser, {
-      status: "passed",
-    } as TestResult)
+    reporter.onTestEnd(
+      mockTestPrivacyPolicyRegistration,
+      createMockTestResult(),
+    )
+    reporter.onTestEnd(mockTestLoggedInUser, createMockTestResult())
+    reporter.onTestEnd(mockTestLoggedOutUser, createMockTestResult())
 
     expect(readdirSync(tempDir)).toHaveLength(4)
     reporter.onEnd()
@@ -345,8 +354,8 @@ sidebar_position: 2
     const reporter = setup()
 
     reporter.onBegin(mockFullConfig, mockSuiteForCategories)
-    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
-    reporter.onStepBegin(mockTestFail, {} as TestResult, mockStep)
+    reporter.onStepBegin(mockTestSuccess, createMockTestResult(), mockStep)
+    reporter.onStepBegin(mockTestFail, createMockTestResult(), mockStep)
     reporter.onEnd()
 
     expect(
@@ -459,9 +468,7 @@ Given user is on login page
     it("when there are failed tests", () => {
       const reporter = setup()
 
-      const mockFailedResult: TestResult = {
-        status: "failed",
-      } as TestResult
+      const mockFailedResult = createMockTestResult({ status: "failed" })
 
       expect(() =>
         reporter.onTestEnd(mockTestSuccess, mockFailedResult),
@@ -477,9 +484,7 @@ Given user is on login page
     it("when there are tests that timeout", () => {
       const reporter = setup()
 
-      const mockTimeoutResult: TestResult = {
-        status: "timedOut",
-      } as TestResult
+      const mockTimeoutResult = createMockTestResult({ status: "timedOut" })
 
       expect(() =>
         reporter.onTestEnd(mockTestSuccess, mockTimeoutResult),
@@ -496,9 +501,7 @@ Given user is on login page
       process.env.IGNORE_TEST_FAILURES = "true"
       const reporter = setup()
 
-      const mockFailedResult: TestResult = {
-        status: "failed",
-      } as TestResult
+      const mockFailedResult = createMockTestResult({ status: "failed" })
 
       expect(() =>
         reporter.onTestEnd(mockTestSuccess, mockFailedResult),
@@ -549,12 +552,8 @@ Given user is on login page
     const reporter = setup()
 
     reporter.onBegin(mockFullConfig, mockSingleSetupFileSuite)
-    reporter.onTestEnd(mockSetupTest, {
-      status: "passed",
-    } as TestResult)
-    reporter.onTestEnd(mockAuthenticatedTest, {
-      status: "passed",
-    } as TestResult)
+    reporter.onTestEnd(mockSetupTest, createMockTestResult())
+    reporter.onTestEnd(mockAuthenticatedTest, createMockTestResult())
     reporter.onEnd()
 
     expect(mockLogging).toHaveBeenCalledWith("[..] 0/2 (0%)")
@@ -622,7 +621,7 @@ Given user is on login page
       Buffer.from(`mock image data ${bufferCounter++}`)
 
     reporter.onBegin(mockFullConfig, mockSuiteForPages)
-    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStep)
+    reporter.onStepBegin(mockTestSuccess, createMockTestResult(), mockStep)
 
     const mockScreenshotName1 = `test2doc-${Date.now() + 500}-1.png`
     const mockScreenshotName2WithFigure = `test2doc-${Date.now() + 600}-2.png[test2doc_screenshot]:${JSON.stringify({ figure: true, caption: "User login screen" })}`
@@ -653,13 +652,11 @@ Given user is on login page
 
     reporter.onStepEnd(
       mockTestSuccess,
-      {
-        attachments: mockAttachmentWithFigure,
-      } as TestResult,
+      createMockTestResult({ attachments: mockAttachmentWithFigure }),
       mockStep,
     )
 
-    reporter.onTestEnd(mockTestSuccess, { status: "passed" } as TestResult)
+    reporter.onTestEnd(mockTestSuccess, createMockTestResult())
     reporter.onEnd()
 
     const content = readFileSync(`${tempDir}/test2doc-login-page.mdx`, "utf8")
@@ -695,18 +692,22 @@ Given user is on login page
       ...mockStep,
       title: "[nodoc] Setup test data",
     }
-    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStepNodoc)
-    reporter.onStepEnd(mockTestSuccess, {} as TestResult, mockStepNodoc)
+    reporter.onStepBegin(mockTestSuccess, createMockTestResult(), mockStepNodoc)
+    reporter.onStepEnd(mockTestSuccess, createMockTestResult(), mockStepNodoc)
 
     // Regular step
     const mockStepRegular = {
       ...mockStep,
       title: "Given user is on login page",
     }
-    reporter.onStepBegin(mockTestSuccess, {} as TestResult, mockStepRegular)
-    reporter.onStepEnd(mockTestSuccess, {} as TestResult, mockStepRegular)
+    reporter.onStepBegin(
+      mockTestSuccess,
+      createMockTestResult(),
+      mockStepRegular,
+    )
+    reporter.onStepEnd(mockTestSuccess, createMockTestResult(), mockStepRegular)
 
-    reporter.onTestEnd(mockTestSuccess, { status: "passed" } as TestResult)
+    reporter.onTestEnd(mockTestSuccess, createMockTestResult())
     reporter.onEnd()
 
     const content = readFileSync(`${tempDir}/test2doc-login-page.mdx`, "utf8")
