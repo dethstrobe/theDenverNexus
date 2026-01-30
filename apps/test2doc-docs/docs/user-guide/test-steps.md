@@ -13,35 +13,54 @@ Test steps are documented in the order they appear in your tests:
 
 ```ts
 test("user login flow", async ({ page }) => {
-  await test.step("Navigate to login page", async () => {
+  await test.step("Navigate to login page.\n", async () => {
     await page.goto("/login");
   });
 
-  await test.step("Enter credentials", async () => {
+  await test.step("Enter credentials ", async () => {
     await page.getByRole("textbox", { name: "Username" }).fill("user@example.com");
-    await page.getByRole("textbox", { name: "Password" })fill("password123");
+    await page.getByRole("textbox", { name: "Password" }).fill("password123");
   });
 
-  await test.step("Click login button", async () => {
+  await test.step("and click login button.\n", async () => {
     await page.getByRole("button", { name: "Login" }).click();
   });
 
-  await test.step("Verify dashboard is displayed", async () => {
+  await test.step("Verify dashboard is displayed.", async () => {
     await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
   });
 });
 ```
 
-This generates documentation like:
+:::info Rendering Markdown quirk
+
+Markdown renderers (like Docusaurus) combine consecutive text lines into a single paragraph. To force each test step to appear on its own line in the generated docs, add `\n` at the end of the step title string.
+
+:::
+
+This generates this markdown:
 
 ```md
 ## user login flow
 
-Navigate to login page
+Navigate to login page.
+
 Enter credentials
-Click login button
-Verify dashboard is displayed
+and click login button.
+
+Verify dashboard is displayed.
 ```
+
+Which will generate html similar to this:
+
+```html
+<h2>user login flow</h2>
+<p>Navigate to login page.</p>
+<p>Enter credentials and click login button.</p>
+<p>Verify dashboard is displayed.</p>
+```
+
+Notice how "Enter credentials" and "and click login button" are combined into one `<p>` tag because there was no `\n` between them.
 
 ## Skipping Steps with `[nodoc]`
 
@@ -107,13 +126,13 @@ Do not capture screenshots within `[nodoc]` steps. While the step title will be 
 ```ts
 // ❌ Bad: Screenshot will appear without explanation
 await test.step("[nodoc] Setup test data", async () => {
-  await screenshot(page, "data-setup"); // This screenshot will still appear!
-});
+  await screenshot(testInfo, page) // This screenshot will still appear!
+})
 
 // ✅ Good: Keep screenshots in documented steps
 await test.step("Verify initial state", async () => {
-  await screenshot(page, "initial-state");
-});
+  await screenshot(testInfo, page)
+})
 ```
 
 If you need to take screenshots during setup for debugging purposes, those should be captured outside of the Test2Doc workflow using Playwrights native [screenshot functionality](https://playwright.dev/docs/screenshots).
@@ -125,11 +144,16 @@ Steps work seamlessly with [screenshots](./screenshots/screenshots.md). When you
 
 ```ts
 await test.step("Click submit button", async () => {
-  await screenshot(page, "submit", {
-    caption: "Submit button location",
-  });
-  await page.click("#submit");
-});
+  const submitButton = page.getByRole("button", { name: "Submit" })
+  await screenshot(
+    testInfo,
+    submitButton,
+    {
+      altText: "Submit button location"
+    }
+  )
+  await submitButton.click()
+})
 ```
 
 Generates:

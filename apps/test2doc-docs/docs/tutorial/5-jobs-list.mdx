@@ -1327,7 +1327,11 @@ import { Badge } from "./ui/badge"
 
 While we're at it, if you take a look inside the `Badge` component, you'll see that we can pass in a `variant` property to style the badge. Let's take the time to style the badge while we're at it.
 
-> **Note:** Normally, if we implement some logic, I usually like to add tests, in order to prevent regressions. But styling logic is usually considered non-essential for the functioning of the app, so it normally will not be tested.
+:::info When to test
+
+**Note:** Normally, if we implement some logic, I usually like to add tests, in order to prevent regressions. But styling logic is usually considered non-essential for the functioning of the app, so it normally will not be tested.
+
+:::
 
 ```tsx title="src/app/components/ui/badge.tsx" {11-15}
 variants: {
