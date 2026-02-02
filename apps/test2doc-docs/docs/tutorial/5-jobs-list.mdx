@@ -310,10 +310,10 @@ import { test } from "@playwright/test"
 import { TESTPASSKEY } from "../src/scripts/test-passkey.js"
 import { selectors } from "./util"
 import Database from "better-sqlite3"
-import {enablePasskey, addPasskeyCredential, simulateSuccessfulPasskeyInput} from "@test2doc/playwright-passkey"
+import { enableVirtualAuthenticator, addPasskeyCredential, simulateSuccessfulPasskeyInput } from "@test2doc/playwright-passkey"
 
 test("Can access protected page", async ({ page }) => {
-  const authenticator = await enablePasskey(page)
+  const authenticator = await enableVirtualAuthenticator(page)
 
   await addPasskeyCredential(authenticator, TESTPASSKEY)
 
