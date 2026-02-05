@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@500;700&display=swap");
+
+:root {
+  --logo-fill: #981818;
+}
+
+body {
+  background: linear-gradient(
+    180deg,
+    #222 0,
+    #7db9e8 32%,
+    #7db9e8 49%,
+    #faff00 72%,
+    #faff00 0,
+    #f600ff 73%,
+    #000032
+  );
+  background-attachment: fixed;
+  /* color: white; */
+
+  font-family: "Inter", sans-serif;
+  /* background-color: #fdfcf8; */
+  color: #1a1a1a;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.barbarian-border {
+  border: 3px solid #1a1a1a;
+  box-shadow: 8px 8px 0px #1a1a1a;
+  transition: all 0.2s ease;
+}
+
+.barbarian-border:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 20px 20px 0px #1a1a1a;
+}
+
+.logo-hover {
+  transform: perspective(1000px) rotateX(0deg);
+  transform-origin: center bottom;
+  transition: transform 1s ease-in-out;
+}
+
+.logo-hover:hover {
+  transform: perspective(1000px) rotateX(30deg) scale(1.2);
+}
+
+.logo-shine {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.logo-hover:hover .logo-shine {
+  opacity: 1;
+}
+
+.chrome-text {
+  background: linear-gradient(
+    to bottom,
+    #f7ff0a 0%,
+    #ffa026 14%,
+    #f9455b 28%,
+    #ab0478 42%,
+    #9b0278 57%,
+    #d51d64 71%,
+    #f85944 85%,
+    #ff9913 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+}
