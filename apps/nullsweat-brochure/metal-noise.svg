@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+  <filter id="metal1">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02 0.8" numOctaves="2" seed="1"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer>
+      <feFuncA type="discrete" tableValues="0 0.3 0.6 0.8 1"/>
+    </feComponentTransfer>
+  </filter>
+  <rect width="200" height="200" filter="url(#metal1)" fill="#d0d0d0"/>
+</svg>
