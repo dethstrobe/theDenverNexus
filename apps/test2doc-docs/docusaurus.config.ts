@@ -74,6 +74,12 @@ const config: Config = {
   ],
 
   themeConfig: {
+    metadata: [
+      {
+        name: "google-site-verification",
+        content: "jm-tx2k0FC31i0Ezsd00QEiPKKplW1EIL6ERoDjtO0w",
+      },
+    ],
     algolia: {
       appId: "6RT9YP1C0G",
       apiKey: "cd3fb24640e1276f4826b75fb09de3d1",
