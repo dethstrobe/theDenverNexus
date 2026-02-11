@@ -169,7 +169,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Null Sweat, LLC. Built with Docusaurus.`,
+      copyright: `Copyright &copy; ${new Date().getFullYear()} <a href="https://nullsweat.io/">Null Sweat, LLC</a>. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
