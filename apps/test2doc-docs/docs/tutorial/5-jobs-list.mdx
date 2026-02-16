@@ -1763,29 +1763,7 @@ await expect(
 
 #### Implement link
 
-Now that we got a failing test, now we want to make it pass.
-
-First let's add the route to our link function.
-
-```ts title="src/app/shared/links.ts" {8}
-import { defineLinks } from "rwsdk/router"
-
-export const link = defineLinks([
-  "/",
-  "/auth/login",
-  "/auth/signup",
-  "/applications",
-  "/applications/:id",
-  "/legal/privacy",
-  "/legal/terms",
-])
-```
-
-<details>
-- We just need to add `/applications/:id` to the list of routes.
-</details>
-
-Now we'll focus on making the test pass with a simple solution.
+Now that we got a failing test, now we want to make it pass with a simple solution.
 
 ```tsx title="src/app/components/ApplicationsTable.tsx" {1, 4-9}
 import { link } from "../shared/links"
@@ -2440,17 +2418,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar"
 
 </details>
 
-The test is still not passing. First let's add the new routes to the `link` function.
-
-```ts title="src/app/shared/links.ts" {3-4}
-  ...
-  "/legal/terms",
-  "/settings",
-  "/account",
-])
-```
-
-Then we'll add mock routes for these pages.
+The test is still not passing. Let's add mock routes for these pages.
 
 ```tsx title="src/worker.tsx" {3-4}
 layout(InteriorLayout, [
@@ -2565,26 +2533,6 @@ test.describe(
 
 #### Implementing logout
 
-Let's add a logout end point to our links.
-
-```ts title="src/app/shared/links.ts" {2}
-"/auth/signup",
-"/auth/logout",
-"/applications",
-```
-
-<details>
-- This route will use our current authentication logic. So it seemed appropriate to group it with the other auth end points.
-</details>
-
-Let's update the `href` for the Logout link to use our new route.
-
-```tsx title="src/app/components/Header.tsx"
-<li>
-  <a href={link("/auth/logout")}>Logout</a>
-</li>
-```
-
 Let's add a logout function to invalidate the session.
 
 ```ts title="src/passkey/functions.ts"
@@ -2610,6 +2558,14 @@ return [
     })
   }),
 ]
+```
+
+Let's update the `href` for the Logout link to our a new route.
+
+```tsx title="src/app/components/Header.tsx"
+<li>
+  <a href={link("/auth/logout")}>Logout</a>
+</li>
 ```
 
 And now our new test is passing and we've finished all the functionality of the header and documented it.

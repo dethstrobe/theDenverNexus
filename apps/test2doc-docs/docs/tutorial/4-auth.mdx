@@ -818,10 +818,14 @@ The last thing we'll need (for now), after we successfully register a new user, 
 
 #### Implement redirect to login page
 RedwoodSDK has a nice typesafe way to [generate links](https://docs.rwsdk.com/core/routing/#generating-links). It's already setup for us from when we initialized the app. We'll be using this for when we navigate.
-```ts title="src/app/shared/links.ts"
-import { defineLinks } from "rwsdk/router"
 
-export const link = defineLinks(["/", "/auth/login", "/auth/signup"])
+```ts title="src/app/shared/links.ts"
+import { linkFor } from "rwsdk/router"
+
+import type * as Worker from "../../worker"
+type App = typeof Worker.default
+
+export const link = linkFor<App>()
 ```
 
 Now let's use this link in our `Signup` component to redirect to login on successful registration.
@@ -1333,30 +1337,19 @@ So we don't want to just show a success message. After we successfully login, we
 ```
 
 ### Implement redirect to Dashboard
-First we need to add the new route for our dashboard to our app's links.
-
-```ts title="src/app/shared/links.ts" {7}
-import { defineLinks } from "rwsdk/router"
-
-export const link = defineLinks([
-  "/",
-  "/auth/login",
-  "/auth/signup",
-  "/applications",
-])
-```
 
 We'll add a placeholder route for now, and refactor it later with the real implementation.
 
 We'll also take the time to refactor how the auth interceptor works.
 
-```tsx title="src/worker.tsx"{2-9,15,17-19}
+```tsx title="src/worker.tsx"{1,3-10,16,18-20}
+import { link } from "./app/shared/links"
 ...
 const isAuthenticated = ({ ctx }: { ctx: AppContext }) => {
   if (!ctx.session?.userId) {
     return new Response(null, {
       status: 302,
-      headers: { Location: "/auth/login" },
+      headers: { Location: link("/auth/login") },
     })
   }
 }
@@ -2484,20 +2477,8 @@ test.describe(
 ```
 
 ### Implement Stubs for Legal Pages
-Let's add to our `link` function.
 
-```ts title="src/app/shared/links.ts" {6-7}
-export const link = defineLinks([
-  "/",
-  "/auth/login",
-  "/auth/signup",
-  "/applications",
-  "/legal/privacy",
-  "/legal/terms",
-])
-```
-
-Now that we've added our routes to the links, let's link to the pages.
+We use our handy `link` function to add the `href` to the anchor tags.
 
 ```ts title="src/passkey/components/Login.tsx" {3-4}
 <p>

@@ -1993,41 +1993,6 @@ Now, the test is failing for the right reasons. That it can't find our edit page
 
 We've added new pages before, so this should be pretty easy.
 
-We add the route to the link function.
-
-```ts title="src/app/shared/links.ts" {9}
-export const link = defineLinks([
-  "/",
-  "/auth/login",
-  "/auth/signup",
-  "/auth/logout",
-  "/applications",
-  "/applications/new",
-  "/applications/:id",
-  "/applications/:id/edit",
-  "/legal/privacy",
-  "/legal/terms",
-  "/settings",
-  "/account",
-])
-```
-
-We update the link in the `Details.tsx`.
-
-```tsx title="src/app/pages/applications/Details.tsx" {2}
-<Button asChild variant="secondary">
-  <a href={link("/applications/:id/edit", { id: details.id })}>
-    <Icon id="edit" size={16} /> Edit
-  </a>
-</Button>
-```
-
-<details>
-
-Note that the URL param is passed in as the second argument to the `link` function.
-
-</details>
-
 Now we just create a placeholder component.
 
 ```ts title="src/app/pages/applications/Edit.tsx"
@@ -2049,6 +2014,22 @@ prefix("/applications", [
   route("/:id/edit", Edit),
 ]),
 ```
+
+We update the link in the `Details.tsx`.
+
+```tsx title="src/app/pages/applications/Details.tsx" {2}
+<Button asChild variant="secondary">
+  <a href={link("/applications/:id/edit", { id: details.id })}>
+    <Icon id="edit" size={16} /> Edit
+  </a>
+</Button>
+```
+
+<details>
+
+Note that the URL param is passed in as the second argument to the `link` function.
+
+</details>
 
 Now the test is passing.
 

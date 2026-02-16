@@ -168,20 +168,6 @@ Error: element(s) not found
 
 ### Implementing the New Application Page
 
-Let's add the new route to our `link` function.
-
-```ts title="src/app/shared/links.ts" {2}
-"/applications",
-"/applications/new",
-"/applications/:id",
-```
-
-<details>
-
-To keep the application routes grouped together, I put the new route between `"/applications"` and `"/applications/:id"`.
-
-</details>
-
 Let's attempt to [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) up our code a bit, and move the New Applications button to it's own component. Since it will only be used in this component, we'll just put it at the bottom of this file.
 
 ```tsx title="src/app/pages/applications/List.tsx"
