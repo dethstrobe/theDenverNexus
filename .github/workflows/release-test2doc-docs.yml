@@ -9,7 +9,7 @@ on:
       - 'apps/test2doc-docs/docs/**'
       - 'apps/test2doc-docs/workers/**'
       - 'apps/test2doc-docs/static/**'
-      - 'apps/test2doc-docs/docusaurus.config.js'
+      - 'apps/test2doc-docs/docusaurus.config.ts'
       - 'apps/test2doc-docs/sidebars.js'
   workflow_dispatch:
 
