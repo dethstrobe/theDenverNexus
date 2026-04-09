@@ -475,7 +475,7 @@ Given user is on login page
       ).toThrow("process.exit called")
 
       expect(mockLogging).toHaveBeenCalledWith(
-        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
+        `\n\nDocumentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
       )
       expect(mockExit).toHaveBeenCalledWith(1)
       expect(mockExit).toHaveBeenCalledTimes(1)
@@ -491,7 +491,7 @@ Given user is on login page
       ).toThrow("process.exit called")
 
       expect(mockLogging).toHaveBeenCalledWith(
-        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
+        `\n\nDocumentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
       )
       expect(mockExit).toHaveBeenCalledWith(1)
       expect(mockExit).toHaveBeenCalledTimes(1)
@@ -508,11 +508,76 @@ Given user is on login page
       ).not.toThrow("process.exit called")
 
       expect(mockLogging).toHaveBeenCalledWith(
-        `Documentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
+        `\n\nDocumentation generation aborted due to test failure: ${mockTestSuccess.title}\n`,
       )
 
       expect(mockExit).toHaveBeenCalledTimes(0)
       delete process.env.IGNORE_TEST_FAILURES
+    })
+
+    it("when a failed test has an error with a stack trace, it should output the stack", () => {
+      const reporter = setup()
+      const mockError = {
+        message: "Expected 'foo' to equal 'bar'",
+        stack: "Error: Expected 'foo' to equal 'bar'\n    at Object.<anonymous> (src/foo.test.ts:42:5)",
+      }
+      const mockFailedResult = createMockTestResult({
+        status: "failed",
+        errors: [mockError],
+      })
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockFailedResult),
+      ).toThrow("process.exit called")
+
+      expect(mockLogging).toHaveBeenCalledWith(`${mockError.stack}\n`)
+    })
+
+    it("when a failed test has an error without a stack, it should output the message", () => {
+      const reporter = setup()
+      const mockError = { message: "Something went wrong" }
+      const mockFailedResult = createMockTestResult({
+        status: "failed",
+        errors: [mockError],
+      })
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockFailedResult),
+      ).toThrow("process.exit called")
+
+      expect(mockLogging).toHaveBeenCalledWith(`${mockError.message}\n`)
+    })
+
+    it("when a failed test throws a non-Error value, it should output the value", () => {
+      const reporter = setup()
+      const mockError = { value: "something string-like was thrown" }
+      const mockFailedResult = createMockTestResult({
+        status: "failed",
+        errors: [mockError],
+      })
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockFailedResult),
+      ).toThrow("process.exit called")
+
+      expect(mockLogging).toHaveBeenCalledWith(`${mockError.value}\n`)
+    })
+
+    it("when a failed test has stderr output, it should output each line", () => {
+      const reporter = setup()
+      const mockFailedResult = createMockTestResult({
+        status: "failed",
+        stderr: ["error from page: network request failed\n", "another error\n"],
+      })
+
+      expect(() =>
+        reporter.onTestEnd(mockTestSuccess, mockFailedResult),
+      ).toThrow("process.exit called")
+
+      expect(mockLogging).toHaveBeenCalledWith(
+        "error from page: network request failed\n\n",
+      )
+      expect(mockLogging).toHaveBeenCalledWith("another error\n\n")
     })
   })
 

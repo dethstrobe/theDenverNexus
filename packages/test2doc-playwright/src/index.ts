@@ -206,8 +206,22 @@ class Test2DocReporter implements Reporter {
       this.testResults[this.completedTests] = "F"
       this.updateProgressBar()
       writeLine(
-        `Documentation generation aborted due to test failure: ${test.title}`,
+        `\n\nDocumentation generation aborted due to test failure: ${test.title}`,
       )
+
+      for (const error of result.errors) {
+        if (error.stack) {
+          writeLine(error.stack)
+        } else if (error.message) {
+          writeLine(error.message)
+        } else if (error.value) {
+          writeLine(error.value)
+        }
+      }
+
+      for (const line of result.stderr) {
+        writeLine(typeof line === "string" ? line : line.toString())
+      }
 
       if (!process.env["IGNORE_TEST_FAILURES"]) {
         process.exit(1)
