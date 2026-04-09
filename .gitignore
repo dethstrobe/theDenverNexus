@@ -36,6 +36,9 @@
 **/playwright/.cache/
 **/debug-screenshot.png
 
+# Claude Code
+.claude/settings.json
+
 # IDE and editors
 **/.vscode
 **/.idea
