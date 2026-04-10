@@ -3,6 +3,7 @@
   "tagFormat": "test2doc-playwright-v${version}",
   "repositoryUrl": "https://github.com/Null-Sweat-LLC/theDenverNexus",
   "plugins": [
+    "./sr-path-filter.js",
     [
       "@semantic-release/commit-analyzer",
       {
@@ -16,6 +17,13 @@
       }
     ],
     [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    ["@semantic-release/changelog"],
+    [
       "@semantic-release/exec",
       {
         "prepareCmd": "pnpm build && sed -i.bak 's/\"version\": \"[^\"]*\"/\"version\": \"${nextRelease.version}\"/' package.json && rm package.json.bak",
@@ -25,7 +33,7 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["package.json"],
+        "assets": ["package.json", "CHANGELOG.md"],
         "message": "chore(release): test2doc-playwright-v${nextRelease.version} [skip ci]"
       }
     ],
