@@ -34,7 +34,7 @@
     "@cloudflare/workers-types": "^4.20251003.0",
     "@docusaurus/module-type-aliases": "3.10.0",
     "@docusaurus/tsconfig": "3.9.2",
-    "@docusaurus/types": "3.9.2",
+    "@docusaurus/types": "3.10.0",
     "@playwright/test": "^1.57.0",
     "@types/node": "^25.0.10",
     "dotenv": "^17.2.3",
