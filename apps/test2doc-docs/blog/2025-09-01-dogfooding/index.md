@@ -8,7 +8,7 @@ tags: [development]
 So, I’ve been working through the [Redwood SDK fullstack](https://docs.rwsdk.com/tutorial/full-stack-app/setup/) tutorial. I thought it would be an interesting and moderately complicated app to write Playwright tests for, and a great way to dogfood `test2doc`. Well, I’ve found many [issues](https://github.com/Null-Sweat-LLC/theDenverNexus/issues?q=is%3Aissue%20state%3Aclosed).
 
 Finding issues while dogfooding is obviously wonderful as it shows test2doc working in a real world example and real world pain points. And then I figure out how to mitigate and improve the experience.
-<!-- truncate -->
+{/* truncate */}
 So, let’s go over some of the new features and fixes that I’ve added since the last post.
 
 ## New Screenshot Implementation

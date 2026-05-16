@@ -9,7 +9,7 @@ tags: [development]
 https://www.npmjs.com/package/@test2doc/playwright/v/0.0.2
 
 Just for clarification, this is a work in progress. This is just the proof of concept right now, but it is possible to play with it. There will be breaking changes coming in the near future was I attempt to improve the markdown and best practices around how to write tests.
-<!-- truncate -->
+{/* truncate */}
 So I'm looking for feedback on ways to improve and if this is something you think you could use.
 
 So this is the [Playwright](https://playwright.dev/) reporter that generates markdown to make documentation based off your test. I'm intending to also add [Docusaurus](https://docusaurus.io/) metadata to the markdown in the near future, but for right now it just pumps out pretty generic markdown so can work with any static site generator that uses markdown.

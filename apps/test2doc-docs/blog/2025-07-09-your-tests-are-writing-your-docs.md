@@ -8,7 +8,7 @@ tags: [development]
 Ever wished your documentation could write itself? What if every time you wrote a test, you automatically got beautiful, up-to-date docs with screenshots?
 
 That's exactly what [Test2Doc](https://www.npmjs.com/package/@test2doc/playwright/v/0.3.2) does - a Playwright reporter that automatically generates Docusaurus documentation from your tests - and with the latest release, we've hit MVP with three game-changing features that turn your Playwright tests into living documentation.
-<!-- truncate -->
+{/* truncate */}
 ## Tired of manually organizing docs?
 The `withDocMeta` helper automatically generates the [frontmatter](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter) that controls how your pages appear in Docusaurus sidebars.
 

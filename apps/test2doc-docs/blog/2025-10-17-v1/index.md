@@ -8,7 +8,7 @@ tags: [development]
 The API has been stable for a few weeks now and I just finished a redesign of [test2doc.com](https://test2doc.com/) (you might be reading it on there now).
 
 So let's talk about some of the fun new stuff you'll see with v1.
-<!-- truncate -->
+{/* truncate */}
 ## New Screenshot Functionality
 You can now add:
 

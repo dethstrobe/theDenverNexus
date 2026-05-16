@@ -6,7 +6,7 @@ tags: [testing]
 ---
 
 **Test Driven Development (TDD)**: you've heard of it, maybe tried it, possibly given up on it. The theory sounds great, but how do you actually do it on a real project? That's what [my new tutorial tackles](/docs/tutorial-1), using [RedwoodSDK](https://rwsdk.com/) and [Playwright](https://playwright.dev/) to test and generate documentation using Test2Doc!
-<!-- truncate -->
+{/* truncate */}
 
 ## Why This Tutorial?
 
