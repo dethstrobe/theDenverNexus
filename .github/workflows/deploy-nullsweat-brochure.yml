@@ -1,0 +1,22 @@
+name: Deploy - nullsweat-brochure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/nullsweat-brochure/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: 9ab0a868ac2600134d3bca1061e39272
+          command: pages deploy apps/nullsweat-brochure --project-name=nullsweat-io
