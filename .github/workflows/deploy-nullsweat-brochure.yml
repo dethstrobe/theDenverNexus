@@ -14,14 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          run_install: false
+          node-version: "latest"
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: 9ab0a868ac2600134d3bca1061e39272
-          command: pages deploy apps/nullsweat-brochure --project-name=nullsweat-io
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 9ab0a868ac2600134d3bca1061e39272
+        run: npx wrangler pages deploy apps/nullsweat-brochure --project-name=nullsweat-io
