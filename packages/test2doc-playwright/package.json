@@ -41,6 +41,11 @@
       "require": "./dist/screenshots.js",
       "types": "./dist/screenshots.d.ts"
     },
+    "./injectMarkdown": {
+      "import": "./dist/injectMarkdown.js",
+      "require": "./dist/injectMarkdown.js",
+      "types": "./dist/injectMarkdown.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts",
       "import": "./dist/types.js",
@@ -55,7 +60,9 @@
     "dist/DocMeta.js",
     "dist/DocMeta.d.ts",
     "dist/screenshots.js",
-    "dist/screenshots.d.ts"
+    "dist/screenshots.d.ts",
+    "dist/injectMarkdown.js",
+    "dist/injectMarkdown.d.ts"
   ],
   "publishConfig": {
     "access": "public"

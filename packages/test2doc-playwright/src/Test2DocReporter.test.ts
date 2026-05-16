@@ -450,6 +450,87 @@ Given user is on login page
     )
   })
 
+  describe("injectMarkdown", () => {
+    it("should add markdown content inside a step", () => {
+      const reporter = setup()
+      const screenshotBuffer = Buffer.from("mock image data")
+
+      reporter.onBegin(mockFullConfig, mockSuiteForPages)
+      reporter.onStepBegin(mockTestSuccess, createMockTestResult(), mockStep)
+
+      const mockAttachments = [
+        {
+          name: `test2doc-markdown-${Date.now() + 100}-1.md`,
+          body: Buffer.from("This is injected markdown content 1"),
+          contentType: "text/markdown",
+        },
+        {
+          name: `test2doc-${Date.now() + 500}-1.png`,
+          body: screenshotBuffer,
+          contentType: "image/png",
+        },
+        {
+          name: `test2doc-markdown-${Date.now() + 550}-2.md`,
+          body: Buffer.from("This is injected markdown content 2"),
+          contentType: "text/markdown",
+        },
+      ]
+      vi.advanceTimersByTime(600)
+
+      reporter.onStepEnd(
+        mockTestSuccess,
+        createMockTestResult({ attachments: mockAttachments }),
+        mockStep,
+      )
+
+      reporter.onTestEnd(mockTestSuccess, createMockTestResult())
+      reporter.onEnd()
+
+      expect(
+        readFileSync(`${tempDir}/test2doc-login-page.mdx`, "utf8"),
+      ).toEqual(
+        `---
+title: Login Page Documentation
+keywords:
+  - login
+  - password
+  - username
+description: The different login scenarios for the login page.
+sidebar_position: 1
+parse_number_prefixes: true
+---
+
+# Login Page
+
+## Successful Login
+
+### should redirect to dashboard on successful login
+
+Given user is on login page
+
+This is injected markdown content 1
+
+![screenshot](./test2doc-15208f4337a8.png)
+
+This is injected markdown content 2
+
+
+## Failed Login
+
+### should display error message on failed login
+
+## link to privacy policy
+
+### should open privacy policy in new tab
+
+`,
+      )
+      expect(readFileSync(`${tempDir}/test2doc-15208f4337a8.png`)).toEqual(
+        screenshotBuffer,
+      )
+    })
+  })
+
   describe("exit test run", () => {
     let mockExit: MockInstance<
       (code?: string | number | null | undefined) => never
@@ -519,7 +600,8 @@ Given user is on login page
       const reporter = setup()
       const mockError = {
         message: "Expected 'foo' to equal 'bar'",
-        stack: "Error: Expected 'foo' to equal 'bar'\n    at Object.<anonymous> (src/foo.test.ts:42:5)",
+        stack:
+          "Error: Expected 'foo' to equal 'bar'\n    at Object.<anonymous> (src/foo.test.ts:42:5)",
       }
       const mockFailedResult = createMockTestResult({
         status: "failed",
@@ -567,7 +649,10 @@ Given user is on login page
       const reporter = setup()
       const mockFailedResult = createMockTestResult({
         status: "failed",
-        stderr: ["error from page: network request failed\n", "another error\n"],
+        stderr: [
+          "error from page: network request failed\n",
+          "another error\n",
+        ],
       })
 
       expect(() =>

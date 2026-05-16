@@ -1,11 +1,4 @@
-import type {
-  FullConfig,
-  Reporter,
-  Suite,
-  TestCase,
-  TestResult,
-  TestStep,
-} from "@playwright/test/reporter"
+import crypto from "node:crypto"
 import {
   mkdirSync,
   readdirSync,
@@ -15,15 +8,22 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs"
-import { activateTest2Doc } from "./DocMeta.js"
+import { join } from "node:path"
+import type {
+  FullConfig,
+  Reporter,
+  Suite,
+  TestCase,
+  TestResult,
+  TestStep,
+} from "@playwright/test/reporter"
 import type {
   DocusaurusCategoryMetadata,
   DocusaurusHeaderConfig,
   metadataType,
 } from "./DocMeta.js"
+import { activateTest2Doc } from "./DocMeta.js"
 import { convertToKebabCase } from "./utils.js"
-import { join } from "node:path"
-import crypto from "node:crypto"
 
 interface DocNode {
   title: string
@@ -41,6 +41,7 @@ interface DocTest {
   steps: Array<{
     title?: string
     screenshot?: DocScreenshot
+    markdown?: string
   }>
 }
 
@@ -80,6 +81,7 @@ class Test2DocReporter implements Reporter {
   private outputDir: string
   private screenshotMoveQueue: DocScreenshot[] = []
   private seenScreenshot = new Set<string>()
+  private seenMarkdown = new Set<string>()
   private totalTests = 0
   private completedTests = 0
   private testResults: ("P" | "F" | "S" | ".")[] = []
@@ -185,15 +187,28 @@ class Test2DocReporter implements Reporter {
       for (const attachment of result.attachments) {
         if (!attachment?.body) continue
 
-        const match = attachment.name.match(/test2doc-(\d+)-\d+\.png/)
+        const screenshotMatch = attachment.name.match(/test2doc-(\d+)-\d+\.png/)
+        const markdownMatch = attachment.name.match(
+          /test2doc-markdown-(\d+)-\d+\.md/,
+        )
 
-        const screenshotTime = +(match?.[1] ?? 0)
-
-        if (screenshotTime < now && !this.seenScreenshot.has(attachment.name)) {
-          this.seenScreenshot.add(attachment.name)
-          docSection.steps.push({
-            screenshot: { name: attachment.name, buffer: attachment.body },
-          })
+        if (screenshotMatch) {
+          const screenshotTime = +(screenshotMatch[1] ?? 0)
+          if (
+            screenshotTime < now &&
+            !this.seenScreenshot.has(attachment.name)
+          ) {
+            this.seenScreenshot.add(attachment.name)
+            docSection.steps.push({
+              screenshot: { name: attachment.name, buffer: attachment.body },
+            })
+          }
+        } else if (markdownMatch) {
+          const markdownTime = +(markdownMatch[1] ?? 0)
+          if (markdownTime < now && !this.seenMarkdown.has(attachment.name)) {
+            this.seenMarkdown.add(attachment.name)
+            docSection.steps.push({ markdown: attachment.body.toString() })
+          }
         }
       }
     }
@@ -223,7 +238,7 @@ class Test2DocReporter implements Reporter {
         writeLine(typeof line === "string" ? line : line.toString())
       }
 
-      if (!process.env["IGNORE_TEST_FAILURES"]) {
+      if (!process.env.IGNORE_TEST_FAILURES) {
         process.exit(1)
       }
     } else if (result.status === "skipped") {
@@ -404,6 +419,9 @@ class Test2DocReporter implements Reporter {
           for (const step of test.steps) {
             if (step.title) {
               markdown += `${step.title}\n`
+            }
+            if (step.markdown) {
+              markdown += `\n${step.markdown.trim()}\n\n`
             }
             if (step.screenshot) {
               this.screenshotMoveQueue.push(step.screenshot)
