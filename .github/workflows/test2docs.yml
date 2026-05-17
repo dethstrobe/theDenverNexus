@@ -20,7 +20,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.40.0-jammy
+    container: mcr.microsoft.com/playwright:v1.59.1-jammy
     steps:
       - name: Branch Checkout
         uses: actions/checkout@v4
@@ -38,6 +38,8 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Build Test2Doc
         run: pnpm build:test2doc
