@@ -498,6 +498,35 @@ test("screenshot should take alt text from annotation when provided", async ({
   expect(testInfo.attachments[2].name).toMatch(/test2doc-\d+-\d.png/)
 })
 
+test("screenshot highlighting element inside dialog - dialog should not render over annotation canvas", async ({
+  page,
+}, testInfo) => {
+  await page.setContent(`
+    <html>
+      <body style="margin: 0; padding: 20px; background: white;">
+        <button id="open-dialog" onclick="document.getElementById('test-dialog').showModal()">
+          Open Dialog
+        </button>
+        <dialog id="test-dialog" style="padding: 20px; border-radius: 8px;">
+          <h2 id="dialog-heading">Dialog Title</h2>
+          <p>This is some dialog content.</p>
+          <button onclick="document.getElementById('test-dialog').close()">Close</button>
+        </dialog>
+      </body>
+    </html>
+  `)
+
+  await page.getByRole("button", { name: "Open Dialog" }).click()
+  await page.waitForSelector("dialog[open]")
+
+  const heading = page.locator("dialog h2")
+  await screenshot(testInfo, heading, {
+    annotation: { text: "Dialog Heading", showArrow: true, position: "below" },
+  })
+
+  await expectScreenshotToMatch(testInfo, "dialog-element-annotation.png")
+})
+
 test("screenshot should support figure and caption metadata for HTML figure elements", async ({
   page,
 }, testInfo) => {

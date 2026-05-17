@@ -443,7 +443,13 @@ async function generateScreenshotBuffer(
           }
         }
 
-        document.body.appendChild(canvas)
+        // dialogs opened with showModal() live in the browser top layer, which
+        // renders above all z-index stacking — appending to body means the
+        // canvas is always hidden behind an open dialog. Append to the dialog
+        // instead so the canvas inherits its top-layer position.
+        const topLevelContainer =
+          document.querySelector("dialog[open]") ?? document.body
+        topLevelContainer.appendChild(canvas)
       },
       { boundingBoxes, annotations },
     )
