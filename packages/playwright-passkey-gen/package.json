@@ -23,7 +23,8 @@
     "clean": "rm -rf dist && rm -rf tsconfig.tsbuildinfo",
     "format": "biome format --write .",
     "lint": "biome lint . --fix",
-    "passkey-gen": "pnpm build && node ./src/generate-passkey/cli.ts"
+    "passkey-gen": "pnpm build && node ./src/generate-passkey/cli.ts",
+    "postinstall": "pnpm playwright install --with-deps chromium"
   },
   "bin": {
     "playwright-passkey-gen": "./bin/generate-passkey"

@@ -21,8 +21,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.59.1-jammy
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
     steps:
       - name: Branch Checkout
         uses: actions/checkout@v4
@@ -40,9 +38,8 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Browsers
-        run: pnpm --filter @test2doc/playwright exec playwright install chromium
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Build Test2Doc
         run: pnpm build:test2doc
