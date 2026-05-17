@@ -75,7 +75,7 @@
     "int": "playwright test",
     "int:a": "playwright test --config=playwright-annotation.config.ts",
     "lint": "biome lint .",
-    "postinstall": "[ \"$PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD\" = \"1\" ] || pnpm playwright install",
+    "postinstall": "[ \"$CI\" = \"true\" ] || pnpm playwright install",
     "test": "vitest run && pnpm int && pnpm int:a",
     "unit": "vitest"
   },

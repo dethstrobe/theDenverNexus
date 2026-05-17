@@ -38,8 +38,6 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Build Test2Doc
         run: pnpm build:test2doc
