@@ -41,6 +41,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright Browsers
+        run: pnpm --filter @test2doc/playwright exec playwright install chromium
+
       - name: Build Test2Doc
         run: pnpm build:test2doc
 
