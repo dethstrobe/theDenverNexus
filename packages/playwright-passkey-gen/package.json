@@ -46,7 +46,7 @@
   "devDependencies": {
     "@types/node": "^25.0.10",
     "@test2doc/playwright-passkey": "workspace:*",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitest": "^4.0.8"
   },
   "dependencies": {
