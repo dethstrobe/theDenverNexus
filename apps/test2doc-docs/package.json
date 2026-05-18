@@ -43,7 +43,7 @@
     "juice": "^11.1.1",
     "marked": "^17.0.6",
     "tsx": "^4.22.0",
-    "typescript": "~5.9.3"
+    "typescript": "~6.0.3"
   },
   "browserslist": {
     "production": [
