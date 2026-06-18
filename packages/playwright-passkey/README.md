@@ -1,5 +1,7 @@
 # @test2doc/playwright-passkey
 
+> **Deprecated:** Playwright v1.61+ has built-in passkey support via [`browserContext.credentials`](https://playwright.dev/docs/release-notes#version-161). This package is no longer maintained. Migrate to the native API for cross-browser support (Chromium, Firefox, WebKit).
+
 Playwright utilities for testing passkeys (WebAuthn) in your end-to-end tests.
 
 ## Installation
