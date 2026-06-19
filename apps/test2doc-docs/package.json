@@ -37,7 +37,7 @@
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",
     "@playwright/test": "^1.60.0",
-    "@types/node": "^25.8.0",
+    "@types/node": "^26.0.0",
     "dotenv": "^17.4.2",
     "gray-matter": "^4.0.3",
     "juice": "^11.1.1",

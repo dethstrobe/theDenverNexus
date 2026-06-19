@@ -44,7 +44,7 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.17.1",
   "devDependencies": {
-    "@types/node": "^25.0.10",
+    "@types/node": "^26.0.0",
     "@test2doc/playwright-passkey": "workspace:*",
     "typescript": "^5.9.3",
     "vitest": "^4.0.8"
