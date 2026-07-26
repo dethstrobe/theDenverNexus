@@ -25,3 +25,6 @@ Never let your docs fall out of sync with your code again.
 - Docusaurus categories via `_category_.json`
 - Frontmatter support via helpers (withDocMeta, withDocCategory)
 - Screenshot capture with element highlighting and annotations
+
+## Real-world example
+Want to see Test2Doc in production? [ScheduleLord's documentation site](https://doc.schedulelord.com/) is generated entirely from its Playwright test suite using this reporter.
