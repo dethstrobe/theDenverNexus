@@ -3,16 +3,29 @@ import { mkdir, rmdir, unlink, access } from "node:fs/promises"
 import { join } from "node:path"
 import { main } from "./index.js"
 
-// Assertion helpers
 const UUID_V4_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-const base64ToBase64url = (b64: string) =>
-  b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "")
+function assertTestPasskey(TESTPASSKEY: {
+  username: string
+  userId: string
+  rpId: string
+  id: string
+  userHandle: string
+  privateKey: string
+  publicKey: string
+}) {
+  expect(TESTPASSKEY.username).toBe("testuser")
+  expect(TESTPASSKEY.userId).toMatch(UUID_V4_REGEX)
+  expect(TESTPASSKEY.rpId).toBe("localhost")
+  expect(TESTPASSKEY.id).toBeDefined()
+  expect(TESTPASSKEY.userHandle).toBeDefined()
+  expect(TESTPASSKEY.privateKey).toBeDefined()
+  expect(TESTPASSKEY.publicKey).toBeDefined()
+}
 
 test("generate a test passkey file", async () => {
   const outputPath = join(process.cwd(), "test-passkey.ts")
-  // remove existing file if present
   try {
     await unlink(outputPath)
   } catch {
@@ -21,20 +34,56 @@ test("generate a test passkey file", async () => {
   await main()
 
   const { TESTPASSKEY } = await import(outputPath)
-  expect(TESTPASSKEY.username).toBe("testuser")
-  expect(TESTPASSKEY.userId).toMatch(UUID_V4_REGEX)
-  expect(TESTPASSKEY.publicKey).toBeDefined()
-  expect(Array.isArray(TESTPASSKEY.publicKey)).toBe(true)
-  expect(TESTPASSKEY.signCount).toBe(1)
+  assertTestPasskey(TESTPASSKEY)
 
-  expect(TESTPASSKEY.credentialId).toBeDefined()
-  expect(TESTPASSKEY.credentialDbId).toBeDefined()
-  // assert credentialDbId is the base64url encoding of credentialId
-  expect(TESTPASSKEY.credentialDbId).toBe(
-    base64ToBase64url(TESTPASSKEY.credentialId),
-  )
+  try {
+    await unlink(outputPath)
+  } catch {}
+})
 
-  // cleanup
+test("generate a passkey with a custom username and user id", async () => {
+  const outputPath = join(process.cwd(), "custom-passkey.ts")
+  try {
+    await unlink(outputPath)
+  } catch {
+    // ignore if not present
+  }
+
+  await main({
+    output: "custom-passkey.ts",
+    username: "alice",
+    userId: "user-123",
+  })
+
+  const { TESTPASSKEY } = await import(outputPath)
+  expect(TESTPASSKEY.username).toBe("alice")
+  expect(TESTPASSKEY.userId).toBe("user-123")
+
+  try {
+    await unlink(outputPath)
+  } catch {}
+})
+
+test("default username and user id remain independent between calls", async () => {
+  const outputPath = join(process.cwd(), "default-passkey.ts")
+  try {
+    await unlink(outputPath)
+  } catch {
+    // ignore if not present
+  }
+
+  await main({ output: "default-passkey.ts" })
+
+  const { TESTPASSKEY: first } = await import(`${outputPath}?first`)
+  await main({ output: "default-passkey.ts" })
+  const { TESTPASSKEY: second } = await import(`${outputPath}?second`)
+
+  expect(first.username).toBe("testuser")
+  expect(second.username).toBe("testuser")
+  expect(first.userId).toMatch(UUID_V4_REGEX)
+  expect(second.userId).toMatch(UUID_V4_REGEX)
+  expect(first.userId).not.toBe(second.userId)
+
   try {
     await unlink(outputPath)
   } catch {}
@@ -46,7 +95,6 @@ test("generate a passkey to the output path specified", async () => {
   const fileName = "my-passkey.ts"
   const outputPath = join(dir, fileName)
 
-  // ensure clean slate
   try {
     await unlink(outputPath)
   } catch {}
@@ -58,15 +106,9 @@ test("generate a passkey to the output path specified", async () => {
 
   await main({ output: join(tempDir, fileName) })
 
-  // assert file exists and has TESTPASSKEY
   const { TESTPASSKEY } = await import(outputPath)
+  assertTestPasskey(TESTPASSKEY)
 
-  expect(TESTPASSKEY).toBeDefined()
-  expect(TESTPASSKEY.username).toBe("testuser")
-  expect(TESTPASSKEY.credentialId).toBeDefined()
-  expect(TESTPASSKEY.credentialDbId).toBeDefined()
-
-  // cleanup
   try {
     await unlink(outputPath)
     await rmdir(dir)
@@ -75,7 +117,6 @@ test("generate a passkey to the output path specified", async () => {
 
 test("generate JSON passkey file", async () => {
   const outputPath = join(process.cwd(), "test-passkey.json")
-  // remove existing file if present
   try {
     await unlink(outputPath)
   } catch {
@@ -87,20 +128,8 @@ test("generate JSON passkey file", async () => {
   const content = await fs.readFile(outputPath, "utf-8")
   const TESTPASSKEY = JSON.parse(content)
 
-  expect(TESTPASSKEY.username).toBe("testuser")
-  expect(TESTPASSKEY.userId).toMatch(UUID_V4_REGEX)
-  expect(TESTPASSKEY.publicKey).toBeDefined()
-  expect(Array.isArray(TESTPASSKEY.publicKey)).toBe(true)
-  expect(TESTPASSKEY.signCount).toBe(1)
+  assertTestPasskey(TESTPASSKEY)
 
-  expect(TESTPASSKEY.credentialId).toBeDefined()
-  expect(TESTPASSKEY.credentialDbId).toBeDefined()
-  // assert credentialDbId is the base64url encoding of credentialId
-  expect(TESTPASSKEY.credentialDbId).toBe(
-    base64ToBase64url(TESTPASSKEY.credentialId),
-  )
-
-  // cleanup
   try {
     await unlink(outputPath)
   } catch {}
@@ -109,7 +138,6 @@ test("generate JSON passkey file", async () => {
 test("generate javascript passkey file and make the extension js", async () => {
   const outputPath = join(process.cwd(), "test-passkey.json")
   const expectedPath = join(process.cwd(), "test-passkey.js")
-  // remove existing file if present
   try {
     await unlink(outputPath)
     await unlink(expectedPath)
@@ -121,20 +149,8 @@ test("generate javascript passkey file and make the extension js", async () => {
   await access(expectedPath)
   const { TESTPASSKEY } = await import(expectedPath)
 
-  expect(TESTPASSKEY.username).toBe("testuser")
-  expect(TESTPASSKEY.userId).toMatch(UUID_V4_REGEX)
-  expect(TESTPASSKEY.publicKey).toBeDefined()
-  expect(Array.isArray(TESTPASSKEY.publicKey)).toBe(true)
-  expect(TESTPASSKEY.signCount).toBe(1)
+  assertTestPasskey(TESTPASSKEY)
 
-  expect(TESTPASSKEY.credentialId).toBeDefined()
-  expect(TESTPASSKEY.credentialDbId).toBeDefined()
-  // assert credentialDbId is the base64url encoding of credentialId
-  expect(TESTPASSKEY.credentialDbId).toBe(
-    base64ToBase64url(TESTPASSKEY.credentialId),
-  )
-
-  // cleanup
   try {
     await unlink(outputPath)
     await unlink(expectedPath)
@@ -144,7 +160,6 @@ test("generate javascript passkey file and make the extension js", async () => {
 test("generate the correct extension if the output filename is missing the extension", async () => {
   const outputPath = join(process.cwd(), "test-passkey")
   const expectedPath = join(process.cwd(), "test-passkey.ts")
-  // remove existing file if present
   try {
     await unlink(expectedPath)
     await unlink(outputPath)
@@ -157,7 +172,6 @@ test("generate the correct extension if the output filename is missing the exten
   const { TESTPASSKEY } = await import(expectedPath)
   expect(TESTPASSKEY).toBeDefined()
 
-  // cleanup
   try {
     await unlink(expectedPath)
     await unlink(outputPath)

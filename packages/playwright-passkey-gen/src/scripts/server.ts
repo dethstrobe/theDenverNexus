@@ -1,16 +1,17 @@
 import { createServer, type ServerResponse, type IncomingMessage } from "http"
+import { createPublicKey } from "node:crypto"
 import {
-  generateRegistrationOptions,
   generateAuthenticationOptions,
+  generateRegistrationOptions,
   verifyAuthenticationResponse,
 } from "@simplewebauthn/server"
+import { cose, isoCBOR } from "@simplewebauthn/server/helpers"
 import { clientScript } from "./client.js"
 import { TESTPASSKEY } from "./testpasskey.js"
 
 interface StoredCredential {
   id: string
-  publicKey: Uint8Array
-  counter: number
+  publicKey: string
   userId: string
 }
 
@@ -25,8 +26,29 @@ const challenges = new Map<string, StoredChallenge>()
 
 const rpID = "localhost"
 const rpName = "Test App"
-const port = 5173
+const port = 5183
 const origin = `http://localhost:${port}`
+
+// Playwright's context.credentials.create() hands back an SPKI (DER) EC public
+// key, but @simplewebauthn/server verifies against COSE-encoded public keys.
+function spkiToCosePublicKey(publicKeyBase64url: string) {
+  const key = createPublicKey({
+    key: Buffer.from(publicKeyBase64url, "base64url"),
+    format: "der",
+    type: "spki",
+  })
+  const jwk = key.export({ format: "jwk" }) as { x: string; y: string }
+
+  const coseKey = new Map<number, number | Uint8Array>([
+    [cose.COSEKEYS.kty, cose.COSEKTY.EC2],
+    [cose.COSEKEYS.alg, cose.COSEALG.ES256],
+    [cose.COSEKEYS.crv, cose.COSECRV.P256],
+    [cose.COSEKEYS.x, Buffer.from(jwk.x, "base64url")],
+    [cose.COSEKEYS.y, Buffer.from(jwk.y, "base64url")],
+  ])
+
+  return isoCBOR.encode(coseKey as Parameters<typeof isoCBOR.encode>[0])
+}
 
 async function parseBody(req: IncomingMessage): Promise<UnknownJson> {
   return new Promise((resolve, reject) => {
@@ -119,9 +141,9 @@ const server = createServer(async (req, res) => {
 </head>
 <body>
   <h1>Passkey Authentication Test</h1>
-  
+
   <button onclick="testAuthentication()">Test Login with Passkey</button>
-  
+
   <div role="status" id="status"></div>
 
   <script>
@@ -161,19 +183,14 @@ ${clientScript}
     req.method === "POST" &&
     isRegisterFinishBody(body)
   ) {
-    const { userId, credentialId, publicKey, counter } = body
+    const { userId, credentialId, publicKey } = body
 
     const storedChallenge = challenges.get(userId)
     if (!storedChallenge) {
       return sendJson(res, { error: "No challenge found" }, 400)
     }
 
-    credentials.set(credentialId, {
-      id: credentialId,
-      publicKey: new Uint8Array(publicKey),
-      counter,
-      userId,
-    })
+    credentials.set(credentialId, { id: credentialId, publicKey, userId })
 
     challenges.delete(userId)
 
@@ -221,8 +238,8 @@ ${clientScript}
         expectedOrigin: origin,
         expectedRPID: rpID,
         credential: {
-          id: TESTPASSKEY.credentialDbId,
-          publicKey: Uint8Array.from(TESTPASSKEY.publicKey),
+          id: TESTPASSKEY.id,
+          publicKey: spkiToCosePublicKey(TESTPASSKEY.publicKey),
           counter: 0,
         },
       })
@@ -265,16 +282,14 @@ function isRegisterStartBody(
 function isRegisterFinishBody(body: UnknownJson): body is {
   userId: string
   credentialId: string
-  publicKey: number[]
-  counter: number
+  publicKey: string
 } {
   return (
     typeof body === "object" &&
     body !== null &&
     typeof body["userId"] === "string" &&
     typeof body["credentialId"] === "string" &&
-    Array.isArray(body["publicKey"]) &&
-    typeof body["counter"] === "number"
+    typeof body["publicKey"] === "string"
   )
 }
 

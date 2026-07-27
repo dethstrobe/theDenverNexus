@@ -4,13 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - 'packages/playwright-passkey/**'
       - 'packages/playwright-passkey-gen/**'
       - '.github/workflows/playwright-passkey-tests.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'packages/playwright-passkey/**'
       - 'packages/playwright-passkey-gen/**'
       - '.github/workflows/playwright-passkey-tests.yml'
 
@@ -49,10 +47,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: .
-
-      - name: Build playwright-passkey dependency
-        run: pnpm build
-        working-directory: packages/playwright-passkey
 
       - name: Run tests
         run: pnpm ci:test
