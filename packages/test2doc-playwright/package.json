@@ -1,6 +1,6 @@
 {
   "name": "@test2doc/playwright",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "A reporter that generates docs based off playwright test files",
   "keywords": [
     "documentation",
@@ -75,7 +75,6 @@
     "int": "playwright test",
     "int:a": "playwright test --config=playwright-annotation.config.ts",
     "lint": "biome lint .",
-    "postinstall": "pnpm playwright install",
     "test": "vitest run && pnpm int && pnpm int:a",
     "unit": "vitest"
   },
