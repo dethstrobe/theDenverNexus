@@ -69,8 +69,82 @@ For this project we're going to use a few tools to make our lives a bit easier.
 
 ### .gitignore
 For this tutorial, we'll have some files get generated that we won't want to track in git. So we'll generate a .gitignore file to not track these.
-```sh
-node --eval 'require("fs").writeFileSync("eslint.config.js", `import tsPlugin from "@typescript-eslint/eslint-plugin"\nimport tsParser from "@typescript-eslint/parser"\nimport reactPlugin from "eslint-plugin-react"\nimport reactHooksPlugin from "eslint-plugin-react-hooks"\nimport playwrightPlugin from "eslint-plugin-playwright"\nimport eslintConfigPrettier from "eslint-config-prettier"\nimport tseslint from "typescript-eslint"\nimport eslint from "@eslint/js"\nimport globals from "globals"\n\nexport default [\n  {\n    ignores: [\n      "**/node_modules/**",\n      "**/dist/**",\n      "**/build/**",\n      "**/.generated/**",\n      "**/.vite/**",\n      "**/.wrangler/**",\n      "**/playwright-report/**",\n      "**/test-results/**",\n      "**/*.config.js",\n      "**/*.config.ts",\n      "**/*.config.mjs",\n      "**/doc/**",\n      "**/worker-configuration.d.ts",\n    ],\n  },\n\n  eslint.configs.recommended,\n  ...tseslint.configs.recommended,\n  ...tseslint.configs.recommendedTypeChecked,\n\n  {\n    files: ["src/**/*.{ts,tsx}", "tests/**/*.ts"],\n\n    languageOptions: {\n      parser: tsParser,\n      parserOptions: {\n        project: "./tsconfig.json",\n        tsconfigRootDir: import.meta.dirname,\n      },\n      globals: {\n        ...globals.node,\n        ...globals.browser,\n      },\n    },\n\n    plugins: {\n      "@typescript-eslint": tsPlugin,\n      react: reactPlugin,\n      "react-hooks": reactHooksPlugin,\n      playwright: playwrightPlugin,\n    },\n\n    rules: {\n      "@typescript-eslint/no-floating-promises": "error",\n      "@typescript-eslint/await-thenable": "error",\n      "@typescript-eslint/no-misused-promises": "error",\n      "@typescript-eslint/no-unused-vars": [\n        "warn",\n        { argsIgnorePattern: "^_" },\n      ],\n      "no-empty-pattern": "off",\n      ...reactPlugin.configs.recommended.rules,\n      ...reactHooksPlugin.configs.recommended.rules,\n      "react/react-in-jsx-scope": "off",\n    },\n\n    settings: {\n      react: { version: "detect" },\n    },\n  },\n\n  eslintConfigPrettier,\n]`)'
+
+```txt title=".gitignore"
+# Node modules
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.dev.vars
+
+# Vite build output
+dist
+
+# TypeScript
+*.tsbuildinfo
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# MacOS
+.DS_Store
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# pnpm store directory
+.pnpm-store
+
+# dotenv environment variables file
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vite cache
+.vite
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# Wrangler
+.wrangler
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
 ```
 
 ### Prettier
@@ -84,24 +158,41 @@ I also turned off ending semicolons, but feel free to delete this rule if you li
   <TabItem value="npm" label="npm" default>
 ```sh
 npm install --save-dev --save-exact prettier
-node --eval "fs.writeFileSync('.prettierrc','{\n  \"semi\": false,\n  \"experimentalTernaries\": true,\n  \"experimentalOperatorPosition\": \"start\"\n}')"
-node --eval "fs.writeFileSync('.prettierignore','# Ignore artifacts:\nbuild\ncoverage\nnode_modules\ndist\ntest-results\nplaywright-report')"
 ```
   </TabItem>
   <TabItem value="yarn" label="yarn">
 ```sh
 yarn add --dev --exact prettier
-node --eval "fs.writeFileSync('.prettierrc','{\n  \"semi\": false,\n  \"experimentalTernaries\": true,\n  \"experimentalOperatorPosition\": \"start\"\n}')"
-node --eval "fs.writeFileSync('.prettierignore','# Ignore artifacts:\nbuild\ncoverage\nnode_modules\ndist\ntest-results\nplaywright-report')"
 ```
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 ```sh
 pnpm add --save-dev --save-exact prettier
-node --eval "fs.writeFileSync('.prettierrc','{\n  \"semi\": false,\n  \"experimentalTernaries\": true,\n  \"experimentalOperatorPosition\": \"start\"\n}')"
 ```
   </TabItem>
 </Tabs>
+
+Create a `.prettierrc` file in the root of your project with the following contents:
+
+```json title=".prettierrc"
+{
+  "semi": false,
+  "experimentalTernaries": true,
+  "experimentalOperatorPosition": "start"
+}
+```
+
+And a `.prettierignore` file, also in the root of your project:
+
+```txt title=".prettierignore"
+# Ignore artifacts:
+build
+coverage
+node_modules
+dist
+test-results
+playwright-report
+```
 
 #### Using Prettier in VSCode
 If using VSCode, I also recommend setting up autoformatting on save, and turning on auto save on focus change and setting the formatter to prettier
@@ -131,10 +222,84 @@ pnpm add --save-dev eslint @eslint/js @typescript-eslint/eslint-plugin @typescri
   </TabItem>
 </Tabs>
 
-Now, create an `eslint.config.js` file in the root of your project:
+Now, create an `eslint.config.js` file in the root of your project with the following contents:
 
-```sh
-node --eval 'require("fs").writeFileSync("eslint.config.js", `import tsPlugin from "@typescript-eslint/eslint-plugin"\nimport tsParser from "@typescript-eslint/parser"\nimport reactPlugin from "eslint-plugin-react"\nimport reactHooksPlugin from "eslint-plugin-react-hooks"\nimport playwrightPlugin from "eslint-plugin-playwright"\nimport eslintConfigPrettier from "eslint-config-prettier"\nimport tseslint from "typescript-eslint"\nimport eslint from "@eslint/js"\nimport globals from "globals"\n\nexport default [\n  {\n    ignores: [\n      "**/node_modules/**",\n      "**/dist/**",\n      "**/build/**",\n      "**/.generated/**",\n      "**/.vite/**",\n      "**/.wrangler/**",\n      "**/playwright-report/**",\n      "**/test-results/**",\n      "**/*.config.js",\n      "**/*.config.ts",\n      "**/*.config.mjs",\n      "**/doc/**",\n      "**/worker-configuration.d.ts",\n    ],\n  },\n\n  eslint.configs.recommended,\n\n  {\n    files: ["src/**/*.{ts,tsx}", "tests/**/*.ts"],\n\n    languageOptions: {\n      parser: tsParser,\n      parserOptions: {\n        project: "./tsconfig.json",\n        tsconfigRootDir: import.meta.dirname,\n      },\n      globals: {\n        ...globals.node,\n        ...globals.browser,\n      },\n    },\n\n    plugins: {\n      "@typescript-eslint": tsPlugin,\n      react: reactPlugin,\n      "react-hooks": reactHooksPlugin,\n      playwright: playwrightPlugin,\n    },\n\n    rules: {\n      ...tseslint.configs.recommendedTypeChecked[0].rules,\n      "@typescript-eslint/no-floating-promises": "error",\n      "@typescript-eslint/await-thenable": "error",\n      "@typescript-eslint/no-misused-promises": "error",\n      "@typescript-eslint/no-unused-vars": [\n        "warn",\n        { argsIgnorePattern: "^_" },\n      ],\n      "no-empty-pattern": "off",\n      ...reactPlugin.configs.recommended.rules,\n      ...reactHooksPlugin.configs.recommended.rules,\n      "react/react-in-jsx-scope": "off",\n    },\n\n    settings: {\n      react: { version: "detect" },\n    },\n  },\n\n  eslintConfigPrettier,\n]` )'
+```js title="eslint.config.js"
+import tsPlugin from "@typescript-eslint/eslint-plugin"
+import tsParser from "@typescript-eslint/parser"
+import reactPlugin from "eslint-plugin-react"
+import reactHooksPlugin from "eslint-plugin-react-hooks"
+import playwrightPlugin from "eslint-plugin-playwright"
+import eslintConfigPrettier from "eslint-config-prettier"
+import tseslint from "typescript-eslint"
+import eslint from "@eslint/js"
+import globals from "globals"
+
+export default [
+  {
+    ignores: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.generated/**",
+      "**/.vite/**",
+      "**/.wrangler/**",
+      "**/playwright-report/**",
+      "**/test-results/**",
+      "**/*.config.js",
+      "**/*.config.ts",
+      "**/*.config.mjs",
+      "**/doc/**",
+      "**/worker-configuration.d.ts",
+    ],
+  },
+
+  eslint.configs.recommended,
+
+  {
+    files: ["src/**/*.{ts,tsx}", "tests/**/*.ts"],
+
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: "./tsconfig.json",
+        tsconfigRootDir: import.meta.dirname,
+      },
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+      react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
+      playwright: playwrightPlugin,
+    },
+
+    rules: {
+      ...tseslint.configs.recommendedTypeChecked[0].rules,
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/no-misused-promises": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+      "no-empty-pattern": "off",
+      ...reactPlugin.configs.recommended.rules,
+      ...reactHooksPlugin.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
+    },
+
+    settings: {
+      react: { version: "detect" },
+    },
+  },
+
+  eslintConfigPrettier,
+]
 ```
 
 This sets up ESLint with TypeScript, React, React Hooks, and Playwright support, while disabling rules that conflict with Prettier.
@@ -190,8 +355,8 @@ export default defineConfig({
 @import "tailwindcss";
 ```
 
-#### Import the CSS file at the top of your file and include a `link` tag in the `head` of the `Document.tsx` file.
-```tsx title="src/app/Document.tsx" {1,5}
+#### Import the CSS file at the top of your file and include a `link` tag in the `head` of the `document.tsx` file.
+```tsx title="src/app/document.tsx" {1,5}
 import styles from "./styles.css?url";
 ...
 <head>
