@@ -41,6 +41,10 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
+      - name: Install Playwright Browsers
+        working-directory: packages/test2doc-playwright
+        run: pnpm playwright install --with-deps chromium
+
       - name: Build Test2Doc
         run: pnpm build:test2doc
 
