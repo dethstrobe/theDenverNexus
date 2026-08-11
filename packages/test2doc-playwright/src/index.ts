@@ -253,14 +253,49 @@ class Test2DocReporter implements Reporter {
     // Move cursor to beginning of line and clear it
     process.stdout.write("\r\x1b[K")
 
-    // Write the progress bar
-    const progressBar = `[${this.testResults.join("")}]`
-    const percentage = Math.round(
-      (this.completedTests / this.testResults.length) * 100,
-    )
-    process.stdout.write(
-      `${progressBar} ${this.completedTests}/${this.testResults.length} (${percentage}%)`,
-    )
+    const total = this.testResults.length
+    const percentage = Math.round((this.completedTests / total) * 100)
+    const suffix = ` ${this.completedTests}/${total} (${percentage}%)`
+
+    // Leave room for the brackets and the trailing "n/n (pct%)" text
+    const terminalWidth = process.stdout.columns || 80
+    const maxBarWidth = Math.max(1, terminalWidth - suffix.length - 2)
+    const barWidth = Math.min(total, maxBarWidth)
+
+    const bar =
+      barWidth >= total
+        ? this.testResults.join("")
+        : this.scaleProgressBar(barWidth)
+
+    process.stdout.write(`[${bar}]${suffix}`)
+  }
+
+  private scaleProgressBar(barWidth: number): string {
+    const total = this.testResults.length
+    // Worse statuses take priority when multiple tests are collapsed into one slot
+    const rank: Record<"." | "S" | "P" | "F", number> = {
+      ".": 0,
+      S: 1,
+      P: 2,
+      F: 3,
+    }
+
+    let bar = ""
+    for (let slot = 0; slot < barWidth; slot++) {
+      const start = Math.floor((slot * total) / barWidth)
+      const end = Math.floor(((slot + 1) * total) / barWidth)
+
+      let worst: "." | "S" | "P" | "F" = "."
+      for (let i = start; i < end; i++) {
+        const result = this.testResults[i]
+        if (rank[result] > rank[worst]) {
+          worst = result
+        }
+      }
+      bar += worst
+    }
+
+    return bar
   }
 
   onEnd() {

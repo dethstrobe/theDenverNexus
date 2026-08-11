@@ -711,6 +711,72 @@ This is injected markdown content 2
     expect(mockLogging).toHaveBeenCalledWith("[PP] 2/2 (100%)")
   })
 
+  describe("progress bar scaling to terminal width", () => {
+    let originalColumns: number | undefined
+
+    beforeEach(() => {
+      originalColumns = process.stdout.columns
+    })
+
+    afterEach(() => {
+      Object.defineProperty(process.stdout, "columns", {
+        value: originalColumns,
+        configurable: true,
+      })
+    })
+
+    it("collapses the bar into fewer slots than tests when the terminal is too narrow", () => {
+      Object.defineProperty(process.stdout, "columns", {
+        value: 15,
+        configurable: true,
+      })
+      const reporter = setup()
+      const passedResult = createMockTestResult({ status: "passed" })
+
+      for (let i = 0; i < 10; i++) {
+        reporter.onTestEnd(mockTestSuccess, passedResult)
+      }
+
+      // 10 one-char slots would need "[PPPPPPPPPP] 10/10 (100%)" (25 chars),
+      // which doesn't fit in a 15-column terminal, so it collapses to 1 slot
+      expect(mockLogging).toHaveBeenCalledWith("[P] 10/10 (100%)")
+    })
+
+    it("shows the worst status when multiple tests are collapsed into one slot", () => {
+      Object.defineProperty(process.stdout, "columns", {
+        value: 15,
+        configurable: true,
+      })
+      process.env.IGNORE_TEST_FAILURES = "true"
+      const reporter = setup()
+      const passedResult = createMockTestResult({ status: "passed" })
+      const failedResult = createMockTestResult({ status: "failed" })
+
+      reporter.onTestEnd(mockTestSuccess, failedResult)
+      for (let i = 0; i < 9; i++) {
+        reporter.onTestEnd(mockTestSuccess, passedResult)
+      }
+
+      expect(mockLogging).toHaveBeenCalledWith("[F] 10/10 (100%)")
+      delete process.env.IGNORE_TEST_FAILURES
+    })
+
+    it("still shows one character per test when everything fits in the terminal", () => {
+      Object.defineProperty(process.stdout, "columns", {
+        value: 80,
+        configurable: true,
+      })
+      const reporter = setup()
+      const passedResult = createMockTestResult({ status: "passed" })
+
+      for (let i = 0; i < 5; i++) {
+        reporter.onTestEnd(mockTestSuccess, passedResult)
+      }
+
+      expect(mockLogging).toHaveBeenCalledWith("[PPPPP] 5/5 (100%)")
+    })
+  })
+
   it("should not clean up user directories with generated files", () => {
     const reporter = setup()
     writeFileSync(join(tempDir, "test2doc-old.md"), "# Old Documentation")
